@@ -7,7 +7,7 @@ def inicio(request):
 
 @login_required
 def vista_usuario(request):
-    return HttpResponse("Bienvenido usuario autenticado")
+    return HttpResponse("Bienvenido/a persona autenticado") #agregar que cuando se loguee, salte bienvenido y el nombre
 
 @login_required
 def vista_admin(request):
