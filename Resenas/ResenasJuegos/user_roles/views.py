@@ -5,9 +5,10 @@ def inicio(request):
     rol = request.session.get('rol', 'invitado')
     return HttpResponse(f"Rol actual: {rol}")
 
+#TODO:agregar que cuando se loguee, salte bienvenido y el nombre
 @login_required
 def vista_usuario(request):
-    return HttpResponse("Bienvenido/a persona autenticado") #agregar que cuando se loguee, salte bienvenido y el nombre
+    return HttpResponse("Bienvenido/a persona autenticado") 
 
 @login_required
 def vista_admin(request):
