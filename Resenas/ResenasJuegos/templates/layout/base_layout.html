@@ -1,0 +1,20 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {% block title_layout %} {% endblock title_layout %} </title>
+    <link rel="icon" href="{% static 'assets/favicon.ico' %}">
+
+</head>
+
+<body>
+    {% block content_layout %}
+    Blog Info
+    {% endblock content_layout %}
+</body>
+
+</html>
