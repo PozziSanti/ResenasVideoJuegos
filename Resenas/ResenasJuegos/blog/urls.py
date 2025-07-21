@@ -24,6 +24,8 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('signup/', views.signup, name='signup'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('logout/', views.goout, name='logout'),
+    path('signin/', views.signin, name='signin'),
 ]
 
 if settings.DEBUG:
