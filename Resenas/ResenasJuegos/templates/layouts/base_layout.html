@@ -6,26 +6,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-        {% block title_layout %}
-        Hit or Quit
-        {% endblock title_layout %}
-    </title>
+    <title> Hit or Quit </title>
     <link rel="icon" href="{% static 'assets/favicon1.ico' %}" type="image/x-icon" />
-    {% block extra_head_layout %} {% endblock extra_head_layout %}
+
+    {% block extra_head_layout %}{% endblock extra_head_layout %}
+
+    <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="{% static 'js/tailwind.js' %}"></script>
+
     <style type="text/tailwindcss">
         @theme {
-        /* --breakpoint-xs: 30rem; */
-        --color-primary-morado: #130C2A;
-        /* --color-secondary: rgba(16, 24, 90); */
-      }
+            --color-primary-morado: #130C2A; /* Tu color base muy oscuro */
+            --color-darker-morado: #0B071A; /* Un tono aún más oscuro para elementos como sidebar/header/footer */
+            --color-light-morado: #241D44; /* Un morado ligeramente más claro, para fondos de tarjetas/inputs */
+            
+            --color-text-light: #F3F4F6; /* Blanco-gris muy claro para textos principales */
+            --color-text-medium: #A7A1B8; /* Gris-morado para textos secundarios */
+            
+            --color-accent-blue: #6366F1; /* Un azul violeta para botones o elementos interactivos */
+            --color-accent-blue-hover: #4F46E5; /* Tono más oscuro del azul para hover */
+            
+            --color-status-new: #10B981; /* Verde para etiquetas 'Nuevo' */
+            --color-status-hot: #EF4444; /* Rojo para etiquetas 'Hot' */
+            --color-status-top: #F59E0B; /* Naranja-amarillo para etiquetas 'Top Rated' */
+        }
+        @layer base {
+            body {
+                @apply text-white;
+            }
+        }
     </style>
 </head>
 
 <body class="min-w-[280px] bg-primary-morado">
-    {% block content_layout %} {% endblock content_layout %}
+    <div class="min-h-screen flex">
 
+        {% include 'components/ui/sidebar.html' %}
+
+        <div class="flex-grow ml-20 z-10">
+
+            {% include 'components/commons/header.html' %}
+
+            <main class="container mx-auto p-4">
+                {% block content_layout %}{% endblock content_layout %}
+            </main>
+
+            {% include 'components/commons/footer.html' %}
+        </div>
+    </div>
 </body>
 
 </html>
