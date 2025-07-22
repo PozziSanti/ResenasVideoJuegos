@@ -1,0 +1,29 @@
+<header class="bg-darker-morado p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="{% url 'home' %}" class="text-text-light text-2xl font-bold">Hit or Quit</a>
+        <nav class="hidden md:flex">
+            <ul class="flex space-x-4">
+                <li>
+                    <a href="#" class="text-text-medium hover:text-text-light transition-colors duration-200">Inicio</a>
+                </li>
+                <li>
+                    <a href="#" class="text-text-medium hover:text-text-light transition-colors duration-200">Juegos</a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="text-text-medium hover:text-text-light transition-colors duration-200">Categorías</a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="text-text-medium hover:text-text-light transition-colors duration-200">Contacto</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="flex items-center space-x-4">
+            <input type="text" placeholder="Buscar..."
+                class="bg-light-morado text-text-light px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-blue">
+            <button
+                class="bg-accent-blue hover:bg-accent-blue-hover text-text-light px-4 py-1 rounded-md transition-colors duration-200">Login</button>
+        </div>
+    </div>
+</header>
