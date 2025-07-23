@@ -21,3 +21,6 @@ class Score(models.Model):
 
     def __str__(self):
         return f'Calificación {self.score} de {self.user.username} para {self.review.title[:30]}'
+
+def funcion_prueba():
+    pass
