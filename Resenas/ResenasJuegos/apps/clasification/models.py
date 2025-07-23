@@ -1,5 +1,4 @@
 from django.db import models
-from review.models import models
 import uuid
 
 #MODELO CATEGORÍA

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from .models import Review
-from .models import Score
+from apps.review.models import Review
+from apps.score.models import Score
 import uuid
 
 #MODELO COMENTARIO

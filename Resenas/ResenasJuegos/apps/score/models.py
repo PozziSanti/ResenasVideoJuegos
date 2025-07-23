@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from .models import Review
-import uuid
+from apps.review.models import Review
+
 
 #MODELO CALIFICACION
 class Score(models.Model):
