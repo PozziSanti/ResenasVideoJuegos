@@ -1,13 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
 from .models import Review
+from .models import Score
+import uuid
 
 #MODELO COMENTARIO
 class Comment(models.Model):
-    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='') #TODO Definir comentario en review.
+    #PRIMARY KEY
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    
+    #FOREIGN KEYS
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comment') #TODO Definir comentario en review.
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    score = models.ForeignKey(Score, on_delete=models.CASCADE, related_name='comment') #TODO Definir a que va a estar asociado.
+    
+    #ATRIBUTOS
     content = models.TextField()
-    approbed = models.BooleanField(default=False)
+    approbed = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
