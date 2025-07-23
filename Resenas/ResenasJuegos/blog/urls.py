@@ -20,7 +20,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('user_roles.urls')),  # Incluimos rutas de usuarios
+    path('', include('apps.user_roles.urls')),  # Incluimos rutas de usuarios
 ]
 
 if settings.DEBUG:

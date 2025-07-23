@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user_roles.apps.UsuariosConfig',
+    'apps.user_roles',  # Aplicación de gestión de roles de usuario
 ]
 
 MIDDLEWARE = [
@@ -44,7 +44,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'user_roles.middleware.InvitadoMiddleware',
+    'apps.user_roles.middleware.InvitadoMiddleware',
 ]
 
 ROOT_URLCONF = 'blog.urls'
