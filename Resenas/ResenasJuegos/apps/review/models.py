@@ -18,10 +18,13 @@ class Review(models.Model): #TODO Hay que hacer una view/formulario que nos perm
     title = models.CharField(max_length=100)
     content = models.TextField()
     #TODO Hay que decidir si vamos a cargar imagenes
-    score = models.DecimalField(max_digits=3, decimal_places=1) #TODO Necesito que muestre el promedio de calificaciones.
     date_creation = models.DateTimeField(auto_now_add=True)
     class Meta:
         ordering = ['-date_creation']
+    
+    def average_score(self):
+        final_score = self.final_score.all()
+        return round(sum(p.score for p in final_score) / len(final_score), 2) if final_score else 0
     
     def __str__(self):
         return f"{self.title} ({self.score})"
