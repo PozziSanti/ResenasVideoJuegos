@@ -13,18 +13,18 @@
                 <a href="/">Inicio</a>
             </li>
             <li>
-                <a href="/dashboard">Panel</a>
+                <a href="/user_dashboard">Panel</a>
             </li>
             {% if user.is_authenticated %}
             <li>
-                <a href="/logout">Cerrar sesión</a>
+                <a href="/user_logout">Cerrar sesión</a>
             </li>
             {% else %}
              <li>
-                <a href="/signup">Inscribirse</a>
+                <a href="/user_signup">Inscribirse</a>
             </li>
             <li>
-                <a href="/signin">Iniciar sesión</a>
+                <a href="/user_signin">Iniciar sesión</a>
             </li>
             
             {% endif %}

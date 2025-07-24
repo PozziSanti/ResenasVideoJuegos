@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'user/user_base.html' %}
 
 
 {% block content %}
@@ -6,7 +6,7 @@
 
 {{error}}
 
-<form action="/signin/", method="POST">
+<form action="/user_signin/", method="POST">
     {% csrf_token %}
     {{form.as_p}}
     <button>

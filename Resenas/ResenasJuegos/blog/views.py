@@ -8,9 +8,9 @@ from django.db import IntegrityError
 # Create your views here.
 
 # Signup (Registrar nuevo usuario)
-def signup(request):
+def user_signup(request):
     if request.method == 'GET':
-        return render(request, 'signup.html', {
+        return render(request, 'user/user_signup.html', {
             'form': UserCreationForm
     })
 
@@ -21,13 +21,13 @@ def signup(request):
                 user = User.objects.create_user(username=request.POST['username'], password=request.POST['password1'])
                 user.save()
                 login(request, user)
-                return redirect('dashboard')
+                return redirect('user_dashboard')
             except IntegrityError:
-                return render(request, 'signup.html', {
+                return render(request, 'user/user_signup.html', {
                     'form': UserCreationForm,
                     'error': 'El usuario ya existe'
                 })
-        return render(request, 'signup.html', {
+        return render(request, 'user/user_signup.html', {
             'form': UserCreationForm,
             'error': 'Las contraseñas no coinciden'
         })
@@ -35,37 +35,34 @@ def signup(request):
     
 
 # Home (inicio)
-def home(request):
-    return render(request, 'home.html')
+def user_home(request):
+    return render(request, 'user/user_home.html')
 
 
 # Dashboard (panel de tareas)
-def dashboard(request):
-    return render(request, 'dashboard.html')
+def user_dashboard(request):
+    return render(request, 'user/user_dashboard.html')
 
 
 # Logout (cerrar sesión)
-def goout(request):
+def user_goout(request):
     logout(request)
-    return redirect('home')
+    return redirect('user_home')
 
 
 # login (Iniciar sesion)
-def signin(request):
+def user_signin(request):
     if request.method == 'GET':
-         return render(request, 'signin.html', {   # Envía el formulario de "Iniciar sesión"
+         return render(request, 'user/user_signin.html', {   # Envía el formulario de "Iniciar sesión"
         'form': AuthenticationForm
         }) 
     else:
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
-            return render(request, 'signin.html', {
+            return render(request, 'user/user_signin.html', {
             'form': AuthenticationForm,
             'error': 'Usuario o contraseña incorrectos'   # Si se cargan mal los datos, arroja un mensaje de error y vuelve a mandar el formulario
             }) 
         else:
             login(request, user)
-            return redirect('dashboard')     # si todo está correcto, redirecciona y guarda la sesion del usuario
-
-       
-        
+            return redirect('user_dashboard')  

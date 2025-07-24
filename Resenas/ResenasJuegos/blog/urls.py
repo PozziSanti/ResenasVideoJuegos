@@ -17,15 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
-from user import views
+from blog import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('signup/', views.signup, name='signup'),
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('logout/', views.goout, name='logout'),
-    path('signin/', views.signin, name='signin'),
+    path('', views.user_home, name='user_home'),
+    path('user_signup/', views.user_signup, name='user_signup'),
+    path('user_dashboard/', views.user_dashboard, name='user_dashboard'),
+    path('user_logout/', views.user_goout, name='user_logout'),
+    path('user_signin/', views.user_signin, name='user_signin'),
 ]
 
 if settings.DEBUG:
