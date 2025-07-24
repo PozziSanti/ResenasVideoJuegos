@@ -6,18 +6,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Hit or Quit </title>
+    <title>Hit or Quit</title>
     <link rel="icon" href="{% static 'assets/favicon1.ico' %}" type="image/x-icon" />
+
+    <!-- Google Fonts - Fredoka -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
 
     {% block extra_head_layout %}{% endblock extra_head_layout %}
 
+    <!-- CDN de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="{% static 'js/tailwind.js' %}"></script>
 
     <style type="text/tailwindcss">
         @theme {
             --color-primary-morado: #130C2A; /* Tu color base muy oscuro */
-            --color-darker-morado: #0B071A; /* Un tono aún más oscuro para elementos como sidebar/header/footer */
+            --color-darker-morado: #0B071A; /* Un tono aún más oscuro para header/footer */
             --color-light-morado: #241D44; /* Un morado ligeramente más claro, para fondos de tarjetas/inputs */
             
             --color-text-light: #F3F4F6; /* Blanco-gris muy claro para textos principales */
@@ -32,30 +38,188 @@
         }
         @layer base {
             body {
-                @apply text-white;
+                @apply text-text-light;
             }
+            html{
+                font-family: 'Fredoka', sans-serif;
+            }
+        }
+    </style>
+
+    <!-- Estilos para la animación de flip de las tarjetas (no se puede solo con Tailwind) -->
+    <style>
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 250px;
+            /* Altura fija para todas las tarjetas */
+            perspective: 1000px;
+            /* Necesario para la animación 3D */
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            /* Permite que el contenido se rote en 3D */
+            border-radius: 0.5rem;
+            /* rounded-lg */
+            overflow: hidden;
+            /* Para que las esquinas se vean bien con el borde */
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            /* Oculta la parte trasera mientras no está girada */
+            backface-visibility: hidden;
+            border-radius: 0.5rem;
+            /* rounded-lg */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .flip-card-front {
+            background-color: var(--color-light-morado);
+            color: var(--color-text-light);
+            z-index: 2;
+            /* Asegura que esté al frente */
+        }
+
+        .flip-card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .flip-card-back {
+            background-color: var(--color-light-morado);
+            color: var(--color-text-light);
+            transform: rotateY(180deg);
+            /* Mueve la parte trasera a la posición inicial de girado */
+            box-sizing: border-box;
+            /* Para que el padding no desborde */
         }
     </style>
 </head>
 
 <body class="min-w-[280px] bg-primary-morado">
-    <div class="min-h-screen flex">
+    <!-- Contenedor principal para el layout con header fijo y contenido desplazable -->
+    <div class="flex flex-col min-h-screen">
 
-        {% include 'components/ui/sidebar.html' %}
+        {% include 'components/commons/header.html' %}
 
-        <div class="flex-grow ml-20 z-10">
+        <!-- Contenedor principal del contenido y sidebar que se desplaza -->
+        <div id="main-content-wrapper" class="flex flex-grow transition-all duration-300 ease-in-out ml-0 lg:ml-20">
 
-            {% include 'components/commons/header.html' %}
+            <!-- Incluye el Sidebar (menú lateral) -->
+            {% include 'components/ui/sidebar.html' %}
 
-            <main class="container mx-auto p-4">
+            <main class="flex-grow container mx-auto p-4 z-10">
+                <!-- Bloque principal donde se pondran los contenidos específicos de cada página -->
                 {% block content_layout %}{% endblock content_layout %}
             </main>
-
-            {% include 'components/commons/footer.html' %}
         </div>
     </div>
+
+    <!-- Script para la funcionalidad del sidebar (no se puede hacer solo con Tailwind) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContentWrapper = document.getElementById('main-content-wrapper');
+            let isSidebarOpen = true; // El sidebar está abierto por defecto en desktop
+
+            // Función para alternar el estado del sidebar
+            function toggleSidebar() {
+                isSidebarOpen = !isSidebarOpen;
+                updateSidebarState();
+            }
+
+            // Función para actualizar el estado del sidebar y el contenido principal
+            function updateSidebarState() {
+                if (isSidebarOpen) {
+                    sidebar.classList.remove('-translate-x-full'); // Muestra el sidebar
+                    sidebar.classList.add('translate-x-0');
+                    // Para desktop, si el sidebar está abierto, empuja el contenido
+                    if (window.innerWidth >= 1024) { // 1024px es el breakpoint 'lg' de Tailwind
+                        mainContentWrapper.classList.remove('ml-0');
+                        mainContentWrapper.classList.add('lg:ml-20');
+                    } else {
+                        // En móvil, el sidebar es overlay, así que el contenido no se mueve
+                        mainContentWrapper.classList.remove('ml-20');
+                        mainContentWrapper.classList.add('ml-0');
+                    }
+                } else {
+                    sidebar.classList.remove('translate-x-0'); // Oculta el sidebar
+                    sidebar.classList.add('-translate-x-full');
+                    mainContentWrapper.classList.remove('lg:ml-20'); // Elimina el margen en desktop
+                    mainContentWrapper.classList.add('ml-0');
+                }
+            }
+
+            // Manejar click en el botón de menú
+            menuToggle.addEventListener('click', toggleSidebar);
+
+            // Manejar hover para abrir el sidebar solo en pantallas grandes
+            // Nota: El hover es para abrir. El click para cerrar. Esto es una UX común.
+            // Si el sidebar está cerrado, al pasar el mouse se abre temporalmente
+            menuToggle.addEventListener('mouseenter', function () {
+                if (!isSidebarOpen && window.innerWidth >= 1024) { // Solo en desktop y si está cerrado
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
+                    mainContentWrapper.classList.remove('ml-0'); // Ajusta el margen si el sidebar se abre por hover
+                    mainContentWrapper.classList.add('lg:ml-20');
+                }
+            });
+
+            // Al salir del hover, si estaba cerrado y no se hizo click, se cierra de nuevo
+            sidebar.addEventListener('mouseleave', function () {
+                if (!isSidebarOpen && window.innerWidth >= 1024) { // Solo en desktop y si está cerrado
+                    sidebar.classList.remove('translate-x-0');
+                    sidebar.classList.add('-translate-x-full');
+                    mainContentWrapper.classList.remove('lg:ml-20');
+                    mainContentWrapper.classList.add('ml-0');
+                }
+            });
+
+            // Ajustar el sidebar al cambiar el tamaño de la ventana (para responsividad)
+            window.addEventListener('resize', function () {
+                if (window.innerWidth < 1024) { // En móvil/tablet
+                    sidebar.classList.add('fixed', 'left-0', 'top-0', 'h-full', 'w-64', 'z-40', '-translate-x-full', 'transition-transform', 'duration-300', 'ease-in-out');
+                    sidebar.classList.remove('lg:translate-x-0', 'lg:w-20'); // Limpia clases de desktop
+                    mainContentWrapper.classList.remove('lg:ml-20');
+                    mainContentWrapper.classList.add('ml-0');
+                    isSidebarOpen = false; // Asume que en móvil empieza cerrado
+                    updateSidebarState(); // Aplica el estado inicial para móvil
+                } else { // En desktop
+                    sidebar.classList.remove('fixed', '-translate-x-full', 'w-64', 'z-40');
+                    sidebar.classList.add('lg:w-20', 'lg:translate-x-0', 'transition-transform', 'duration-300', 'ease-in-out');
+                    mainContentWrapper.classList.remove('ml-0');
+                    mainContentWrapper.classList.add('lg:ml-20');
+                    isSidebarOpen = true; // Asume que en desktop empieza abierto
+                    updateSidebarState(); // Aplica el estado inicial para desktop
+                }
+            });
+
+            // Llamada inicial para establecer el estado del sidebar al cargar la página
+            window.dispatchEvent(new Event('resize'));
+        });
+    </script>
 </body>
-{% load django_browser_reload %}
-{% django_browser_reload_script %}
 
 </html>
