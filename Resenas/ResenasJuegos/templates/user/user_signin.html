@@ -1,18 +1,16 @@
 {% extends 'user/user_base.html' %}
 
-
 {% block content %}
-<h1>Signin</h1>
+<h1>Iniciar Sesión</h1>
 
-{{error}}
-
-<form action="/user_signin/", method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button>
-        Ingresar
-    </button>
+<form action="{% url 'signin' %}" method="POST">  
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button>
+    Ingresar
+  </button>
 </form>
-
 {% endblock %}
+
+
     
