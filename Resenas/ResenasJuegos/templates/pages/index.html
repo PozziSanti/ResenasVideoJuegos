@@ -1,0 +1,16 @@
+{% extends 'layouts/base_layout.html' %}
+
+{% block content_layout %}
+<h1 class="text-4xl font-bold text-center mb-8">Bienvenido a Hit or Quit</h1>
+
+<!-- Sección de "Juegos Destacados" -->
+<h2 class="text-3xl font-bold mt-12 mb-6">Juegos Destacados</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    {% for game in games_data %}
+    {% include 'components/game_card.html' with game=game %}
+    {% endfor %}
+</div>
+
+<!-- Agregar más secciones aca -->
+
+{% endblock content_layout %}
