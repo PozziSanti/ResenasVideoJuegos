@@ -18,12 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from blog.views import IndexView
+#from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='home'),
     path('', include('apps.user.urls')),
-]
+] 
 
 if settings.DEBUG:
     from django.conf.urls.static import static
