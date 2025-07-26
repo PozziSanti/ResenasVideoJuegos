@@ -1,0 +1,152 @@
+/* static/css/styles.css */
+
+/* --- Configuración de Tailwind CSS --- */
+@theme {
+    --color-primary-morado: #130C2A;
+    /* Tu color base muy oscuro */
+    --color-darker-morado: #0B071A;
+    /* Un tono aún más oscuro para header/footer */
+    --color-light-morado: #241D44;
+    /* Un morado ligeramente más claro, para fondos de tarjetas/inputs */
+    --color-darker-morado-transparent: rgba(11, 7, 26, 0.6);
+    /* Aquí 0.7 es 70% opaco */
+
+    --color-text-light: #f0f1f4;
+    /* Blanco-gris muy claro para textos principales */
+    --color-text-medium: #A7A1B8;
+    /* Gris-morado para textos secundarios // se usa en game_card */
+
+    --color-accent-blue: #622bbf;
+    /* Un azul violeta para botones o elementos interactivos */
+    --color-accent-blue-hover: #4F46E5;
+    /* Tono más oscuro del azul para hover // se usa en game_card */
+
+    --color-status-new: #10B981;
+    /* Verde para etiquetas 'Nuevo' */
+    --color-status-hot: #EF4444;
+    /* Rojo para etiquetas 'Hot' */
+    --color-status-top: #F59E0B;
+    /* Naranja-amarillo para etiquetas 'Top Rated' */
+}
+
+@layer base {
+    body {
+        @apply text-text-light;
+    }
+
+    html {
+        font-family: 'Fredoka', sans-serif;
+    }
+}
+
+/* --- Estilos de la Scrollbar (anteriormente en scrollbar.css) --- */
+#sidebar-content-scroll {
+    /* Usar valores directos para asegurar compatibilidad con CDN, ya que las variables de Tailwind podrían no ser accesibles aquí */
+    --sb-track-color: #0B071A;
+    /* Valor de --color-darker-morado */
+    --sb-thumb-color: #6366F1;
+    /* Valor de --color-accent-blue (asegúrate de que este sea el valor hexadecimal correcto para #622bbf si lo cambiaste) */
+    --sb-thumb-border-color: #130C2A;
+    /* Valor de --color-primary-morado */
+    --sb-size: 6px;
+}
+
+#sidebar-content-scroll::-webkit-scrollbar {
+    width: var(--sb-size);
+}
+
+#sidebar-content-scroll::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 3px;
+}
+
+#sidebar-content-scroll::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 3px;
+    border: 1px solid var(--sb-thumb-border-color);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+    #sidebar-content-scroll {
+        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- Estilos de Flip Card (anteriormente comentados en base_layout.html) --- */
+.flip-card {
+    background-color: transparent;
+    width: 100%;
+    height: 250px;
+    /* Altura fija para todas las tarjetas */
+    perspective: 1000px;
+    /* Necesario para la animación 3D */
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    /* Permite que el contenido se rote en 3D */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    overflow: hidden;
+    /* Para que las esquinas se vean bien con el borde */
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    /* Oculta la parte trasera mientras no está girada */
+    backface-visibility: hidden;
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.flip-card-front {
+    background-color: var(--color-light-morado);
+    color: var(--color-text-light);
+    z-index: 2;
+    /* Asegura que esté al frente */
+}
+
+.flip-card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.flip-card-back {
+    background-color: var(--color-light-morado);
+    color: var(--color-text-light);
+    transform: rotateY(180deg);
+    /* Mueve la parte trasera a la posición inicial de girado */
+    box-sizing: border-box;
+    /* Para que el padding no desborde */
+}
