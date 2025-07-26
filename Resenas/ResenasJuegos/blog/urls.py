@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.urls import include, path
 from django.conf import settings
 from blog.views import IndexView
 #from django.conf.urls.static import static
@@ -23,8 +24,9 @@ from blog.views import IndexView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='home'),
-    path('', include('apps.user.urls')),
-] 
+    path('', include('apps.user.urls')), 
+    path('', include('apps.user_roles.urls')),  # Incluimos rutas de usuarios
+]
 
 if settings.DEBUG:
     from django.conf.urls.static import static
