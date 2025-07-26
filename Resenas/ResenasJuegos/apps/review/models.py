@@ -12,7 +12,7 @@ def get_card_image_filename(instance, filename):
     return os.path.join('review/card_image/', new_filename)
 
 #MODELO POSTS 
-class Review(models.Model): #TODO Hay que hacer una view/formulario que nos permita cargar las reseñas
+class Review(models.Model): #TODO Modelos incompleto, falta slug #TODO Hay que hacer una view/formulario que nos permita cargar las reseñas
     #PRIMARY KEY
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     
