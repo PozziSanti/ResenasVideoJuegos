@@ -22,9 +22,10 @@ from blog.views import IndexView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('__reload__/', include('django_browser_reload.urls')),
     path('', IndexView.as_view(), name='home'),
     path('', include('apps.user.urls')),
-] 
+]
 
 if settings.DEBUG:
     from django.conf.urls.static import static

@@ -1,0 +1,78 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hit or Quit</title>
+    <link rel="icon" href="{% static 'assets/header_icons/favicon1.ico' %}" type="image/x-icon" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+
+    {% block extra_head_layout %}{% endblock extra_head_layout %}
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="{% static 'js/tailwind.js' %}" async></script>
+
+    <!-- Configuración de Tailwind CSS -->
+    <style type="text/tailwindcss">
+        @theme {
+             --color-primary-morado: #130C2A; /* Tu color base muy oscuro */
+            --color-darker-morado: #0B071A; /* Un tono aún más oscuro para header/footer */
+            --color-light-morado: #241D44; /* Un morado ligeramente más claro, para fondos de tarjetas/inputs */
+            --color-darker-morado-transparent: rgba(11, 7, 26, 0.6); /* Aquí 0.7 es 70% opaco */
+            
+            --color-text-light: #f0f1f4; /* Blanco-gris muy claro para textos principales */
+            --color-text-medium: #A7A1B8; /* Gris-morado para textos secundarios // se usa en game_card */
+            
+            --color-accent-blue: #622bbf ; /* Un azul violeta para botones o elementos interactivos */
+            --color-accent-blue-hover: #4F46E5; /* Tono más oscuro del azul para hover // se usa en game_card */
+            
+            --color-status-new: #10B981; /* Verde para etiquetas 'Nuevo' */
+            --color-status-hot: #EF4444; /* Rojo para etiquetas 'Hot' */
+            --color-status-top: #F59E0B; /* Naranja-amarillo para etiquetas 'Top Rated' */
+        }
+        @layer base {
+            body {
+                @apply text-text-light;
+            }
+            html{
+                font-family: 'Fredoka', sans-serif;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+
+<!-- Estilos para scrollbar, colores base y gamecard -->
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+
+<body class="min-w-[280px] bg-primary-morado flex flex-col min-h-screen pt-16">
+    <div class="flex flex-col min-h-screen">
+
+        {% include 'components/commons/header.html' %}
+
+        <div id="main-content-wrapper" class="flex flex-grow transition-all duration-300 ease-in-out">
+
+            {% include 'components/ui/sidebar.html' %}
+
+            <main class="flex-grow container mx-auto p-4 z-10">
+                {% block content_layout %}{% endblock content_layout %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Logica sidebar -->
+    <script src="{% static 'js/sidebar_logic.js' %}"></script>
+
+</body>
+
+</html>

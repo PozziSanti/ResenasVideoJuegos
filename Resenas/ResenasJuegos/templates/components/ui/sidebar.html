@@ -1,0 +1,209 @@
+{% load static %}
+
+<!-- TODO= MENU CON ICONOS VISIBLES FIJOS Y QUE AL APOYAR SE EXPANDA EL MENU -->
+<aside id="sidebar" class="fixed left-0 top-16 h-[calc(100vh-4rem)] bg-darker-morado-transparent flex flex-col justify-between py-6 shadow-lg z-40
+             w-64 -translate-x-full transition-transform duration-300 ease-in-out">
+
+    <!-- SCROLLBAR -->
+    <div id="sidebar-content-scroll" class="flex flex-col items-center flex-grow overflow-y-auto">
+
+        <!-- <a href="{% url 'home' %}" class="mb-8 p-2">
+            <img src="{% static 'assets/logo.png' %}" alt="Logo" class="h-10 w-auto">
+        </a> -->
+
+        {# Este botón de menú está DENTRO del sidebar, lo cual no es ideal. Lo moveremos a HEADER.html #}
+        <nav class="flex flex-col space-y-6 w-full mt-8">
+            {% include 'partials/_sidebar_link.html' with
+            url_name='home'
+            svg_path_d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0
+            001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            text_desktop='Inicio' text_mobile='Inicio' %}
+
+            {% include 'partials/_sidebar_link.html'
+            with url_name='home'
+            svg_path_d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0
+            001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            text_desktop='Juegos'
+            text_mobile='Juegos' %}
+
+            {% include 'partials/_sidebar_link.html'
+            with url_name='home'
+            svg_path_d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0
+            001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            text_desktop='Categorías'
+            text_mobile='Categorías' %}
+
+            <hr class="border-t border-text-medium my-4">
+            <h3 class="text-sm font-semibold text-text-medium uppercase px-4 mb-2 hidden lg:block">Categorías de Juegos
+            </h3>
+            <div class="space-y-2">
+                {% include 'partials/_sidebar_link.html' with
+                url_name='home'
+                svg_path_d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1
+                1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Puzzle'
+                text_mobile='Puzzle' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='home'
+                svg_path_d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1
+                1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Motos'
+                text_mobile='Motos' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='#'
+                svg_path_d="M13 14h-2V6h2v8zm5 4h-2V6h2v12zM7 14H5v-4h2v4z"
+                text_desktop='Terror'
+                text_mobile='Terror' %}
+
+                {% include 'partials/_sidebar_link.html' with u
+                rl_name='home'
+                svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Vestir'
+                text_mobile='Vestir' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='home'
+                svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Aventuras'
+                text_mobile='Aventuras' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='home'
+                svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Acción'
+                text_mobile='Acción' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='home'
+                svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Baloncesto'
+                text_mobile='Baloncesto' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='home'
+                svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Belleza'
+                text_mobile='Belleza' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='#'
+                svg_path_d="M12 2C6.48 2 2 6.48 2 12s4.48 10
+                10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.5V14H7.5v-2H11V6.5h2V12h3.5v2H13v5.5z"
+                text_desktop='Billar'
+                text_mobile='Billar' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='home'
+                svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Cartas'
+                text_mobile='Cartas' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='home'
+                svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Casual'
+                text_mobile='Casual' %}
+
+                {% include 'partials/_sidebar_link.html' with
+                url_name='home' s
+                vg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6"
+                text_desktop='Clic'
+                text_mobile='Clic' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Coches' text_mobile='Coches' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Conducir' text_mobile='Conducir' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Controller' text_mobile='Controller' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Defensa de torres' text_mobile='Defensa de torres' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Deportes' text_mobile='Deportes' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Disparos' text_mobile='Disparos' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Escape' text_mobile='Escape' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='First Person Shoot' text_mobile='First Person Shoot' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Flash' text_mobile='Flash' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Fútbol' text_mobile='Fútbol' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='.io' text_mobile='.io' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Mahjong' text_mobile='Mahjong' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Minecraft' text_mobile='Minecraft' %}
+
+                {% include 'partials/_sidebar_link.html' with url_name='home' svg_path_d="M3 12l2-2m0 0l7-7 7 7M5
+                10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0
+                011 1v4a1 1 0 001 1m-6 0h6" text_desktop='Motos' text_mobile='Motos' %}
+            </div>
+
+            <hr class="border-t border-text-medium my-4">
+            {% include 'partials/_sidebar_link.html' with
+            url_name='home'
+            svg_path_d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0
+            001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            text_desktop='Etiquetas'
+            text_mobile='Etiquetas' %}
+
+            {% include 'partials/_sidebar_link.html' with
+            url_name='home'
+            svg_path_d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0
+            001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            text_desktop='Contáctanos'
+            text_mobile='Contáctanos' %}
+        </nav>
+    </div>
+
+    <!-- SE INCLUYE EL FOOTER -->
+    {% include 'components/commons/footer.html' %}
+
+</aside>

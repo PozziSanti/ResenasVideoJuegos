@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_browser_reload',
     'apps.user',
     'apps.review',
     'apps.clasification',
@@ -105,7 +106,7 @@ USE_TZ = True #TIME ZONE
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILE_DIRS=[os.path.join(BASE_DIR,"static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 #collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
