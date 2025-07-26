@@ -3,7 +3,8 @@
 <aside id="sidebar" class="fixed left-0 top-16 h-[calc(100vh-4rem)] bg-darker-morado-transparent flex flex-col justify-between py-6 shadow-lg z-40
              w-64 -translate-x-full transition-transform duration-300 ease-in-out">
 
-    <div class="flex flex-col items-center flex-grow">
+    <!-- SCROLLBAR -->
+    <div id="sidebar-content-scroll" class="flex flex-col items-center flex-grow overflow-y-auto">
 
         <!-- <a href="{% url 'home' %}" class="mb-8 p-2">
             <img src="{% static 'assets/logo.png' %}" alt="Logo" class="h-10 w-auto">
@@ -116,4 +117,6 @@
 
     <!-- SE INCLUYE EL FOOTER -->
     {% include 'components/commons/footer.html' %}
+
+
 </aside>

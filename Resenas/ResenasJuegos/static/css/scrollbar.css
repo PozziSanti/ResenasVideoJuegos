@@ -1,0 +1,34 @@
+/* Definir variables de color para la scrollbar */
+#sidebar-content-scroll {
+    /* Pista de la scrollbar, usa el mismo fondo oscuro del sidebar */
+    --sb-track-color: var(--color-darker-morado);
+    /* Pulgar de la scrollbar, usa el azul de acento */
+    --sb-thumb-color: var(--color-accent-blue);
+    /* Borde del pulgar, usa el morado principal */
+    --sb-thumb-border-color: var(--color-primary-morado);
+    --sb-size: 6px;
+    /* Ancho de la scrollbar */
+}
+
+/* Estilos para navegadores Webkit (Chrome, Safari, Edge) */
+#sidebar-content-scroll::-webkit-scrollbar {
+    width: var(--sb-size);
+}
+
+#sidebar-content-scroll::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 3px;
+}
+
+#sidebar-content-scroll::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 3px;
+    border: 1px solid var(--sb-thumb-border-color);
+}
+
+/* Estilos para navegadores que soportan la propiedad 'scrollbar-color' (Firefox) */
+@supports not selector(::-webkit-scrollbar) {
+    #sidebar-content-scroll {
+        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
+}

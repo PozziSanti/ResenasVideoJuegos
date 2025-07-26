@@ -23,12 +23,12 @@
             --color-primary-morado: #130C2A; /* Tu color base muy oscuro */
             --color-darker-morado: #0B071A; /* Un tono aún más oscuro para header/footer */
             --color-light-morado: #241D44; /* Un morado ligeramente más claro, para fondos de tarjetas/inputs */
-            --color-darker-morado-transparent: rgba(11, 7, 26, 0.9); /* Aquí 0.7 es 70% opaco */
+            --color-darker-morado-transparent: rgba(11, 7, 26, 0.6); /* Aquí 0.7 es 70% opaco */
             
             --color-text-light: #f0f1f4; /* Blanco-gris muy claro para textos principales */
             --color-text-medium: #A7A1B8; /* Gris-morado para textos secundarios // se usa en game_card */
             
-            --color-accent-blue: #6366F1; /* Un azul violeta para botones o elementos interactivos */
+            --color-accent-blue: #622bbf ; /* Un azul violeta para botones o elementos interactivos */
             --color-accent-blue-hover: #4F46E5; /* Tono más oscuro del azul para hover // se usa en game_card */
             
             --color-status-new: #10B981; /* Verde para etiquetas 'Nuevo' */
@@ -44,6 +44,9 @@
             }
         }
     </style>
+
+    <link rel="stylesheet" href="{% static 'css/scrollbar.css' %}">
+
 </head>
 
 <!-- <style>
@@ -121,7 +124,6 @@
 
         {% include 'components/commons/header.html' %}
 
-        {# QUITAR ML-0 Y LG:ML-64 DEL WRAPPER. SE MANEJARÁ DIRECTAMENTE EN MAIN SI ES NECESARIO #}
         <div id="main-content-wrapper" class="flex flex-grow transition-all duration-300 ease-in-out">
 
             {% include 'components/ui/sidebar.html' %}
@@ -133,6 +135,7 @@
     </div>
 
     <script src="{% static 'js/sidebar_logic.js' %}"></script>
+
 </body>
 
 </html>
