@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Iniciar Sesión</h1>
 
-<form action="{% url 'signin' %}" method="POST">  
+<form action="{% url 'signin' %}" method="POST">
   {% csrf_token %}
   {{ form.as_p }}
   <button>
@@ -11,6 +11,3 @@
   </button>
 </form>
 {% endblock %}
-
-
-    
