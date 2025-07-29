@@ -25,9 +25,10 @@ urlpatterns = [
     path('', IndexView.as_view(), name='home'),  # Vista principal
     path('roles/', include('apps.user_roles.urls')),  # URLs de roles
     path('usuarios/', include('apps.user.urls')),     # URLs de usuarios
+    path('__reload__/', include('django_browser_reload.urls')),
     path('', IndexView.as_view(), name='home'),
     path('', include('apps.user.urls')),
-] 
+]
 
 if settings.DEBUG:
     from django.conf.urls.static import static

@@ -1,0 +1,35 @@
+<div class="flip-card rounded-lg shadow-lg">
+    <div class="flip-card-inner bg-light-morado">
+        <!-- Parte Frontal (imagen del juego) -->
+        <div class="flip-card-front relative flex items-center justify-center">
+            <img src="{{ game.image_url }}" alt="{{ game.title }}"
+                class="absolute inset-0 w-full h-full object-cover rounded-lg">
+            <!-- Etiquetas de estado (New, Hot, Top Rated) -->
+            {% if game.is_new %}
+            <span
+                class="absolute top-2 left-2 bg-status-new text-text-light text-xs px-2 py-1 rounded-full z-10">New</span>
+            {% elif game.is_hot %}
+            <span
+                class="absolute top-2 left-2 bg-status-hot text-text-light text-xs px-2 py-1 rounded-full z-10">Hot</span>
+            {% elif game.is_top_rated %}
+            <span class="absolute top-2 right-2 bg-status-top text-text-light text-xs px-2 py-1 rounded-full z-10">Top
+                Rated</span>
+            {% endif %}
+            <!-- Título del juego superpuesto -->
+            <h3
+                class="absolute bottom-4 text-xl font-bold text-shadow-sm text-text-light bg-darker-morado bg-opacity-75 px-3 py-1 rounded-md">
+                {{ game.title }}
+            </h3>
+        </div>
+
+        <!-- Parte Trasera (descripción y botón) -->
+        <div class="flip-card-back flex flex-col justify-between items-center bg-light-morado text-text-light">
+            <h3 class="text-xl font-semibold mb-2">{{ game.title }}</h3>
+            <p class="text-text-medium text-sm text-center mb-4 flex-grow">{{ game.description }}</p>
+            <a href="{% url 'game_detail' game.id %}"
+                class="bg-accent-blue hover:bg-accent-blue-hover text-text-light px-4 py-2 rounded-md w-full text-center transition-colors duration-200">
+                Ver reseña
+            </a>
+        </div>
+    </div>
+</div>
