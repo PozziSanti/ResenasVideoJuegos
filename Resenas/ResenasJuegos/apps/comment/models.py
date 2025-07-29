@@ -18,6 +18,7 @@ class Comment(models.Model):
     content = models.TextField()
     approbed = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'Comentario de {self.user.username} en {self.review.title[:30]}'
