@@ -22,16 +22,12 @@ from blog.views import IndexView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
     path('', IndexView.as_view(), name='home'),  # Vista principal
     path('roles/', include('apps.user_roles.urls')),  # URLs de roles
     path('usuarios/', include('apps.user.urls')),     # URLs de usuarios
-]
-=======
     path('', IndexView.as_view(), name='home'),
     path('', include('apps.user.urls')),
 ] 
->>>>>>> a93806a5d3466a0613b928f1de18a1aaf0442235
 
 if settings.DEBUG:
     from django.conf.urls.static import static
