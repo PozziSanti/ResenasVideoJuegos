@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from apps.comment.models import Comment
 from apps.comment.forms import CommentForm
 from apps.review.models import Review
 from django.contrib.auth.decorators import login_required
+
+#TODO Cambiar view, probablemente se mueva todo a review 
 
 @login_required
 def add_comment(request, review_id):
