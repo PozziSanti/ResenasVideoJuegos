@@ -30,8 +30,11 @@ class Review(models.Model): #TODO Modelos incompleto, falta realcionar score #TO
         ordering = ['-date_creation']
     
     def average_score(self):
-        final_score = self.final_score.all()
-        return round(sum(p.score for p in final_score) / len(final_score), 2) if final_score else 0
+        all_scores = self.score.all()
+        if all_scores.exists():
+            return round(sum(s.score for s in all_scores) / all_scores.count(), 2)
+        else: 
+            return 0
     
     
     @property
@@ -56,7 +59,7 @@ class Review(models.Model): #TODO Modelos incompleto, falta realcionar score #TO
         return unique_slug
 
     def __str__(self):
-        return f"{self.title} ({self.score})" 
+        return f"{self.title} ({self.average_score()})" 
 
 def get_image_path(instance, filename):
     review_id = instance.review.id

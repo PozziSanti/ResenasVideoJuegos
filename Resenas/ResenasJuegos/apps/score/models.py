@@ -24,4 +24,4 @@ class Score(models.Model):
         verbose_name_plural = 'Calificaciones'
 
     def __str__(self):
-        return f'{self.user.username} le ha dado {self.score}⭐ a "{self.review.title[:30]}"'
+        return f'{self.user.username} le ha dado {self.score}⭐ a "{self.review.title[:30]}..."'
