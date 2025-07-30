@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from apps.review.models import Review
 from apps.score.models import Score
 import uuid
 
@@ -10,9 +9,9 @@ class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     
     #FOREIGN KEYS
-    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comment') #TODO Definir comentario en review.
+    review = models.ForeignKey('review.Review', on_delete=models.CASCADE, related_name='comment') 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    score = models.ForeignKey(Score, on_delete=models.CASCADE, related_name='comment') #TODO Definir a que va a estar asociado.
+    score = models.ForeignKey(Score, on_delete=models.CASCADE, related_name='comment') 
     
     #ATRIBUTOS
     content = models.TextField()

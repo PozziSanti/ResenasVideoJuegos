@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from apps.clasification.models import Category
 from apps.clasification.models import Plataform
-from apps.comment.models import Comment
 import uuid
 import os
    
@@ -17,8 +16,7 @@ class Review(models.Model): #TODO Modelos incompleto, falta realcionar score #TO
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='review')
     plataform = models.ForeignKey(Plataform, on_delete=models.SET_NULL, null=True, related_name='review')
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='review', null=True, blank=True)
-    
+
     #ATRIBUTOS
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
@@ -35,7 +33,6 @@ class Review(models.Model): #TODO Modelos incompleto, falta realcionar score #TO
             return round(sum(s.score for s in all_scores) / all_scores.count(), 2)
         else: 
             return 0
-    
     
     @property
     def ammount_comments(self):
