@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from apps.review.models import Review
+import uuid
 
 
 #MODELO CALIFICACION
@@ -8,6 +9,9 @@ class Score(models.Model):
     #Variable Auxiliar para calcular score
     score_range = [(i, str(i)) for i in range(1, 6)] # Del 1 al 5
 
+    #PRIMARY KEY
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    
     #FOREIGN KEYS
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='score') 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -20,4 +24,4 @@ class Score(models.Model):
         verbose_name_plural = 'Calificaciones'
 
     def __str__(self):
-        return f'{self.user.username} le ha dado {self.score}⭐ a "{self.review.title[:30]}"'
+        return f'{self.user.username} le ha dado {self.score}⭐ a "{self.review.title[:30]}..."'
