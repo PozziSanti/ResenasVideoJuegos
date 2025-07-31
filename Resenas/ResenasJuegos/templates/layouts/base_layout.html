@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hit or Quit</title>
+    <title>Hit or Quit{% block title_layout %}{% endblock title_layout %}</title>
     <link rel="icon" href="{% static 'assets/header_icons/favicon1.ico' %}" type="image/x-icon" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,23 +18,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="{% static 'js/tailwind.js' %}" async></script>
 
-    <!-- Configuración de Tailwind CSS -->
     <style type="text/tailwindcss">
         @theme {
-             --color-primary-morado: #130C2A; /* Tu color base muy oscuro */
-            --color-darker-morado: #0B071A; /* Un tono aún más oscuro para header/footer */
-            --color-light-morado: #241D44; /* Un morado ligeramente más claro, para fondos de tarjetas/inputs */
-            --color-darker-morado-transparent: rgba(11, 7, 26, 0.6); /* Aquí 0.7 es 70% opaco */
-            
-            --color-text-light: #f0f1f4; /* Blanco-gris muy claro para textos principales */
-            --color-text-medium: #A7A1B8; /* Gris-morado para textos secundarios // se usa en game_card */
-            
-            --color-accent-blue: #622bbf ; /* Un azul violeta para botones o elementos interactivos */
-            --color-accent-blue-hover: #4F46E5; /* Tono más oscuro del azul para hover // se usa en game_card */
-            
-            --color-status-new: #10B981; /* Verde para etiquetas 'Nuevo' */
-            --color-status-hot: #EF4444; /* Rojo para etiquetas 'Hot' */
-            --color-status-top: #F59E0B; /* Naranja-amarillo para etiquetas 'Top Rated' */
+            --color-primary-morado: #130C2A;
+            --color-darker-morado: #0B071A;
+            --color-light-morado: #241D44;
+            --color-darker-morado-transparent: rgba(11, 7, 26, 0.6);
+
+            --color-text-light: #f0f1f4;
+            --color-text-medium: #A7A1B8;
+
+            --color-accent-blue: #622bbf ;
+            --color-accent-blue-hover: #4F46E5;
+
+            --color-status-new: #10B981;
+            --color-status-hot: #EF4444;
+            --color-status-top: #F59E0B;
         }
         @layer base {
             body {
@@ -47,11 +46,6 @@
     </style>
 
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
-</head>
-
-<!-- Estilos para scrollbar, colores base y gamecard -->
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
 </head>
 
@@ -70,7 +64,6 @@
         </div>
     </div>
 
-    <!-- Logica sidebar -->
     <script src="{% static 'js/sidebar_logic.js' %}"></script>
 
 </body>

@@ -1,8 +1,4 @@
-{% extends 'user/user_base.html' %}
-
-{% block content %}
-<h1>Iniciar Sesión</h1>
-
+<!-- Iniciar sesion -->
 <form action="{% url 'signin' %}" method="POST">
   {% csrf_token %}
   {{ form.as_p }}
@@ -10,4 +6,3 @@
     Ingresar
   </button>
 </form>
-{% endblock %}
