@@ -34,7 +34,7 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
-
+#PERMITE EDITAR PERFIL
 @login_required
 def edit_profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
@@ -42,8 +42,8 @@ def edit_profile(request):
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('signin')  # lugar de redirección después de guardar el perfil
+            return redirect('dashboard')  # lugar de redirección después de guardar el perfil
     else:
         form = ProfileForm(instance=profile)
-    
+
     return render(request, 'user/user_profile.html', {'form': form})
