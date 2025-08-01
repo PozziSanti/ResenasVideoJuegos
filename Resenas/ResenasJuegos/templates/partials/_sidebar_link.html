@@ -1,0 +1,9 @@
+<a href="{% url url_name %}"
+   class="text-white hover:text-text-light flex flex-col lg:flex-row items-center justify-center lg:justify-start p-2 rounded-md transition-colors duration-200">
+
+    <!-- Contenido del archivo SVG que le pasemos -->
+    {% include icon_template_path %}
+
+    <span class="text-sm mt-1 lg:ml-2 lg:text-lg hidden lg:block">{{ text_desktop }}</span>
+    <span class="text-sm mt-1 lg:hidden">{{ text_mobile }}</span>
+</a>
