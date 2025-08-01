@@ -41,8 +41,8 @@ def logout_view(request):
 #    template_name = 'user/user_home.html'
 
 
-class DashboardView(TemplateView):
-    template_name = 'user/user_dashboard.html'
+#class DashboardView(TemplateView):
+#    template_name = 'user/user_dashboard.html'
 
 
 
