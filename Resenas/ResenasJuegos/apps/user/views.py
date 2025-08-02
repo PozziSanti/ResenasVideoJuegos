@@ -10,26 +10,24 @@ from .models import UserProfile
 
 
 class UserSignupView(CreateView):
-    template_name = 'user/user_signup.html'
+    template_name = 'registration/signup.html'
     form_class = UserCreationForm
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        user = self.object
-        login(self.request, user)
+        user = form.save()
         UserProfile.objects.create(user=user)  # crea perfil en blanco automáticamente
-        return redirect('edit_profile')    # redirige al formulario para que lo complete
 
-    def get_success_url(self):
-        return reverse('edit_profile')
+        next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
+        signin_url = f"{reverse('signin')}?next={next_url}"
+        return redirect(signin_url)    # redirige al formulario para que lo complete
         
         
 class UserLoginView(LoginView):
-    template_name = 'user/user_signin.html'
+    template_name = 'registration/signin.html'
     redirect_authenticated_user = True
     
     def get_success_url(self):
-        return reverse_lazy('home')
+        return self.request.GET.get('next') or reverse_lazy('home') # Si hay una URL de redirección pasada, usarla; si no, ir a home
 
 
 def logout_view(request):
@@ -37,15 +35,7 @@ def logout_view(request):
     return redirect('home')
 
 
-#class HomeView(TemplateView):
-#    template_name = 'user/user_home.html'
-
-
-class DashboardView(TemplateView):
-    template_name = 'user/user_dashboard.html'
-
-
-
+#PERMITE EDITAR PERFIL
 @login_required
 def edit_profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
@@ -56,5 +46,5 @@ def edit_profile(request):
             return redirect('dashboard')  # lugar de redirección después de guardar el perfil
     else:
         form = ProfileForm(instance=profile)
-    
+
     return render(request, 'user/user_profile.html', {'form': form})
