@@ -16,12 +16,10 @@ class UserSignupView(CreateView):
     def form_valid(self, form):
         user = form.save()
         UserProfile.objects.create(user=user)  # crea perfil en blanco automáticamente
-
         next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
         signin_url = f"{reverse('signin')}?next={next_url}"
         return redirect(signin_url)    # redirige al formulario para que lo complete
-        
-        
+
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
     redirect_authenticated_user = True
