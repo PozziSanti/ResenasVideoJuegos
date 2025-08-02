@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 #TODO=CREAR UNA NUEVA SECRET KEY PARA PRODUCTION
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Application definition
 
@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.user',        # Aplicación de usuarios
     'django_browser_reload',
     'apps.user',
     'apps.review',
@@ -41,6 +40,8 @@ INSTALLED_APPS = [
     'apps.comment',
     'apps.favorite',
     'apps.score',
+    'apps.user_roles',
+    'apps.post',
 ]
 
 MIDDLEWARE = [
