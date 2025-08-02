@@ -11,6 +11,15 @@
     {% endfor %}
 </div>
 
-<!-- Agregar más secciones aca -->
+<!-- 🔽 CONTENIDO DE PRUEBA TEMPORAL PARA TESTEAR SCROLL 🔽 -->
+<div class="mt-16 space-y-4">
+  <h2 class="text-xl font-semibold">Contenido de prueba (scroll)</h2>
+  {% for i in "abcdefghijklmnopqrstuvwxyz"|make_list %}
+    <div class="bg-light-morado p-4 rounded-md shadow-md">
+      Elemento de prueba {{ forloop.counter }}
+    </div>
+  {% endfor %}
+</div>
+<!-- 🔼 LO PODÉS BORRAR CUANDO TERMINE LA PRUEBA 🔼 -->
 
 {% endblock content_layout %}
