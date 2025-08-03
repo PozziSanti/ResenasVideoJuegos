@@ -1,8 +1,57 @@
+{% extends 'layouts/base_layout.html' %}
 <!-- Iniciar sesion -->
-<form action="{% url 'signin' %}" method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button>
-    Ingresar
-  </button>
-</form>
+{% load static %}
+{% block content_layout %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="main-container centered-flex">
+  <div class="form-container">
+    <div class="icon fa fa-user"></div>
+
+    <form method="post" class="centered-flex" onsubmit="return validarFormulario();">
+      {% csrf_token %}
+
+      <div class="title">Inicia Sesión</div>
+      <div class="msg"></div>
+
+      <div class="field">
+        <input type="text" placeholder="Username" id="uname" name="username" required>
+        <span class="fa fa-user"></span>
+      </div>
+
+      <div class="field">
+        <input type="password" placeholder="Password" id="password" name="password" required>
+        <span class="far fa-eye"></span>
+      </div>
+
+      <div class="action centered-flex">
+        <label for="remember" class="centered-flex">
+          <input type="checkbox" id="remember" name="remember"> Recordarme
+        </label>
+        <a href="#">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <div class="btn-container">
+        <input type="submit" id="login-btn" value="Login" class="login-btn">
+      </div>
+
+      <div class="signup"> ¿No tenes cuenta? <a href="{% url 'signup' %}?next={{ request.path }}">Registrate</a></div>
+    </form>
+  </div>
+</div>
+
+<script src="{% static 'js/login.js' %}"></script>
+</body>
+</html>
+
+    
+{% endblock content_layout %}
