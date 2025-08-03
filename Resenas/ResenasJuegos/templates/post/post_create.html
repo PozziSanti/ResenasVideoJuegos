@@ -1,14 +1,16 @@
-{% extends 'base.html' %}
-{% block content %}
-  <h1>Crear Post</h1>
-  <form method="post">
-    {% csrf_token %}
-    <label>Título:</label><br>
-    <input type="text" name="titulo" required><br><br>
+{% extends 'layouts/general_layout.html' %}
+{% block content_layout %}
+  {% if perms.post.add_post %}
+    <h1>Crear Post</h1>
+    <form method="post">
+      {% csrf_token %}
+      <label>Título:</label><br>
+      <input type="text" name="titulo" required><br><br>
 
-    <label>Contenido:</label><br>
-    <textarea name="contenido" rows="5" required></textarea><br><br>
+      <label>Contenido:</label><br>
+      <textarea name="contenido" rows="5" required></textarea><br><br>
 
-    <button type="submit">Guardar</button>
-  </form>
+      <button type="submit">Guardar</button>
+    </form>
+  {% endif %}
 {% endblock %}

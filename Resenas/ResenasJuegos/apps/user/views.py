@@ -1,12 +1,12 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .forms import ProfileForm
-from .models import UserProfile
+from apps.user.models import UserProfile
 
 
 class UserSignupView(CreateView):
