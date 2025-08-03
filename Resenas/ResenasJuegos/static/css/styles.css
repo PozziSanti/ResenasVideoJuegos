@@ -1,31 +1,31 @@
-/* --- Estilos de la Scrollbar (con valores hexadecimales directos) --- */
-#sidebar-content-scroll {
+/* Scrollbar personalizada reutilizable */
+.scrollbar-purple {
     --sb-track-color: #0B071A;
-    /* Valor directo de --color-darker-morado */
     --sb-thumb-color: #622bbf;
-    /* Valor directo de --color-accent-blue (#622bbf de tu @theme) */
     --sb-thumb-border-color: #130C2A;
-    /* Valor directo de --color-primary-morado */
     --sb-size: 6px;
 }
 
-#sidebar-content-scroll::-webkit-scrollbar {
+/* Estilos para navegadores con WebKit (Chrome, Edge, Safari) */
+.scrollbar-purple::-webkit-scrollbar {
     width: var(--sb-size);
 }
 
-#sidebar-content-scroll::-webkit-scrollbar-track {
+.scrollbar-purple::-webkit-scrollbar-track {
     background: var(--sb-track-color);
     border-radius: 3px;
 }
 
-#sidebar-content-scroll::-webkit-scrollbar-thumb {
+.scrollbar-purple::-webkit-scrollbar-thumb {
     background: var(--sb-thumb-color);
     border-radius: 3px;
     border: 1px solid var(--sb-thumb-border-color);
 }
 
+/* Estilo para navegadores que soportan scrollbar-color (Firefox) */
 @supports not selector(::-webkit-scrollbar) {
-    #sidebar-content-scroll {
+    .scrollbar-purple {
+        scrollbar-width: thin;
         scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
     }
 }

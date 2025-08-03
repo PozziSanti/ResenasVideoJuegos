@@ -1,1 +1,23 @@
 {% extends 'layouts/general_layout.html' %}
+{% block content_layout %}
+
+  <h1>{{ post.titulo }}</h1>
+  <p>{{ post.contenido }}</p>
+  <p><strong>Autor:</strong> {{ post.autor.username }}</p>
+  <p><strong>Publicado:</strong> {{ post.created_at }}</p>
+
+  {% if perms.post.change_post %}
+    <a href="{% url 'post_update' post.id %}">Editar</a> |
+    <a href="{% url 'post_delete' post.id %}">Eliminar</a>
+  {% endif %}
+
+  <hr>
+
+  <h3>Comentarios</h3>
+  {% for comentario in post.comentarios.all %}
+    <p><strong>{{ comentario.autor.username }}:</strong> {{ comentario.contenido }}</p>
+  {% empty %}
+    <p>No hay comentarios aún.</p>
+  {% endfor %}
+
+{% endblock %}

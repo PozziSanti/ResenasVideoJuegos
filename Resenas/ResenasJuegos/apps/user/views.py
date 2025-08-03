@@ -1,12 +1,12 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .forms import ProfileForm
-from .models import UserProfile
+from apps.user.models import UserProfile
 
 
 class UserSignupView(CreateView):
@@ -16,12 +16,10 @@ class UserSignupView(CreateView):
     def form_valid(self, form):
         user = form.save()
         UserProfile.objects.create(user=user)  # crea perfil en blanco automáticamente
-
         next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
         signin_url = f"{reverse('signin')}?next={next_url}"
         return redirect(signin_url)    # redirige al formulario para que lo complete
-        
-        
+
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
     redirect_authenticated_user = True
@@ -33,6 +31,7 @@ class UserLoginView(LoginView):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
 
 #PERMITE EDITAR PERFIL
 @login_required
