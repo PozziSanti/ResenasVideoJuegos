@@ -33,7 +33,7 @@
 
 
 
-/* --- Estilos de Flip Card (con valores hexadecimales directos) --- */
+/* --- Estilos de Flip Card (Game Card)--- */
 .flip-card {
     background-color: transparent;
     width: 100%;
@@ -53,6 +53,11 @@
 }
 
 .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+/* Flip activado por tap en mobile */
+.flip-card-inner.touch-flip {
     transform: rotateY(180deg);
 }
 

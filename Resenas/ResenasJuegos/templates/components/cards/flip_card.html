@@ -1,0 +1,20 @@
+<div class="flip-card w-full h-64 perspective" data-category="{{ category }}">
+  <div class="flip-card-inner relative w-full h-full transition-transform duration-500 transform-style preserve-3d rounded-lg shadow-lg">
+    
+    <!-- Frente -->
+    <div class="absolute w-full h-full backface-hidden rounded-lg overflow-hidden">
+      <img src="{{ game.image_url }}" alt="{{ game.title }}" class="w-full h-full object-cover">
+      <div class="absolute bottom-0 bg-black/70 w-full px-4 py-2">
+        <h3 class="text-white text-lg font-semibold truncate">{{ game.title }}</h3>
+      </div>
+    </div>
+
+    <!-- Dorso -->
+    <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-light-morado text-text-light p-4 rounded-lg flex flex-col justify-between">
+      <h3 class="text-xl font-bold">{{ game.title }}</h3>
+      <p class="text-sm text-text-medium flex-grow mt-2">{{ game.description }}</p>
+      <a href="{% url 'game_detail' game.id %}" class="mt-4 bg-accent-blue hover:bg-accent-blue-hover text-white px-4 py-2 rounded-md text-center">Ver reseña</a>
+    </div>
+
+  </div>
+</div>

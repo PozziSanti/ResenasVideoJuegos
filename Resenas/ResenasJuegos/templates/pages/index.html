@@ -1,8 +1,6 @@
 {% extends 'layouts/general_layout.html' %}
 
 {% block content_layout %}
-<h1 class="text-4xl font-bold text-center mb-8">Bienvenido a Hit or Quit</h1>
-
 <!-- Sección de "Juegos Destacados" -->
 <h2 class="text-3xl font-bold mt-12 mb-6">Juegos Destacados</h2>
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -10,16 +8,5 @@
     {% include 'components/game_card.html' with game=game %}
     {% endfor %}
 </div>
-
-<!-- 🔽 CONTENIDO DE PRUEBA TEMPORAL PARA TESTEAR SCROLL 🔽 -->
-<div class="mt-16 space-y-4">
-  <h2 class="text-xl font-semibold">Contenido de prueba (scroll)</h2>
-  {% for i in "abcdefghijklmnopqrstuvwxyz"|make_list %}
-    <div class="bg-light-morado p-4 rounded-md shadow-md">
-      Elemento de prueba {{ forloop.counter }}
-    </div>
-  {% endfor %}
-</div>
-<!-- 🔼 LO PODÉS BORRAR CUANDO TERMINE LA PRUEBA 🔼 -->
 
 {% endblock content_layout %}
