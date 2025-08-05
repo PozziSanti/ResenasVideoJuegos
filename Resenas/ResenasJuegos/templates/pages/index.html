@@ -1,38 +1,28 @@
 {% extends 'layouts/general_layout.html' %}
+{% load static %}
 
 {% block content_layout %}
-<h2 class="text-2xl font-bold mb-6">Todos los juegos</h2>
 
-{% for categoria, juegos in juegos_por_categoria.items %}
+<h1 class="text-4xl font-bold text-center my-6">Categorías de Juegos</h1>
+
+<p class="text-center text-red-500 font-bold">DEBUG: Cargando categorías y posts...</p>
+
+{% for categoria, posts in posts_por_categoria.items %}
   <section class="mb-10">
-    <div class="flex justify-between items-center mb-2">
-      <h3 class="text-xl font-semibold">{{ categoria }}</h3>
-      <a href="{% url 'categoria' slug=categoria|slugify %}" class="text-sm text-accent-blue hover:underline">Ver más</a>
-    </div>
+    <h2 class="text-2xl font-semibold mb-4">{{ categoria }} ({{ posts.count }})</h2>
 
-    <div class="relative group">
-      <!-- Scroll contenedor -->
-      <div class="flex overflow-x-auto scrollbar-hidden space-x-4 scroll-smooth snap-x snap-mandatory px-1" id="carousel-{{ forloop.counter }}">
-        {% for juego in juegos %}
-          <div class="min-w-[200px] h-[120px] snap-start shrink-0 rounded-lg overflow-hidden relative transition-transform hover:scale-105">
-            <img src="{{ juego.imagen_url }}" alt="{{ juego.nombre }}" class="w-full h-full object-cover">
-          </div>
+    {% if posts %}
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {% for post in posts %}
+          {% include "components/cards/flip_card.html" with post=post %}
         {% endfor %}
       </div>
-
-      <!-- Flechas -->
-      <button onclick="scrollLeft('carousel-{{ forloop.counter }}')" 
-              class="absolute left-0 top-1/2 -translate-y-1/2 bg-gradient-to-r from-primary-morado/80 to-transparent text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition">
-        ‹
-      </button>
-
-      <button onclick="scrollRight('carousel-{{ forloop.counter }}')" 
-              class="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-l from-primary-morado/80 to-transparent text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition">
-        ›
-      </button>
-    </div>
+    {% else %}
+      <p class="text-gray-500">No hay posts para esta categoría.</p>
+    {% endif %}
   </section>
 {% endfor %}
+
 {% endblock content_layout %}
 
 {% block scripts %}
@@ -46,4 +36,3 @@
   }
 </script>
 {% endblock scripts %}
-
