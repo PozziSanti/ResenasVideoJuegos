@@ -1,20 +1,26 @@
-<div class="flip-card w-full h-64 perspective" data-category="{{ category }}">
-  <div class="flip-card-inner relative w-full h-full transition-transform duration-500 transform-style preserve-3d rounded-lg shadow-lg">
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <!-- LADO FRONTAL -->
+    <div class="flip-card-front">
+      {% with post.images.all|first as imagen %}
+        {% if imagen %}
+          <img src="{{ imagen.image.url }}" alt="{{ post.title }}" class="w-full rounded">
+        {% else %}
+          <div class="w-full h-40 bg-gray-200 flex items-center justify-center">Sin imagen</div>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <!-- LADO TRASERO -->
+    <div class="flip-card-back bg-gray-100 p-4 rounded shadow">
+      <h3 class="text-lg font-bold">{{ post.title }}</h3>
+      <p class="text-sm mt-2">{{ post.content|truncatewords:15 }}</p>
+      <a href="{% url 'detalle_post' slug=post.slug %}" class="text-indigo-500 underline block mt-4">Ver más</a>
     
-    <!-- Frente -->
-    <div class="absolute w-full h-full backface-hidden rounded-lg overflow-hidden">
-      <img src="{{ game.image_url }}" alt="{{ game.title }}" class="w-full h-full object-cover">
-      <div class="absolute bottom-0 bg-black/70 w-full px-4 py-2">
-        <h3 class="text-white text-lg font-semibold truncate">{{ game.title }}</h3>
+      <div class="mobile-flip-hint">
+        <span class="rotate-icon">↻</span>
+        <span class="hint-text">Tocá para girar</span>
       </div>
     </div>
-
-    <!-- Dorso -->
-    <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-light-morado text-text-light p-4 rounded-lg flex flex-col justify-between">
-      <h3 class="text-xl font-bold">{{ game.title }}</h3>
-      <p class="text-sm text-text-medium flex-grow mt-2">{{ game.description }}</p>
-      <a href="{% url 'game_detail' game.id %}" class="mt-4 bg-accent-blue hover:bg-accent-blue-hover text-white px-4 py-2 rounded-md text-center">Ver reseña</a>
-    </div>
-
   </div>
 </div>
