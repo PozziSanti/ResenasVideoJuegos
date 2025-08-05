@@ -1,0 +1,8 @@
+<!-- Iniciar sesion -->
+<form action="{% url 'signin' %}" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button>
+    Ingresar
+  </button>
+</form>
