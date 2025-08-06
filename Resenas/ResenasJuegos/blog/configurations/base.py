@@ -33,7 +33,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'apps.user_roles',  # Aplicación de gestión de roles de usuario
+=======
+    'apps.post',
+    'django_browser_reload',
+    'apps.user',
+    'apps.comment',
+    'apps.favorite',
+>>>>>>> 8493330abcd4d780c691034f620da55c8759d042
 ]
 
 MIDDLEWARE = [
@@ -52,7 +60,7 @@ ROOT_URLCONF = 'blog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,"template")],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,7 +109,7 @@ USE_TZ = True #TIME ZONE
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILE_DIRS=[os.path.join(BASE_DIR,"static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 #collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
