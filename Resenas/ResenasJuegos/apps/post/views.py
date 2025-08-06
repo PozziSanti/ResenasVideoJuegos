@@ -25,6 +25,9 @@ class IndexView(TemplateView):
         print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
         return context
 
+class AboutView(TemplateView):
+    template_name = 'pages/about.html'
+
 class PostDetailView(DetailView):
     model = Post
     template_name = 'pages/post_detail.html'

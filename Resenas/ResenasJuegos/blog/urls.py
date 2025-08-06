@@ -17,13 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from apps.post.views import IndexView
+from apps.post.views import IndexView, AboutView
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('__reload__/', include('django_browser_reload.urls')),
-    path('', IndexView.as_view(), name='home'),  # Página principal
+    path('', IndexView.as_view(), name='home'),  # Página principal 
     path('user/', include('apps.user.urls')),     # URLs de usuarios
     path('post/', include('apps.post.urls')),     # Rutas de la app de post
 ]
