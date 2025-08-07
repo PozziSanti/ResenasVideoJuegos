@@ -68,6 +68,10 @@
     </div>
 
     <script src="{% static 'js/sidebar_logic.js' %}"></script>
+    
+    <!-- Scripts adicionales desde layouts hijos -->
+    {% block scripts %}{% endblock scripts %}
+
 
     <!-- Scripts adicionales desde layouts hijos -->
     {% block scripts %}{% endblock scripts %}
