@@ -1,31 +1,31 @@
-/* --- Estilos de la Scrollbar (con valores hexadecimales directos) --- */
-#sidebar-content-scroll {
+/* Scrollbar personalizada reutilizable */
+.scrollbar-purple {
     --sb-track-color: #0B071A;
-    /* Valor directo de --color-darker-morado */
     --sb-thumb-color: #622bbf;
-    /* Valor directo de --color-accent-blue (#622bbf de tu @theme) */
     --sb-thumb-border-color: #130C2A;
-    /* Valor directo de --color-primary-morado */
     --sb-size: 6px;
 }
 
-#sidebar-content-scroll::-webkit-scrollbar {
+/* Estilos para navegadores con WebKit (Chrome, Edge, Safari) */
+.scrollbar-purple::-webkit-scrollbar {
     width: var(--sb-size);
 }
 
-#sidebar-content-scroll::-webkit-scrollbar-track {
+.scrollbar-purple::-webkit-scrollbar-track {
     background: var(--sb-track-color);
     border-radius: 3px;
 }
 
-#sidebar-content-scroll::-webkit-scrollbar-thumb {
+.scrollbar-purple::-webkit-scrollbar-thumb {
     background: var(--sb-thumb-color);
     border-radius: 3px;
     border: 1px solid var(--sb-thumb-border-color);
 }
 
+/* Estilo para navegadores que soportan scrollbar-color (Firefox) */
 @supports not selector(::-webkit-scrollbar) {
-    #sidebar-content-scroll {
+    .scrollbar-purple {
+        scrollbar-width: thin;
         scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
     }
 }
@@ -33,7 +33,7 @@
 
 
 
-/* --- Estilos de Flip Card (con valores hexadecimales directos) --- */
+/* --- Estilos de Flip Card (Game Card)--- */
 .flip-card {
     background-color: transparent;
     width: 100%;
@@ -46,7 +46,7 @@
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.8s;
+    transition: transform 0.6s ease-in-out;
     transform-style: preserve-3d;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -56,6 +56,7 @@
     transform: rotateY(180deg);
 }
 
+/* Flip activado por tap en mobile */
 .flip-card-front,
 .flip-card-back {
     position: absolute;
@@ -93,4 +94,49 @@
     /* Valor directo de --color-text-light */
     transform: rotateY(180deg);
     box-sizing: border-box;
+}
+
+/* HOVER para desktop */
+@media (hover: hover) and (pointer: fine) {
+  .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+}
+
+/* TAP para mobile (sin necesidad de JS) */
+@media (hover: none) and (pointer: coarse) {
+  .flip-card:active .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+}
+
+/* --- Flip Hint (solo visible en mobile) --- */
+.mobile-flip-hint {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+.rotate-icon {
+  font-size: 1.5rem;
+  animation: rotateHint 1.5s infinite ease-in-out;
+}
+
+@keyframes rotateHint {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+}
+
+/* Mostrar el hint solo en dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-flip-hint {
+    display: flex;
+  }
 }

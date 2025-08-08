@@ -34,6 +34,7 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
+
 #PERMITE EDITAR PERFIL
 @login_required
 def edit_profile(request):
