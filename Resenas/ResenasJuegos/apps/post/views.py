@@ -24,6 +24,14 @@ class IndexView(TemplateView):
         context['posts_por_categoria'] = posts_por_categoria
         print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
         return context
+class AboutView(TemplateView):
+    template_name = 'pages/about.html'
+
+class TermsView(TemplateView):
+    template_name = "pages/terms.html"
+
+class PrivacyPolicyView(TemplateView):
+    template_name = 'pages/privacy.html'
 
 class PostDetailView(DetailView):
     model = Post
