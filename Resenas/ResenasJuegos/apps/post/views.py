@@ -31,8 +31,8 @@ class AboutView(TemplateView):
 class TermsView(TemplateView):
     template_name = "pages/terms.html"
 
-class PrivacyView(TemplateView):
-    template_name = "pages/privacy.html"
+class PrivacyPolicyView(TemplateView):
+    template_name = 'pages/privacy.html'
 
 class PostDetailView(DetailView):
     model = Post
