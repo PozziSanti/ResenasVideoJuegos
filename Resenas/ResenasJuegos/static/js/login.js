@@ -1,49 +1,67 @@
-const uname = document.querySelector('#uname');
-const pass = document.querySelector('#password');
-const btnContainer = document.querySelector('.btn-container');
-const btn = document.querySelector('#login-btn');
-const form = document.querySelector('form');
-const msg = document.querySelector('.msg');
-btn.disabled = true;
+document.addEventListener('DOMContentLoaded', function() {
+  // Elementos del DOM
+  const uname = document.getElementById('uname');
+  const pass = document.getElementById('password');
+  const btnContainer = document.querySelector('.btn-container');
+  const btn = document.getElementById('login-btn');
+  const form = document.querySelector('form');
+  const msg = document.querySelector('.msg');
+  const eye = document.querySelector('.password-toggle');
 
-function shiftButton() {
+  // Estados iniciales
+  btn.disabled = true;
+  const positions = ['shift-left', 'shift-top', 'shift-right', 'shift-bottom'];
+
+  // Función para mover el botón
+  function shiftButton() {
     showMsg();
-    const positions = ['shift-left', 'shift-top', 'shift-right', 'shift-bottom'];
-    const currentPosition = positions.find(dir => btn.classList.contains(dir));
-    const nextPosition = positions[(positions.indexOf(currentPosition) + 1) % positions.length];
-    btn.classList.remove(currentPosition);
-    btn.classList.add(nextPosition);
-}
+    const currentPosition = positions.find(pos => btn.classList.contains(pos));
+    let nextIndex = 0;
+    
+    if (currentPosition) {
+      nextIndex = (positions.indexOf(currentPosition) + 1) % positions.length;
+      btn.classList.remove(currentPosition);
+    }
+    
+    btn.classList.add(positions[nextIndex]);
+  }
 
-function showMsg() {
-    const isEmpty = uname.value === '' || pass.value === '';
+  // Función para mostrar mensajes
+  function showMsg() {
+    const isEmpty = uname.value.trim() === '' || pass.value.trim() === '';
     btn.classList.toggle('no-shift', !isEmpty);
 
     if (isEmpty) {
-        btn.disabled = true
-        msg.style.color = 'rgb(218 49 49)';
-        msg.innerText = 'Rellena todos los campos';
+      btn.disabled = true;
+      msg.style.color = 'rgb(218, 49, 49)';
+      msg.textContent = 'Rellena todos los campos';
     } else {
-        msg.innerText = 'Perfecto, puedes iniciar sesión';
-        msg.style.color = '#92ff92';
-        btn.disabled = false;
-        btn.classList.add('no-shift')
+      msg.textContent = 'Perfecto, puedes iniciar sesión';
+      msg.style.color = '#92ff92';
+      btn.disabled = false;
+      btn.classList.add('no-shift');
     }
-}
+  }
 
-btnContainer.addEventListener('mouseover', shiftButton);
-btn.addEventListener('mouseover', shiftButton);
-form.addEventListener('input', showMsg)
-btn.addEventListener('touchstart', shiftButton);
+  // Función de validación del formulario
+  function validarFormulario() {
+    if (uname.value.trim() === '' || pass.value.trim() === '') {
+      showMsg();
+      return false;
+    }
+    return true;
+  }
 
+  // Event Listeners
+  btnContainer.addEventListener('mouseover', shiftButton);
+  btn.addEventListener('mouseover', shiftButton);
+  form.addEventListener('input', showMsg);
+  btn.addEventListener('touchstart', shiftButton);
 
-const input = document.querySelector('#password');
-const eye = document.querySelector('.far');
-
-function toggle() {
-    eye.classList.toggle('fa-eye-slash');
-    eye.classList.toggle('fa-eye');
-    input.type = (input.type === 'password') ? 'text' : 'password';
-}
-
-eye.addEventListener('click', toggle); 
+  // Toggle para mostrar/ocultar contraseña
+  eye.addEventListener('click', function() {
+    this.classList.toggle('fa-eye-slash');
+    this.classList.toggle('fa-eye');
+    pass.type = pass.type === 'password' ? 'text' : 'password';
+  });
+});

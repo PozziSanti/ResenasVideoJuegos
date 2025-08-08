@@ -1,6 +1,16 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css');
 
+body {
+    background: 
+        linear-gradient(rgba(14, 0, 30, 0.8), rgba(0, 0, 0, 0.85)),
+        url('../img/fondo.jpg'); /* 👈 ruta relativa válida desde /static/css/ */
+    background-size:cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .main-container {
     min-height: 100vh;
     min-width: 450px;
@@ -10,21 +20,18 @@
 .centered-flex {
     display: flex;
     align-items: center;
-    justify-content: center;
     justify-self: center;
-    
 }
 
 .form-container {
-    width: 400px;
-    height: 480px;
+    width: 500px;
+    height: 580px;
     display: grid;
     position: relative;
-    
 }
 
 .icon {
-    position: absolute;
+    position: relative;
     width: 80px;
     height: 80px;
     border: 1px solid #0B071A;
@@ -35,6 +42,9 @@
     border-radius: 50%;
     background: #0e0e0e;
     justify-self: center;
+    display: grid;
+    padding-block: 20px;
+    margin-top: -70px;
     
 }
 
@@ -58,8 +68,10 @@
     transition: .3s;
     width: 30px;
     text-align: center;
-    visibility: visible;
+    visibility: visible; 
     color: #622bbf;
+    right: 10px;
+    bottom: 15px;
 }
 
 .fa {
@@ -68,14 +80,15 @@
 
 form {
     flex-direction: column;
-    padding: 25px 25px 10px;
-    height: 440px;
+    padding: 25px;
+    height: 550px;
     border-radius: 30px;
     background: rgba(19, 19, 19, 0.736);
     border: 1px solid #0B071A;
     position: absolute;
     width: 100%;
     bottom: 0;
+    
 }
 
 .title {
@@ -101,8 +114,8 @@ form {
 .field .fa {
     position: absolute;
     font-size: 14px;
-    right: 10px;
-    bottom: 10px;
+    right: 18px;
+    bottom: 15px;
 }
 
 input:-webkit-autofill {
@@ -150,7 +163,7 @@ a {
 }
 
 .btn-container {
-    padding: 20px;
+    padding: 40px;
     transition: .2s linear;
 }
 
@@ -164,11 +177,12 @@ a {
     border-radius: 15px;
     transition: .3s;
     margin: 25px 0;
+    position: relative;
 }
 
 #login-btn:hover {
     cursor: pointer;
-}
+} 
 
 .signup {
     color: rgb(255, 255, 255);
@@ -194,4 +208,3 @@ a {
 .no-shift {
     transform: translate(0%, 0%);
 }
-

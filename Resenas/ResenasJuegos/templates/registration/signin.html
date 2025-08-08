@@ -1,57 +1,64 @@
 {% extends 'layouts/base_layout.html' %}
-<!-- Iniciar sesion -->
 {% load static %}
+
+{% block title_layout %} | Login{% endblock title_layout %}
+
 {% block content_layout %}
+<div class="min-h-screen w-screen flex items-center justify-center bg-fixed bg-center bg-cover" 
+     style="background-image: url('{% static 'assets/login_register/fondo.png' %}')">
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel="stylesheet" href="{% static 'css/login.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
+  <div class="relative w-full max-w-2xl px-8">  
+    <!-- Icono de usuario -->
+    <div class="absolute w-28 h-28 border-2 border-accent-blue rounded-full bg-darker-morado
+                flex items-center justify-center text-5xl text-accent-blue z-10 mx-auto left-0 right-0 -top-12">  
+      <i class="fa fa-user"></i>
+    </div>
 
-<div class="main-container centered-flex">
-  <div class="form-container">
-    <div class="icon fa fa-user"></div>
-
-    <form method="post" class="centered-flex" onsubmit="return validarFormulario();">
+    <!-- Formulario -->
+    <form method="post" class="flex flex-col p-10 pt-20 rounded-3xl bg-darker-morado-transparent border-2 border-accent-blue shadow-md" onsubmit = "return validarFormulario();">
       {% csrf_token %}
 
-      <div class="title">Inicia Sesión</div>
-      <div class="msg"></div>
+      <div class="relative mt-2 mb-8 text-xl font-bold text-text-light text-center">Inicia Sesión</div>  
+      <div class="msg absolute top-32 left-0 right-0 mx-auto text-center text-status-hot"></div>
 
-      <div class="field">
-        <input type="text" placeholder="Username" id="uname" name="username" required>
-        <span class="fa fa-user"></span>
+      <!-- Campo Usuario -->
+      <div class="relative w-full mb-6">  
+        <input type="text" placeholder="Usuario" id="uname" name="username" required
+               class="block w-full text-lg text-text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-0 py-3 placeholder-text-medium">  
+        <span class="fa fa-user absolute text-base right-3 bottom-3 text-accent-blue"></span> 
       </div>
 
-      <div class="field">
-        <input type="password" placeholder="Password" id="password" name="password" required>
-        <span class="far fa-eye"></span>
+      <!-- Campo Contraseña -->
+      <div class="relative w-full mb-6">
+        <input type="password" placeholder="Contraseña" id="password" name="password" required
+               class="block w-full text-lg text-text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-0 py-3 placeholder-text-medium">
+        <span class="far fa-eye absolute bottom-3 right-0 cursor-pointer text-accent-blue password-toggle"></span>
       </div>
 
-      <div class="action centered-flex">
-        <label for="remember" class="centered-flex">
-          <input type="checkbox" id="remember" name="remember"> Recordarme
+      <!-- Opciones -->
+      <div class="flex justify-between w-full text-base mb-6">  
+        <label for="remember" class="flex items-center text-text-medium cursor-pointer">
+          <input type="checkbox" id="remember" name="remember" class="mr-2 cursor-pointer h-4 w-4">
+          Recordarme
         </label>
-        <a href="#">¿Olvidaste tu contraseña?</a>
+        <a href="#" class="text-text-medium hover:text-text-light">¿Olvidaste tu contraseña?</a>
       </div>
 
-      <div class="btn-container">
-        <input type="submit" id="login-btn" value="Login" class="login-btn">
+      <!-- Botón Login -->
+      <div class="py-6 btn-container">  
+        <input type="submit" id="login-btn" value="Login"
+               class="w-full px-8 py-3 bg-accent-blue text-text-light font-semibold text-lg rounded-xl
+                      transition duration-300 hover:bg-accent-blue-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">  
       </div>
 
-      <div class="signup"> ¿No tenes cuenta? <a href="{% url 'signup' %}?next={{ request.path }}">Registrate</a></div>
+      <!-- Enlace Registro -->
+      <div class="text-text-light text-center mt-4 text-base"> 
+        ¿No tenes cuenta? 
+        <a href="{% url 'signup' %}?next={{ request.path }}" class="text-text-medium hover:text-text-light">Registrate</a>
+      </div>
     </form>
   </div>
 </div>
 
 <script src="{% static 'js/login.js' %}"></script>
-</body>
-</html>
-
-    
 {% endblock content_layout %}

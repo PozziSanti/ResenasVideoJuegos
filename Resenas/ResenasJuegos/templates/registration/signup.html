@@ -1,6 +1,68 @@
 <!-- Registrar usuario -->
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Registrarse</button>
-</form>
+{% extends 'layouts/base_layout.html' %}
+<!-- Iniciar sesion -->
+{% load static %}
+{% block content_layout %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static 'css/register.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="main-container centered-flex">
+  <div class="form-container ">
+
+    <form method="post" class="centered-flex" onsubmit="return validarFormulario();">
+      {% csrf_token %}
+      <div class="icon fa fa-user "></div>
+     
+      <div class="title">Registrate acá</div>
+      <div class="msg"></div>
+
+      <div class="field">
+        <input type="text" placeholder="Nombre de Usuario" id="uname" name="username" required>
+        <span class="fa fa-user"></span>
+      </div>
+
+      <div class="field">
+        <input type="password" placeholder="Contraseña" id="password1" name="password1" required>
+        <span class="far fa-eye"></span>
+      </div>
+
+      <div class="field">
+        <input type="password" placeholder="Repetir Contraseña" id="password2" name="password2" required>
+        <span class="far fa-eye"></span>
+      </div>
+
+      <div class="btn-container ">
+        <input type="submit" id="login-btn" value="Registrarse" class="login-btn">
+      </div>
+
+      <div class="signin"> ¿Ya tenes cuenta? <a href="{% url 'signin' %}?next={{ request.path }}">Inicia Sesión</a></div>
+    </form>
+  </div>
+</div>
+
+<script src="{% static 'js/register.js' %}"></script>
+</body>
+</html>
+
+{% if form.errors %}
+  <ul class="form-errors">
+    {% for field in form %}
+      {% for error in field.errors %}
+        <li>{{ field.label }}: {{ error }}</li>
+      {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% endblock content_layout %}
