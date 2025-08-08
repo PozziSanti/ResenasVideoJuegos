@@ -28,6 +28,12 @@ class IndexView(TemplateView):
 class AboutView(TemplateView):
     template_name = 'pages/about.html'
 
+<<<<<<< HEAD
+=======
+class TermsView(TemplateView):
+    template_name = "pages/terms.html"
+
+>>>>>>> 8c85955895b87662a000d50fa1fd91d4093cbcca
 class PostDetailView(DetailView):
     model = Post
     template_name = 'pages/post_detail.html'
