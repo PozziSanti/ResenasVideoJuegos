@@ -25,7 +25,7 @@
             --color-primary-morado: #130C2A;
             --color-darker-morado: #0B071A;
             --color-light-morado: #241D44;
-            --color-darker-morado-transparent: rgba(11, 7, 26, 0.6);
+            --color-darker-morado-transparent: rgba(11, 7, 26, 0.8);
 
             --color-text-light: #f0f1f4;
             --color-text-medium: #A7A1B8;
@@ -70,9 +70,7 @@
     <script src="{% static 'js/sidebar_logic.js' %}"></script>
     
     <!-- Scripts adicionales desde layouts hijos -->
-    {% block scripts %}
-    
-    {% endblock scripts %}
+    {% block scripts %}{% endblock scripts %}
 
 </body>
 {% load django_browser_reload %}
