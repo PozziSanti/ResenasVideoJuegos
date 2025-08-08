@@ -1,8 +1,12 @@
-<<<<<<< HEAD
 from django.views.generic import ListView
 from apps.post.models import Post 
 from django.db.models import Avg, Value
 from django.db.models.functions import Coalesce
+from django.views.generic import TemplateView, DetailView
+from django.shortcuts import redirect
+from apps.post.models import Category, Post
+from apps.comment.models import Comment
+from apps.comment.forms import CommentForm
 
 
 # Create your views here.
@@ -79,12 +83,7 @@ class PostStarFilter(ListView):
             except ValueError:
                 pass      # si el valor no es un número válido, no se aplica el filtro
         return queryset
-=======
-from django.views.generic import TemplateView, DetailView
-from django.shortcuts import redirect
-from apps.post.models import Category, Post
-from apps.comment.models import Comment
-from apps.comment.forms import CommentForm
+    
 
 
 class IndexView(TemplateView):
@@ -149,4 +148,3 @@ class PostDetailView(DetailView):
             comment.post = self.object
             comment.save()
         return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
->>>>>>> 6a9c813d0b41b2a973109fec29edd18ac976fa90
