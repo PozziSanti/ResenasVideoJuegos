@@ -8,7 +8,36 @@ from apps.comment.forms import CommentForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
-# Create your views here.
+
+class IndexView(TemplateView):
+    template_name = 'pages/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+    
+        print("🟢 VERIFICANDO DATOS EN VISTA:") #TODO:SACAR
+        categorias = Category.objects.all()
+        print("Categorías encontradas:", list(categorias.values('id', 'title'))) #TODO:SACAR
+    
+        posts_por_categoria = {}
+        for categoria in categorias:
+            posts = Post.objects.filter(category=categoria).prefetch_related('images')
+            print(f"Posts en {categoria.title}:", list(posts.values('id', 'title'))) #TODO:SACAR
+            posts_por_categoria[categoria.title] = posts
+    
+        context['posts_por_categoria'] = posts_por_categoria
+        print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
+        return context
+class AboutView(TemplateView):
+    template_name = 'pages/about.html'
+
+class TermsView(TemplateView):
+    template_name = "pages/terms.html"
+
+class PrivacyPolicyView(TemplateView):
+    template_name = 'pages/privacy.html'
+
+    
 
 # Filtros post por titulo
 class PostTitleFilter(ListView):
@@ -83,34 +112,6 @@ class PostStarFilter(ListView):
                 pass      # si el valor no es un número válido, no se aplica el filtro
         return queryset
 
-
-class IndexView(TemplateView):
-    template_name = 'pages/index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-    
-        print("🟢 VERIFICANDO DATOS EN VISTA:") #TODO:SACAR
-        categorias = Category.objects.all()
-        print("Categorías encontradas:", list(categorias.values('id', 'title'))) #TODO:SACAR
-    
-        posts_por_categoria = {}
-        for categoria in categorias:
-            posts = Post.objects.filter(category=categoria).prefetch_related('images')
-            print(f"Posts en {categoria.title}:", list(posts.values('id', 'title'))) #TODO:SACAR
-            posts_por_categoria[categoria.title] = posts
-    
-        context['posts_por_categoria'] = posts_por_categoria
-        print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
-        return context
-class AboutView(TemplateView):
-    template_name = 'pages/about.html'
-
-class TermsView(TemplateView):
-    template_name = "pages/terms.html"
-
-class PrivacyPolicyView(TemplateView):
-    template_name = 'pages/privacy.html'
 
 class PostDetailView(DetailView):
     model = Post
