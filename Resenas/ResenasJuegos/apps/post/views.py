@@ -1,4 +1,5 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from apps.post.models import Post 
 from django.db.models import Avg, Value
 from django.db.models.functions import Coalesce
@@ -7,6 +8,7 @@ from django.shortcuts import redirect
 from apps.post.models import Category, Post
 from apps.comment.models import Comment
 from apps.comment.forms import CommentForm
+from django.urls import reverse_lazy
 
 
 # Create your views here.
@@ -38,9 +40,15 @@ class PostCategoryFilter (ListView):
         category = self.kwargs.get('category') # Obtiene la categoría de los parámetros de la URL
 
         if category:
-            queryset = queryset.filter(title__icontains=category) 
+            queryset = queryset.filter(category__title__iexact=category) 
         
         return queryset
+    
+    # TODO: sacar, ya que es solo para probar el filtro de categoría
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['selected_category'] = self.kwargs.get('category', '')
+        return context
 
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
 # Filtros post por fecha de publicación
@@ -148,3 +156,68 @@ class PostDetailView(DetailView):
             comment.post = self.object
             comment.save()
         return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
+
+
+
+# CRUD PARA LOS POSTS
+
+# Crear un nuevo post
+class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Post
+    fields = ['titulo', 'contenido', 'categoria', 'imagen']
+    template_name = 'post_create.html'
+    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.autor = self.request.user
+        post.save()
+        return super().form_valid(form)
+    
+    def test_func(self):
+        user = self.request.user
+        return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
+
+
+
+# Actualizar un post existente
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+    fields = ['titulo', 'contenido', 'categoria', 'imagen']
+    template_name = 'post_update.html'
+    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
+
+    def form_valid(self, form):
+        post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
+        post.save()
+        return super().form_valid(form)
+    
+    def test_func(self):
+        user = self.request.user
+        return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
+
+
+# Listar todos los posts
+class PostListView(ListView):
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        return Post.objects.all().prefetch_related('images').annotate(avg_score=Coalesce(Avg('comment__score'), Value(0))).order_by('-created_at')  
+# get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
+
+
+# Eliminar un post existente
+class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    model = Post
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+    template_name = 'post_delete.html'
+    success_url = reverse_lazy('post_list')  # Redirige a la lista de posts después de eliminar uno
+    
+    def test_func(self):
+        user = self.request.user
+        return user.is_staff or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
