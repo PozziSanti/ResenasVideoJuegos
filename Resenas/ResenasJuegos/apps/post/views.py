@@ -1,12 +1,12 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView
+from django.views.generic import TemplateView, ListView, DetailView, ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from apps.post.models import Post, Category
 from django.db.models import Avg, Value
 from django.db.models.functions import Coalesce
-from django.shortcuts import redirect
-from apps.post.models import Category, Post
-#from apps.comment.models import Comment
 from apps.comment.forms import CommentForm
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
+# from apps.comment.models import Comment
 
 
 class IndexView(TemplateView):
@@ -28,6 +28,7 @@ class IndexView(TemplateView):
         context['posts_por_categoria'] = posts_por_categoria
         print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
         return context
+
 class AboutView(TemplateView):
     template_name = 'pages/about.html'
 
@@ -37,7 +38,6 @@ class TermsView(TemplateView):
 class PrivacyPolicyView(TemplateView):
     template_name = 'pages/privacy.html'
 
-    
 
 # Filtros post por titulo
 class PostTitleFilter(ListView):
@@ -54,7 +54,6 @@ class PostTitleFilter(ListView):
         
         return queryset
 
-
 # Filtros post por categoría
 class PostCategoryFilter (ListView):
     model = Post
@@ -68,9 +67,10 @@ class PostCategoryFilter (ListView):
             queryset = queryset.filter(title__icontains=category) 
         return queryset
     
+    # TODO: sacar, ya que es solo para probar el filtro de categoría
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['category_name'] = self.kwargs.get('category')
+        context['selected_category'] = self.kwargs.get('category', '')
         return context
 
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
@@ -96,6 +96,7 @@ class PostDateFilter(ListView):
 # if fecha_inicio and fecha_fin:
 #     queryset = queryset.filter(created_at__date__range=[fecha_inicio, fecha_fin])
 
+
 # filtros post por estrellas
 class PostStarFilter(ListView):
     model = Post
@@ -114,7 +115,6 @@ class PostStarFilter(ListView):
             except ValueError:
                 pass      # si el valor no es un número válido, no se aplica el filtro
         return queryset
-
 
 class PostDetailView(DetailView):
     model = Post
@@ -150,8 +150,6 @@ class PostDetailView(DetailView):
             comment.save()
         return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
 
-
-
 # CRUD PARA LOS POSTS
 
 # Crear un nuevo post
@@ -170,8 +168,6 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         user = self.request.user
         return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
-
-
 
 # Actualizar un post existente
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -197,7 +193,6 @@ class PostListView(ListView):
     model = Post
     template_name = 'post_list.html'
     context_object_name = 'posts'
-    paginate_by = 10  # Número de posts por página
 
     def get_queryset(self):
         return Post.objects.all().prefetch_related('images').annotate(avg_score=Coalesce(Avg('comment__score'), Value(0))).order_by('-created_at')  
