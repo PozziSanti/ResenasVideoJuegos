@@ -64,11 +64,14 @@ class PostCategoryFilter (ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         category = self.kwargs.get('category') # Obtiene la categoría de los parámetros de la URL
-
         if category:
             queryset = queryset.filter(title__icontains=category) 
-        
         return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category_name'] = self.kwargs.get('category')
+        return context
 
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
 # Filtros post por fecha de publicación
