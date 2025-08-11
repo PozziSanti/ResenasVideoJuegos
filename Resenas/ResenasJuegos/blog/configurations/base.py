@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -33,15 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
-    'apps.user_roles',  # Aplicación de gestión de roles de usuario
-=======
     'apps.post',
     'django_browser_reload',
     'apps.user',
     'apps.comment',
     'apps.favorite',
->>>>>>> 8493330abcd4d780c691034f620da55c8759d042
 ]
 
 MIDDLEWARE = [
@@ -52,7 +51,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'apps.user_roles.middleware.InvitadoMiddleware',
 ]
 
 ROOT_URLCONF = 'blog.urls'
@@ -92,6 +90,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'user.UserProfile'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

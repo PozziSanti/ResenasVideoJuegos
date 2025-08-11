@@ -22,7 +22,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('apps.user_roles.urls')),  # Incluimos rutas de usuarios
     path('__reload__/', include('django_browser_reload.urls')),
     path('', IndexView.as_view(), name='home'),
     path('', include('apps.user.urls')),

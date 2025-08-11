@@ -5,22 +5,26 @@ from django.views.generic import CreateView, TemplateView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from .forms import ProfileForm
+from .forms import RegisterForm
 from .models import UserProfile
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 
 
+User = get_user_model()
+
+def inicio(request):
+    rol = request.session.get('rol', 'invitado')
+    return HttpResponse(f"Rol actual: {rol}")
 class UserSignupView(CreateView):
     template_name = 'registration/signup.html'
-    form_class = UserCreationForm
+    form_class = RegisterForm
 
     def form_valid(self, form):
         user = form.save()
-        UserProfile.objects.create(user=user)  # crea perfil en blanco automáticamente
-
         next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
         signin_url = f"{reverse('signin')}?next={next_url}"
         return redirect(signin_url)    # redirige al formulario para que lo complete
-        
         
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
@@ -39,11 +43,11 @@ def logout_view(request):
 def edit_profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        form = RegisterForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             return redirect('dashboard')  # lugar de redirección después de guardar el perfil
     else:
-        form = ProfileForm(instance=profile)
+        form = RegisterForm(instance=profile)
 
     return render(request, 'user/user_profile.html', {'form': form})
