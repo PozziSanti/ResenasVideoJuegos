@@ -19,7 +19,6 @@ class Category(models.Model):
 # MODELO PLATAFORMAS (PS5, XBOX, PC, etc.)
 class Platform(models.Model):
     title = models.CharField(max_length=50, unique=True)
-
     class Meta:
         verbose_name = "Plataforma"
         verbose_name_plural = "Plataformas"
