@@ -1,4 +1,5 @@
 from django.urls import path
+<<<<<<< HEAD
 from apps.post.views import (PostCategoryFilter, PostTitleFilter, PostDateFilter, PostStarFilter, 
                              PostListView, 
                              PostUpdateView,
@@ -6,6 +7,10 @@ from apps.post.views import (PostCategoryFilter, PostTitleFilter, PostDateFilter
                              PostCreateView, 
                              PostDetailView)
 from apps.post.views import IndexView, AboutView, TermsView, PrivacyPolicyView
+=======
+from apps.post.views import (PostCategoryFilter, PostTitleFilter, PostDateFilter, PostStarFilter,)
+from apps.post.views import IndexView, AboutView, TermsView, PrivacyPolicyView, PostDetailView
+>>>>>>> 0fa8ed5d59d5707f376cd80f18cf4097c987c8ca
 
 urlpatterns = [
     path('post/', PostListView.as_view(), name='post_list'),
