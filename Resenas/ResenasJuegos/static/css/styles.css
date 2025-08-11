@@ -111,12 +111,12 @@
 }
 
 .shift-top {
-  transform: translateY(-150%);
+  transform: translateY(-100%);
   transition: transform 0.3s ease;
 }
 
 .shift-bottom {
-  transform: translateY(150%);
+  transform: translateY(40%);
   transition: transform 0.3s ease;
 }
 
