@@ -17,21 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from apps.post.views import IndexView, AboutView
+from apps.post.views import IndexView
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('__reload__/', include('django_browser_reload.urls')),
-<<<<<<< HEAD
     path('', IndexView.as_view(), name='home'),    # Página principal 
     path('', include('apps.user.urls')),    # Rutas de la app de usuario
     path('', include('apps.post.urls')),    # Rutas de la app de post
-=======
-    path('', include('apps.user.urls')),
-    path('', include('apps.post.urls')),
-    path('', IndexView.as_view(), name='home'),  
->>>>>>> 0fa8ed5d59d5707f376cd80f18cf4097c987c8ca
 ]
 
 # Sirve archivos estáticos y media en modo DEBUG

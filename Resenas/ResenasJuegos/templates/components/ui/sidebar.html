@@ -9,13 +9,13 @@
         <nav class="flex flex-col space-y-2 w-full p-2">
             {% include 'partials/_sidebar_link.html' with url_name='home' icon_template_path='partials/sidebar_icons/home.html' text_desktop='Inicio' text_mobile='Inicio' %}
 
-            {% include 'partials/_sidebar_link.html' with url_name='home' icon_template_path='partials/sidebar_icons/stars.html' text_desktop='Nuevos' text_mobile='Nuevos' %}
+            {% include 'partials/_sidebar_link.html' with url_name='post_by_category' url_args='Nuevos' icon_template_path='partials/sidebar_icons/stars.html' text_desktop='Nuevos' text_mobile='Nuevos' %}
 
             <hr class="border-t border-text-medium my-4">
             <div class="space-y-2">
                 {% include 'partials/_sidebar_link.html' with url_name='post_by_category' url_args='Multijugador' icon_template_path='partials/sidebar_icons/multiplayer.html' text_desktop='Multijugador' text_mobile='Multijugador' %}
 
-                {% include 'partials/_sidebar_link.html' with url_name='post_by_category' url_args='Acción' icon_template_path='partials/sidebar_icons/action.html' text_desktop='Acción' text_mobile='Acción' %}
+                {% include 'partials/_sidebar_link.html' with url_name='post_by_category' url_args='Accion' icon_template_path='partials/sidebar_icons/action.html' text_desktop='Acción' text_mobile='Acción' %}
 
                 {% include 'partials/_sidebar_link.html' with url_name='post_by_category' url_args='Aventuras' icon_template_path='partials/sidebar_icons/compass.html' text_desktop='Aventuras' text_mobile='Aventuras' %}
 
