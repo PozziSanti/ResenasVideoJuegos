@@ -132,43 +132,43 @@ class PostTitleFilter(ListView):
         return queryset
 
 # Filtros post por categoría
-class PostCategoryFilter (ListView):
-    model = Post
-    template_name = 'post/post_list.html'
-    context_object_name = 'posts'
+# class PostCategoryFilter (ListView):
+#     model = Post
+#     template_name = 'post/post_list.html'
+#     context_object_name = 'posts'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        category = self.kwargs.get('category') # Obtiene la categoría de los parámetros de la URL
-        if category:
-            queryset = queryset.filter(category__title__iexact=category) 
+#     def get_queryset(self):
+#         queryset = super().get_queryset()
+#         category = self.kwargs.get('category') # Obtiene la categoría de los parámetros de la URL
+#         if category:
+#             queryset = queryset.filter(category__title__iexact=category) 
         
-        return queryset
+#         return queryset
 
 
     
-    # TODO: sacar, ya que es solo para probar el filtro de categoría
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['selected_category'] = self.kwargs.get('category', '')
-        return context
+#     # TODO: sacar, ya que es solo para probar el filtro de categoría
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['selected_category'] = self.kwargs.get('category', '')
+#         return context
 
 
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
 # Filtros post por fecha de publicación
-class PostDateFilter(ListView):
-    model = Post
-    template_name = 'post/post_list.html'
-    context_object_name = 'posts'
+# class PostDateFilter(ListView):
+#     model = Post
+#     template_name = 'post/post_list.html'
+#     context_object_name = 'posts'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        date = self.request.GET.get('date')
+#     def get_queryset(self):
+#         queryset = super().get_queryset()
+#         date = self.request.GET.get('date')
 
-        if date:
-            queryset = queryset.filter(created_at__date=date) # busca el post por fecha de publicación
+#         if date:
+#             queryset = queryset.filter(created_at__date=date) # busca el post por fecha de publicación
         
-        return queryset
+#         return queryset
 
 # TODO: se lo puede poner para filtrar por fecha de inicio y fin 
 # fecha_inicio = self.request.GET.get('desde')
@@ -178,23 +178,23 @@ class PostDateFilter(ListView):
 #     queryset = queryset.filter(created_at__date__range=[fecha_inicio, fecha_fin])
 
 # filtros post por estrellas
-class PostStarFilter(ListView):
-    model = Post
-    template_name = 'post/post_list.html' 
-    context_object_name = 'posts'
+# class PostStarFilter(ListView):
+#     model = Post
+#     template_name = 'post/post_list.html' 
+#     context_object_name = 'posts'
 
-    def get_queryset(self):
-        queryset = super().get_queryset().annotate(avg_score=Coalesce(Avg('comment__score'), Value(0)))  # Calcula el promedio de las calificaciones de los comentarios
+#     def get_queryset(self):
+#         queryset = super().get_queryset().annotate(avg_score=Coalesce(Avg('comment__score'), Value(0)))  # Calcula el promedio de las calificaciones de los comentarios
         
-        score = self.request.GET.get('score') # valor que viene del formulario de búsqueda
+#         score = self.request.GET.get('score') # valor que viene del formulario de búsqueda
 
-        if score:
-            try:
-                score = float(score)
-                queryset = queryset.filter(avg_score__gte=score) # filtra comentarios que tengan un valor de estrellas mayor o igual al ingresado
-            except ValueError:
-                pass      # si el valor no es un número válido, no se aplica el filtro
-        return queryset
+#         if score:
+#             try:
+#                 score = float(score)
+#                 queryset = queryset.filter(avg_score__gte=score) # filtra comentarios que tengan un valor de estrellas mayor o igual al ingresado
+#             except ValueError:
+#                 pass      # si el valor no es un número válido, no se aplica el filtro
+#         return queryset
 
 
 class PostDetailView(DetailView):
@@ -284,6 +284,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
         post.save()
+
         return super().form_valid(form)    
     
     def test_func(self):

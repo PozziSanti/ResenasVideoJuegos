@@ -21,4 +21,4 @@ class UserProfile(AbstractUser):
     rol = models.CharField(max_length=10, choices=ROLES, default='guest')
 
     def __str__(self):
-        return f'Perfil de {self.user.username} - {self.rol}'
+        return f'Perfil de {self.username} - {self.rol}'
