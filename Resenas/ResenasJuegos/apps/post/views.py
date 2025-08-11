@@ -226,3 +226,4 @@ class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     def test_func(self):
         user = self.request.user
         return user.is_staff or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
+
