@@ -30,14 +30,18 @@ class IndexView(TemplateView):
         print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
         return context
 
+
 class AboutView(TemplateView):
     template_name = 'pages/about.html'
+
 
 class TermsView(TemplateView):
     template_name = "pages/terms.html"
 
+
 class PrivacyPolicyView(TemplateView):
     template_name = 'pages/privacy.html'
+
 
 # Filtros post por titulo
 class PostTitleFilter(ListView):
@@ -64,7 +68,6 @@ class PostCategoryFilter (ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         category = self.kwargs.get('category') # Obtiene la categoría de los parámetros de la URL
-
         if category:
             queryset = queryset.filter(title__icontains=category) 
         
@@ -138,8 +141,10 @@ class PostCategoryFilter (ListView):
         queryset = super().get_queryset()
         category = self.kwargs.get('category') # Obtiene la categoría de los parámetros de la URL
         if category:
-            queryset = queryset.filter(title__icontains=category) 
+            queryset = queryset.filter(category__title__iexact=category) 
+        
         return queryset
+
     
     # TODO: sacar, ya que es solo para probar el filtro de categoría
     def get_context_data(self, **kwargs):
@@ -147,6 +152,7 @@ class PostCategoryFilter (ListView):
         context['selected_category'] = self.kwargs.get('category', '')
         return context
 
+
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
 # Filtros post por fecha de publicación
 class PostDateFilter(ListView):
@@ -189,6 +195,7 @@ class PostStarFilter(ListView):
             except ValueError:
                 pass      # si el valor no es un número válido, no se aplica el filtro
         return queryset
+
 
 class PostDetailView(DetailView):
     model = Post
@@ -224,6 +231,7 @@ class PostDetailView(DetailView):
             comment.save()
         return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
 
+
 # CRUD PARA LOS POSTS
 
 # Crear un nuevo post
@@ -237,6 +245,8 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         kwargs['request'] = self.request
         return kwargs
 
+
+# TODO: agregar funcion 403 para que aparezca imagen del michi
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
@@ -244,6 +254,7 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         user = self.request.user
         return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
+
 
 # Actualizar un post existente
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -263,6 +274,21 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         form.instance.author = self.request.user      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
         post.save()
         return redirect (self.success_url)
+
+
+# Actualizar un post existente
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+    fields = ['titulo', 'contenido', 'categoria', 'imagen']
+    template_name = 'post_update.html'
+    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
+
+    def form_valid(self, form):
+        post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
+        post.save()
+        return super().form_valid(form)    
     
     def test_func(self):
         user = self.request.user
@@ -284,8 +310,7 @@ class PostListView(ListView):
                 )
             )
         .order_by('-created_at')
-        )  
-# get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
+        )  # get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
 
 
 # Eliminar un post existente
@@ -299,3 +324,4 @@ class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     def test_func(self):
         user = self.request.user
         return user.is_staff or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
+
