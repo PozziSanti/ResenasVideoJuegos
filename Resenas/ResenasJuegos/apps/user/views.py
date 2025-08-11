@@ -36,6 +36,7 @@ def logout_view(request):
 
 
 #PERMITE EDITAR PERFIL
+#TODO=cambiar redireccion de dashboard
 @login_required
 def edit_profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)

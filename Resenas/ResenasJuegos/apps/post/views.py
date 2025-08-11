@@ -1,17 +1,46 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from apps.post.models import Post 
-from django.db.models import Avg, Value
+from apps.post.models import Post, Category, PostImage
+from django.db.models import Avg, Value, FloatField
 from django.db.models.functions import Coalesce
-from django.views.generic import TemplateView, DetailView
-from django.shortcuts import redirect
-from apps.post.models import Category, Post
-from apps.comment.models import Comment
 from apps.comment.forms import CommentForm
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from .forms import PostForm
+# from apps.comment.models import Comment
+
+class IndexView(TemplateView):
+    template_name = 'pages/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+    
+        print("🟢 VERIFICANDO DATOS EN VISTA:") #TODO:SACAR
+        categorias = Category.objects.all()
+        print("Categorías encontradas:", list(categorias.values('id', 'title'))) #TODO:SACAR
+    
+        posts_por_categoria = {}
+        for categoria in categorias:
+            posts = Post.objects.filter(category=categoria).prefetch_related('images')
+            print(f"Posts en {categoria.title}:", list(posts.values('id', 'title'))) #TODO:SACAR
+            posts_por_categoria[categoria.title] = posts
+    
+        context['posts_por_categoria'] = posts_por_categoria
+        print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
+        return context
 
 
-# Create your views here.
+class AboutView(TemplateView):
+    template_name = 'pages/about.html'
+
+
+class TermsView(TemplateView):
+    template_name = "pages/terms.html"
+
+
+class PrivacyPolicyView(TemplateView):
+    template_name = 'pages/privacy.html'
+
 
 # Filtros post por titulo
 class PostTitleFilter(ListView):
@@ -38,7 +67,6 @@ class PostCategoryFilter (ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         category = self.kwargs.get('category') # Obtiene la categoría de los parámetros de la URL
-
         if category:
             queryset = queryset.filter(category__title__iexact=category) 
         
@@ -49,6 +77,7 @@ class PostCategoryFilter (ListView):
         context = super().get_context_data(**kwargs)
         context['selected_category'] = self.kwargs.get('category', '')
         return context
+
 
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
 # Filtros post por fecha de publicación
@@ -73,7 +102,7 @@ class PostDateFilter(ListView):
 # if fecha_inicio and fecha_fin:
 #     queryset = queryset.filter(created_at__date__range=[fecha_inicio, fecha_fin])
 
-# filtros por post por estrellas
+# filtros post por estrellas
 class PostStarFilter(ListView):
     model = Post
     template_name = 'post/post_list.html' 
@@ -91,37 +120,7 @@ class PostStarFilter(ListView):
             except ValueError:
                 pass      # si el valor no es un número válido, no se aplica el filtro
         return queryset
-    
 
-
-class IndexView(TemplateView):
-    template_name = 'pages/index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-    
-        print("🟢 VERIFICANDO DATOS EN VISTA:") #TODO:SACAR
-        categorias = Category.objects.all()
-        print("Categorías encontradas:", list(categorias.values('id', 'title'))) #TODO:SACAR
-    
-        posts_por_categoria = {}
-        for categoria in categorias:
-            posts = Post.objects.filter(category=categoria).prefetch_related('images')
-            print(f"Posts en {categoria.title}:", list(posts.values('id', 'title'))) #TODO:SACAR
-            posts_por_categoria[categoria.title] = posts
-    
-        context['posts_por_categoria'] = posts_por_categoria
-        print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
-        return context
-
-class AboutView(TemplateView):
-    template_name = 'pages/about.html'
-
-class TermsView(TemplateView):
-    template_name = "pages/terms.html"
-
-class PrivacyPolicyView(TemplateView):
-    template_name = 'pages/privacy.html'
 
 class PostDetailView(DetailView):
     model = Post
@@ -158,26 +157,25 @@ class PostDetailView(DetailView):
         return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
 
 
-
 # CRUD PARA LOS POSTS
 
 # Crear un nuevo post
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = Post
-    fields = ['titulo', 'contenido', 'categoria', 'imagen']
-    template_name = 'post_create.html'
-    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
-
+    form_class = PostForm
+    template_name = 'post/post_create.html'
+    success_url = reverse_lazy('home')    # Redirige a la lista de posts después de crear uno
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+# TODO: agregar funcion 403 para que aparezca imagen del michi
     def form_valid(self, form):
-        post = form.save(commit=False)
-        post.autor = self.request.user
-        post.save()
+        form.instance.author = self.request.user
         return super().form_valid(form)
     
     def test_func(self):
         user = self.request.user
         return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
-
 
 
 # Actualizar un post existente
@@ -192,7 +190,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
         post.save()
-        return super().form_valid(form)
+        return super().form_valid(form)    
     
     def test_func(self):
         user = self.request.user
@@ -206,8 +204,15 @@ class PostListView(ListView):
     context_object_name = 'posts'
 
     def get_queryset(self):
-        return Post.objects.all().prefetch_related('images').annotate(avg_score=Coalesce(Avg('comment__score'), Value(0))).order_by('-created_at')  
-# get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
+        return (Post.objects.all()
+        .prefetch_related('images')
+        .annotate(avg_score=Coalesce
+                (Avg('comment__score'),
+                 Value(0.0, output_field=FloatField())
+                )
+            )
+        .order_by('-created_at')
+        )  # get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
 
 
 # Eliminar un post existente
@@ -221,3 +226,4 @@ class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     def test_func(self):
         user = self.request.user
         return user.is_staff or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
+
