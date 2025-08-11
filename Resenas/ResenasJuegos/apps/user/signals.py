@@ -8,9 +8,10 @@ from apps.post.models import Post
 from apps.comment.models import Comment
 from apps.favorite.models import Favorite
 
-# 1️⃣ Crear grupos y permisos después de migraciones
 @receiver(post_migrate)
 def crear_grupos_y_permisos(sender, **kwargs):
+    if sender.name != 'apps.user':
+        return
     try:
         # Obtener ContentTypes
         post_ct = ContentType.objects.get_for_model(Post)
@@ -42,22 +43,3 @@ def crear_grupos_y_permisos(sender, **kwargs):
 
     except Exception as e:
         print(f"⚠️ Error al crear grupos y permisos: {e}")
-
-
-# 2️⃣ Asignar grupo automáticamente según el rol (al crear o modificar usuario)
-@receiver(post_save, sender=UserProfile)
-def asignar_grupo_usuario(sender, instance, created, **kwargs):
-    try:
-        # Siempre limpiar y reasignar para reflejar cambios de rol
-        instance.groups.clear()
-
-        # Buscar el grupo según el rol
-        grupo = Group.objects.filter(name=instance.rol).first()
-        if grupo:
-            instance.groups.add(grupo)
-            print(f"✅ Usuario '{instance.username}' asignado al grupo '{grupo.name}'.")
-        else:
-            print(f"⚠️ No existe un grupo para el rol '{instance.rol}'.")
-
-    except Exception as e:
-        print(f"⚠️ Error al asignar grupo al usuario: {e}")

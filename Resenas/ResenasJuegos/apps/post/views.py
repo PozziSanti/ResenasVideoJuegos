@@ -254,7 +254,9 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     
     def test_func(self):
         user = self.request.user
-        return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
+        return user.has_perm('post.add_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
+                            #modelo+'permiso(add, change, delete, view)'
+
 
 
 # Actualizar un post existente
