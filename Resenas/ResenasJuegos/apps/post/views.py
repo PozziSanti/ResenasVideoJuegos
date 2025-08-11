@@ -1,11 +1,12 @@
 from django.views.generic import TemplateView, ListView, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from apps.post.models import Post, Category
+from apps.post.models import Post, Category, PostImage
 from django.db.models import Avg, Value
 from django.db.models.functions import Coalesce
 from apps.comment.forms import CommentForm
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from .forms import PostForm
 # from apps.comment.models import Comment
 
 
@@ -37,6 +38,79 @@ class TermsView(TemplateView):
 
 class PrivacyPolicyView(TemplateView):
     template_name = 'pages/privacy.html'
+
+# Filtros post por titulo
+class PostTitleFilter(ListView):
+    model = Post
+    template_name = 'post/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q')
+
+        if q:
+            queryset = queryset.filter(title__icontains=q) # busca en el título de los posts
+        
+        return queryset
+
+
+# Filtros post por categoría
+class PostCategoryFilter (ListView):
+    model = Post
+    template_name = 'post/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category = self.kwargs.get('category') # Obtiene la categoría de los parámetros de la URL
+
+        if category:
+            queryset = queryset.filter(title__icontains=category) 
+        
+        return queryset
+
+# TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
+# Filtros post por fecha de publicación
+class PostDateFilter(ListView):
+    model = Post
+    template_name = 'post/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        date = self.request.GET.get('date')
+
+        if date:
+            queryset = queryset.filter(created_at__date=date) # busca el post por fecha de publicación
+        
+        return queryset
+
+# TODO: se lo puede poner para filtrar por fecha de inicio y fin 
+# fecha_inicio = self.request.GET.get('desde')
+# fecha_fin = self.request.GET.get('hasta')
+
+# if fecha_inicio and fecha_fin:
+#     queryset = queryset.filter(created_at__date__range=[fecha_inicio, fecha_fin])
+
+# filtros post por estrellas
+class PostStarFilter(ListView):
+    model = Post
+    template_name = 'post/post_list.html' 
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        queryset = super().get_queryset().annotate(avg_score=Coalesce(Avg('comment__score'), Value(0)))  # Calcula el promedio de las calificaciones de los comentarios
+        
+        score = self.request.GET.get('score') # valor que viene del formulario de búsqueda
+
+        if score:
+            try:
+                score = float(score)
+                queryset = queryset.filter(avg_score__gte=score) # filtra comentarios que tengan un valor de estrellas mayor o igual al ingresado
+            except ValueError:
+                pass      # si el valor no es un número válido, no se aplica el filtro
+        return queryset
 
 
 # Filtros post por titulo
@@ -154,15 +228,17 @@ class PostDetailView(DetailView):
 
 # Crear un nuevo post
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = Post
-    fields = ['titulo', 'contenido', 'categoria', 'imagen']
-    template_name = 'post_create.html'
+    form_class = PostForm
+    template_name = 'post/post_create.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     def form_valid(self, form):
-        post = form.save(commit=False)
-        post.autor = self.request.user
-        post.save()
+        form.instance.author = self.request.user
         return super().form_valid(form)
     
     def test_func(self):
@@ -171,17 +247,22 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 # Actualizar un post existente
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Post
+    form_class = PostForm
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
-    fields = ['titulo', 'contenido', 'categoria', 'imagen']
     template_name = 'post_update.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     def form_valid(self, form):
-        post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
+        post = form.save(commit=False)
+        form.instance.author = self.request.user      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
         post.save()
-        return super().form_valid(form)
+        return redirect (self.success_url)
     
     def test_func(self):
         user = self.request.user
