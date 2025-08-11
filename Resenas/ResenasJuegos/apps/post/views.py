@@ -2,13 +2,43 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from django.db.models import Avg, Value
 from django.db.models.functions import Coalesce
 from django.shortcuts import redirect
-from apps.post.models import Category, Post
 #from apps.comment.models import Comment
-from apps.comment.forms import CommentForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from apps.post.models import Post, PostImage,Category
+from apps.comment.forms import CommentForm
 from django.urls import reverse_lazy
+from .forms import PostForm
 
 # Create your views here.
+
+class IndexView(TemplateView):
+    template_name = 'pages/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+    
+        print("🟢 VERIFICANDO DATOS EN VISTA:") #TODO:SACAR
+        categorias = Category.objects.all()
+        print("Categorías encontradas:", list(categorias.values('id', 'title'))) #TODO:SACAR
+    
+        posts_por_categoria = {}
+        for categoria in categorias:
+            posts = Post.objects.filter(category=categoria).prefetch_related('images')
+            print(f"Posts en {categoria.title}:", list(posts.values('id', 'title'))) #TODO:SACAR
+            posts_por_categoria[categoria.title] = posts
+    
+        context['posts_por_categoria'] = posts_por_categoria
+        print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
+        return context
+
+class AboutView(TemplateView):
+    template_name = 'pages/about.html'
+
+class TermsView(TemplateView):
+    template_name = "pages/terms.html"
+
+class PrivacyPolicyView(TemplateView):
+    template_name = 'pages/privacy.html'
 
 # Filtros post por titulo
 class PostTitleFilter(ListView):
@@ -84,34 +114,6 @@ class PostStarFilter(ListView):
         return queryset
 
 
-class IndexView(TemplateView):
-    template_name = 'pages/index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-    
-        print("🟢 VERIFICANDO DATOS EN VISTA:") #TODO:SACAR
-        categorias = Category.objects.all()
-        print("Categorías encontradas:", list(categorias.values('id', 'title'))) #TODO:SACAR
-    
-        posts_por_categoria = {}
-        for categoria in categorias:
-            posts = Post.objects.filter(category=categoria).prefetch_related('images')
-            print(f"Posts en {categoria.title}:", list(posts.values('id', 'title'))) #TODO:SACAR
-            posts_por_categoria[categoria.title] = posts
-    
-        context['posts_por_categoria'] = posts_por_categoria
-        print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
-        return context
-
-class AboutView(TemplateView):
-    template_name = 'pages/about.html'
-
-class TermsView(TemplateView):
-    template_name = "pages/terms.html"
-
-class PrivacyPolicyView(TemplateView):
-    template_name = 'pages/privacy.html'
 
 class PostDetailView(DetailView):
     model = Post
@@ -153,15 +155,17 @@ class PostDetailView(DetailView):
 
 # Crear un nuevo post
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = Post
-    fields = ['titulo', 'contenido', 'categoria', 'imagen']
-    template_name = 'post_create.html'
+    form_class = PostForm
+    template_name = 'post/post_create.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     def form_valid(self, form):
-        post = form.save(commit=False)
-        post.autor = self.request.user
-        post.save()
+        form.instance.author = self.request.user
         return super().form_valid(form)
     
     def test_func(self):
@@ -172,17 +176,22 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 # Actualizar un post existente
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Post
+    form_class = PostForm
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
-    fields = ['titulo', 'contenido', 'categoria', 'imagen']
     template_name = 'post_update.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     def form_valid(self, form):
-        post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
+        post = form.save(commit=False)
+        form.instance.author = self.request.user      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
         post.save()
-        return super().form_valid(form)
+        return redirect (self.success_url)
     
     def test_func(self):
         user = self.request.user

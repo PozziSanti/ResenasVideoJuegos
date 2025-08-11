@@ -3,8 +3,9 @@ from apps.post.views import (PostCategoryFilter, PostTitleFilter, PostDateFilter
                              PostListView, 
                              PostUpdateView,
                              PostDeleteView,
-                             PostCreateView)
-from apps.post.views import IndexView, AboutView, TermsView, PrivacyPolicyView, PostDetailView
+                             PostCreateView, 
+                             PostDetailView)
+from apps.post.views import IndexView, AboutView, TermsView, PrivacyPolicyView
 
 urlpatterns = [
     path('post/', PostListView.as_view(), name='post_list'),
@@ -18,6 +19,6 @@ urlpatterns = [
     path('privacy/', PrivacyPolicyView.as_view(), name='privacy'),  # Politica de Privacidad
     path('post/<slug:slug>/', PostDetailView.as_view(), name='post_detail'),
     path('edit/<slug:slug>/', PostUpdateView.as_view(), name='post_update'),
-    path('create/', PostCreateView.as_view(), name='post_create'), 
     path('delete/<slug:slug>/', PostDeleteView.as_view(), name='post_delete'),
+    path('post_create/', PostCreateView.as_view(), name='post_create'),
 ]

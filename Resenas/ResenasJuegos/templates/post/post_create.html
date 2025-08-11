@@ -1,0 +1,9 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ form.images.management_form }} <!-- Campos ocultos para el formset -->
+    {% for image_form in form.images %}
+        {{ image_form.as_p }}
+    {% endfor %}
+    <button type="submit">Guardar</button>
+</form>
