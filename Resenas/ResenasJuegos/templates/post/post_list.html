@@ -7,7 +7,7 @@
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
   {% for post in posts %}
-    {% include 'partials/flip_card.html' %}
+    {% include 'components/cards/flip_card.html' %}
   {% empty %}
     <p>No hay juegos en esta categoría.</p>
   {% endfor %}
