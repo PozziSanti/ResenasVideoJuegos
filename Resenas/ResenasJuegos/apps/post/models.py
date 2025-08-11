@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
-from django.contrib.auth.models import User
+from django.conf import settings
 import uuid
 import os
 
@@ -16,6 +16,7 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
+<<<<<<< HEAD
 # MODELO PLATAFORMAS (PS5, XBOX, PC, etc.)
 class Platform(models.Model):
     title = models.CharField(max_length=50, unique=True)
@@ -27,15 +28,16 @@ class Platform(models.Model):
     def __str__(self):
         return self.title
 
+=======
+>>>>>>> 3384dd51d7d8579605fed650bc8fd9a56ff7f343
 # MODELO POSTS
 class Post(models.Model):
     #PRIMARY KEY
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     #FOREIGN KEYS
-    author = models.ForeignKey(User, on_delete=models.CASCADE) #hay que cambiar el 'auth.User' porque no esta definido en config.
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) #hay que cambiar el 'auth.User' porque no esta definido en config.
     category = models.ManyToManyField(Category, related_name="post")
-    plataform = models.ManyToManyField(Platform, related_name="post")
 
     #ATTRIBUTOS
     title = models.CharField(max_length=100)
@@ -72,6 +74,9 @@ class Post(models.Model):
             self.slug = self.generate_unique_slug()
 
         super().save(*args, **kwargs)
+
+        if not self.image.exists():
+            PostImage.objects.create(post=self, image='post/default/post_default.png')
     
     def generate_unique_slug(self):
         slug = slugify(self.title)
