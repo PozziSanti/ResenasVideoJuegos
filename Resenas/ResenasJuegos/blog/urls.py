@@ -17,11 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-<<<<<<< HEAD
 from apps.post.views import IndexView
-=======
-from blog.views import IndexView
->>>>>>> 3384dd51d7d8579605fed650bc8fd9a56ff7f343
 from django.conf.urls.static import static
 
 urlpatterns = [

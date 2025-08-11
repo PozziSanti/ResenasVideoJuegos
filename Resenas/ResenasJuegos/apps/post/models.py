@@ -16,20 +16,7 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-<<<<<<< HEAD
-# MODELO PLATAFORMAS (PS5, XBOX, PC, etc.)
-class Platform(models.Model):
-    title = models.CharField(max_length=50, unique=True)
-    class Meta:
-        verbose_name = "Plataforma"
-        verbose_name_plural = "Plataformas"
-        ordering = ["title"]
-    
-    def __str__(self):
-        return self.title
 
-=======
->>>>>>> 3384dd51d7d8579605fed650bc8fd9a56ff7f343
 # MODELO POSTS
 class Post(models.Model):
     #PRIMARY KEY
