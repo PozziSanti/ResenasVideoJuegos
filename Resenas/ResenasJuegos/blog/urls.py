@@ -23,12 +23,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('__reload__/', include('django_browser_reload.urls')),
-    path('', IndexView.as_view(), name='home'),
-    path('posts/', include('apps.post.urls')),
     path('', IndexView.as_view(), name='home'), # Página principal 
     path('', include('apps.user.urls')), # URLs de usuarios
     path('', include('apps.post.urls')), # Rutas de la app de post
-]
 
 # Sirve archivos estáticos y media en modo DEBUG
 if settings.DEBUG:
