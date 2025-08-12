@@ -1,14 +1,19 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+<<<<<<< HEAD
+from .forms import ProfileForm
+from apps.user.models import UserProfile
+=======
 from .forms import RegisterForm
 from .models import UserProfile
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
+>>>>>>> 9b01a82081ca73d1e5c0499ad4907b8e72bc6352
 
 
 User = get_user_model()
@@ -22,10 +27,18 @@ class UserSignupView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
+<<<<<<< HEAD
+        UserProfile.objects.create(user=user)  # crea perfil en blanco automáticamente
+        next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
+        signin_url = f"{reverse('signin')}?next={next_url}"
+        return redirect(signin_url)    # redirige al formulario para que lo complete
+
+=======
         next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
         signin_url = f"{reverse('signin')}?next={next_url}"
         return redirect(signin_url)    # redirige al formulario para que lo complete
         
+>>>>>>> 9b01a82081ca73d1e5c0499ad4907b8e72bc6352
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
     redirect_authenticated_user = True
