@@ -96,6 +96,49 @@
     box-sizing: border-box;
 }
 
+
+
+
+/* Estilos para el formulario de inicio de sesión y registro */
+/* Animaciones del botón */
+.shift-left {
+  transform: translateX(-120%);
+  transition: transform 0.3s ease;
+}
+
+.shift-right {
+  transform: translateX(120%);
+  transition: transform 0.3s ease;
+}
+
+.shift-top {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+.shift-bottom {
+  transform: translateY(40%);
+  transition: transform 0.3s ease;
+}
+
+.no-shift {
+  transform: translate(0%, 0%);
+  transition: transform 0.3s ease;
+}
+
+/* Autofill personalizado */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px var(--color-darker-morado) inset !important;
+  -webkit-text-fill-color: var(--color-text-light) !important;
+}
+
+/* Efecto de vidrio para el formulario */
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+}
+
 /* HOVER para desktop */
 @media (hover: hover) and (pointer: fine) {
   .flip-card:hover .flip-card-inner {
