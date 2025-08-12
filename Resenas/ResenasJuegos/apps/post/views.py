@@ -1,3 +1,4 @@
+
 from django.views.generic import TemplateView, ListView, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from apps.post.models import Post, Category, PostImage
@@ -8,6 +9,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .forms import PostForm
 # from apps.comment.models import Comment
+
 
 class IndexView(TemplateView):
     template_name = 'pages/index.html'
@@ -72,6 +74,12 @@ class PostCategoryFilter (ListView):
         
         return queryset
 
+    # TODO: sacar, ya que es solo para probar el filtro de categoría
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['selected_category'] = self.kwargs.get('category', '')
+        return context
+
 
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
 # Filtros post por fecha de publicación
@@ -114,11 +122,10 @@ class PostStarFilter(ListView):
             except ValueError:
                 pass      # si el valor no es un número válido, no se aplica el filtro
         return queryset
-
+    
 
 
 # CRUD PARA LOS POSTS
-
 # Detalle de un post
 class PostDetailView(DetailView):
     model = Post
@@ -155,17 +162,17 @@ class PostDetailView(DetailView):
         return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
 
 
-
 # Crear un nuevo post
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     form_class = PostForm
     template_name = 'post/post_create.html'
     success_url = reverse_lazy('home')    # Redirige a la lista de posts después de crear uno
-    
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
 
 # TODO: agregar funcion 403 para que aparezca imagen del michi
     def form_valid(self, form):
@@ -175,7 +182,6 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         user = self.request.user
         return user.has_perm('post.add_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
-
 
 
 # Actualizar un post existente
@@ -207,7 +213,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         post = self.get_object()
         user = self.request.user
         return user == post.author or user.is_superuser # Solo permite acceso a usuarios autores y superusuarios
-
 
 # Listar todos los posts
 class PostListView(ListView):
@@ -244,4 +249,5 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         user = self.request.user
+
         return user.has_perm('post.delete_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios

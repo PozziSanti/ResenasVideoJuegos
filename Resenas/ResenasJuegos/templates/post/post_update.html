@@ -2,6 +2,20 @@
 {% load static %}
 
 {% block content_layout %}
+    {% if perms.post.change_post %}
+    <h2>Editar Post</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar cambios</button>
+    </form>
+    {% else %}
+    <p>No tenés permiso para editar este post.</p>
+    {% endif %}
+{% endblock content_layout %}
+
+{% comment %} {% block content_layout %}
 <h1 class="text-2xl font-bold mb-4"> Actualizacion de post</h1>
 
 <form method="post" enctype="multipart/form-data">
@@ -13,4 +27,4 @@
     {% endfor %}
     <button type="submit">Guardar</button>
 
-{% endblock content_layout %}
+{% endblock content_layout %} {% endcomment %}
