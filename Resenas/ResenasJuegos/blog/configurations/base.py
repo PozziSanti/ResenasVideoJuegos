@@ -34,16 +34,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_browser_reload',
-    'apps.post',
     'apps.user',
     'apps.comment',
     'apps.favorite',
-<<<<<<< HEAD
-    'apps.score',
-    'apps.user_roles',
     'apps.post',
-=======
->>>>>>> 6a0deacaa9cfe212b2e9c430babc58cf2e8cc265
 ]
 
 MIDDLEWARE = [
@@ -54,7 +48,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'apps.user_roles.middleware.InvitadoMiddleware',
 ]
 
 ROOT_URLCONF = 'blog.urls'

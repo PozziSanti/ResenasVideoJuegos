@@ -1,9 +1,4 @@
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponseForbidden
-from .models import Post
-from .forms import PostForm
 from django.views.generic import TemplateView, ListView, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from apps.post.models import Post, Category, PostImage
@@ -13,72 +8,6 @@ from apps.comment.forms import CommentForm
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .forms import PostForm
-
-# Helper: verificar si el usuario es admin o creador del post
-def es_autor_o_admin(user, post):
-    return user.is_superuser or post.autor == user
-
-# Verificación de rol
-
-def es_usuario(user):
-    return user.groups.filter(name='usuario').exists() or user.is_superuser
-
-def es_invitado(user):
-    return not user.is_authenticated
-
-# Lista de posts (público)
-def post_list(request):
-    posts = Post.objects.all()
-    return render(request, 'post/post_list.html', {'posts': posts})
-
-# Ver detalle (público)
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    return render(request, 'post/post_detail.html', {'post': post})
-
-# Crear post (solo usuario o admin)
-@login_required
-@user_passes_test(es_usuario)
-def post_create(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.autor = request.user
-            post.save()
-            return redirect('post_detail', pk=post.pk)
-    else:
-        form = PostForm()
-    return render(request, 'post/post_create.html', {'form': form})
-
-# Editar post (solo autor o admin)
-@login_required
-def post_update(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if not es_autor_o_admin(request.user, post):
-        return HttpResponseForbidden("No tenés permiso para editar este post.")
-
-    if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect('post_detail', pk=post.pk)
-    else:
-        form = PostForm(instance=post)
-    return render(request, 'post/post_update.html', {'form': form, 'post': post})
-
-# Eliminar post (solo autor o admin)
-@login_required
-def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if not es_autor_o_admin(request.user, post):
-        return HttpResponseForbidden("No tenés permiso para eliminar este post.")
-
-    if request.method == 'POST':
-        post.delete()
-        return redirect('post_list')
-    return render(request, 'post/post_delete.html', {'post': post})
-
 # from apps.comment.models import Comment
 
 
@@ -144,6 +73,7 @@ class PostCategoryFilter (ListView):
             queryset = queryset.filter(title__icontains=category) 
         
         return queryset
+
 
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
 # Filtros post por fecha de publicación
@@ -269,9 +199,12 @@ class PostStarFilter(ListView):
         return queryset
 
 
+# CRUD PARA LOS POSTS
+
+# Detalle de un post
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'pages/post_detail.html'
+    template_name = 'post/post_detail.html'
     context_object_name = 'post'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
@@ -304,7 +237,9 @@ class PostDetailView(DetailView):
         return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
 
 
+
 # CRUD PARA LOS POSTS
+
 
 # Crear un nuevo post
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -325,7 +260,7 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     
     def test_func(self):
         user = self.request.user
-        return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
+        return user.has_perm('post.add_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
 
 
 # Actualizar un post existente
@@ -333,6 +268,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = PostForm
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
+
     template_name = 'post_update.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
@@ -357,20 +293,36 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'post_update.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
+    template_name = 'post/post_update.html'
+    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
+
+# TODO: agregar funcion 403 para que aparezca imagen del michi
+    def get_form_kwargs(self):
+            kwargs = super().get_form_kwargs()
+            kwargs['request'] = self.request
+            return kwargs
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:            # Filtra los post para que solo los autores o superusuarios editen el post
+            return Post.objects.all()
+        return Post.objects.filter(author=user)
+
     def form_valid(self, form):
         post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
         post.save()
         return super().form_valid(form)    
     
     def test_func(self):
+        post = self.get_object()
         user = self.request.user
-        return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
+        return user == post.author or user.is_superuser # Solo permite acceso a usuarios autores y superusuarios
 
 
 # Listar todos los posts
 class PostListView(ListView):
     model = Post
-    template_name = 'post_list.html'
+    template_name = 'post/post_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
@@ -386,15 +338,21 @@ class PostListView(ListView):
 
 
 # Eliminar un post existente
-class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
-    template_name = 'post_delete.html'
+    template_name = 'post/post_delete.html'
     success_url = reverse_lazy('post_list')  # Redirige a la lista de posts después de eliminar uno
-    
+
+# TODO: agregar funcion 403 para que aparezca imagen del michi     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['can_delete'] = user.has_perm('post.delete_post') or user.is_superuser
+        return context
+
     def test_func(self):
         user = self.request.user
-        return user.is_staff or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
 
->>>>>>> 6a0deacaa9cfe212b2e9c430babc58cf2e8cc265
+        return user.has_perm('post.delete_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios

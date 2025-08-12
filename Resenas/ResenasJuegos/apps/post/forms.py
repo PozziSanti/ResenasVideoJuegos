@@ -1,5 +1,4 @@
 from django import forms
-from .models import Post
 from .models import Post, PostImage
 from django.forms import inlineformset_factory
 
@@ -10,12 +9,12 @@ ImagesFormSet = inlineformset_factory(
     PostImage, 
     fields=['image'], 
     extra=1, 
-    can_delete=True
+    can_delete=False
 )
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['titulo', 'contenido']
         fields = ['title', 'content', 'category'] 
 
     def __init__(self, *args, **kwargs):
@@ -34,4 +33,3 @@ class PostForm(forms.ModelForm):
         self.images.instance = post
         self.images.save()
         return post 
-

@@ -1,4 +1,5 @@
 {% extends 'layouts/general_layout.html' %}
+{% load static %}
 
 {% block content_layout %}
     {% if perms.post.change_post %}
@@ -12,8 +13,6 @@
     {% else %}
     <p>No tenés permiso para editar este post.</p>
     {% endif %}
-
-{% load static %}
 
 {% block content_layout %}
 <h1 class="text-2xl font-bold mb-4"> Actualizacion de post</h1>

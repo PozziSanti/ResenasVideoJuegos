@@ -1,29 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.text import slugify
-from django.contrib.auth.models import User
+from django.conf import settings
 import uuid
 import os
 
-class Post(models.Model):
-    titulo = models.CharField(max_length=200)
-    contenido = models.TextField()
-    creado = models.DateTimeField(auto_now_add=True)
-    actualizado = models.DateTimeField(auto_now=True)
-    autor = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.titulo
-
-class Comentario(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comentarios')
-    autor = models.ForeignKey(User, on_delete=models.CASCADE)
-    contenido = models.TextField()
-    creado = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.autor.username} - {self.contenido[:30]}"
-        
 # MODELO CATEGORIAS (RPG, ACCION, AVENTURA, etc.)
 class Category(models.Model):
     title = models.CharField(max_length=50, unique=True)
@@ -36,16 +16,6 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-# MODELO PLATAFORMAS (PS5, XBOX, PC, etc.)
-class Platform(models.Model):
-    title = models.CharField(max_length=50, unique=True)
-    class Meta:
-        verbose_name = "Plataforma"
-        verbose_name_plural = "Plataformas"
-        ordering = ["title"]
-    
-    def __str__(self):
-        return self.title
 
 # MODELO POSTS
 class Post(models.Model):
@@ -53,9 +23,8 @@ class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     #FOREIGN KEYS
-    author = models.ForeignKey(User, on_delete=models.CASCADE) #hay que cambiar el 'auth.User' porque no esta definido en config.
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) #hay que cambiar el 'auth.User' porque no esta definido en config.
     category = models.ManyToManyField(Category, related_name="post")
-    plataform = models.ManyToManyField(Platform, related_name="post")
 
     #ATTRIBUTOS
     title = models.CharField(max_length=100)
@@ -92,6 +61,9 @@ class Post(models.Model):
             self.slug = self.generate_unique_slug()
 
         super().save(*args, **kwargs)
+
+        if not self.images.exists():
+            PostImage.objects.create(post=self, image='post/default/post_default.png')
     
     def generate_unique_slug(self):
         slug = slugify(self.title)
@@ -121,4 +93,3 @@ class PostImage(models.Model):
 
     def __str__(self):
         return f"Imagen de {self.post.id} ({self.image.name})"
-    
