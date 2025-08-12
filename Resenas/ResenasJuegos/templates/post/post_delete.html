@@ -12,9 +12,8 @@
   </form>
 {% endblock content_layout%}
 
-{% block content_layout %}
+{% comment %} {% block content_layout %}
 <h1 class="text-2xl font-bold mb-4"> Eliminacion de post</h1>
-{% endblock content_layout %}
 
   <h1>Eliminar post: {{ object.title }}</h1>
 
@@ -32,6 +31,4 @@
     <p>Si pensás que esto es un error, contactate con un administrador.</p>
     <a href="{% url 'post_list' %}">Volver a la lista de posts</a>
   {% endif %}
-
-
-{% endblock content_layout %}
+{% endblock content_layout %} {% endcomment %}

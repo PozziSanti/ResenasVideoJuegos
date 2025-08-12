@@ -186,13 +186,9 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 # Actualizar un post existente
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Post
+    form_class = PostForm
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
-    fields = ['titulo', 'contenido', 'categoria', 'imagen']
-    template_name = 'post_update.html'
-    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
-
     template_name = 'post/post_update.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
@@ -217,7 +213,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         post = self.get_object()
         user = self.request.user
         return user == post.author or user.is_superuser # Solo permite acceso a usuarios autores y superusuarios
-
 
 # Listar todos los posts
 class PostListView(ListView):
