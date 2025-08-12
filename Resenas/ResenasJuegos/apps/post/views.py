@@ -73,6 +73,7 @@ class PostCategoryFilter (ListView):
         
         return queryset
 
+
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
 # Filtros post por fecha de publicación
 class PostDateFilter(ListView):
@@ -197,9 +198,12 @@ class PostStarFilter(ListView):
         return queryset
 
 
+# CRUD PARA LOS POSTS
+
+# Detalle de un post
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'pages/post_detail.html'
+    template_name = 'post/post_detail.html'
     context_object_name = 'post'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
@@ -232,7 +236,9 @@ class PostDetailView(DetailView):
         return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
 
 
+
 # CRUD PARA LOS POSTS
+
 
 # Crear un nuevo post
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -253,7 +259,7 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     
     def test_func(self):
         user = self.request.user
-        return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
+        return user.has_perm('post.add_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
 
 
 # Actualizar un post existente
@@ -261,6 +267,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = PostForm
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
+
     template_name = 'post_update.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
@@ -285,20 +292,36 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'post_update.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
+    template_name = 'post/post_update.html'
+    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
+
+# TODO: agregar funcion 403 para que aparezca imagen del michi
+    def get_form_kwargs(self):
+            kwargs = super().get_form_kwargs()
+            kwargs['request'] = self.request
+            return kwargs
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:            # Filtra los post para que solo los autores o superusuarios editen el post
+            return Post.objects.all()
+        return Post.objects.filter(author=user)
+
     def form_valid(self, form):
         post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
         post.save()
         return super().form_valid(form)    
     
     def test_func(self):
+        post = self.get_object()
         user = self.request.user
-        return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
+        return user == post.author or user.is_superuser # Solo permite acceso a usuarios autores y superusuarios
 
 
 # Listar todos los posts
 class PostListView(ListView):
     model = Post
-    template_name = 'post_list.html'
+    template_name = 'post/post_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
@@ -314,14 +337,21 @@ class PostListView(ListView):
 
 
 # Eliminar un post existente
-class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
-    template_name = 'post_delete.html'
+    template_name = 'post/post_delete.html'
     success_url = reverse_lazy('post_list')  # Redirige a la lista de posts después de eliminar uno
-    
+
+# TODO: agregar funcion 403 para que aparezca imagen del michi     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['can_delete'] = user.has_perm('post.delete_post') or user.is_superuser
+        return context
+
     def test_func(self):
         user = self.request.user
-        return user.is_staff or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
 
+        return user.has_perm('post.delete_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
