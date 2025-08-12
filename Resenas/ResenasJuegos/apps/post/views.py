@@ -116,90 +116,13 @@ class PostStarFilter(ListView):
         return queryset
 
 
-# Filtros post por titulo
-class PostTitleFilter(ListView):
-    model = Post
-    template_name = 'post/post_list.html'
-    context_object_name = 'posts'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        q = self.request.GET.get('q')
+# CRUD PARA LOS POSTS
 
-        if q:
-            queryset = queryset.filter(title__icontains=q) # busca en el título de los posts
-        
-        return queryset
-
-# Filtros post por categoría
-# class PostCategoryFilter (ListView):
-#     model = Post
-#     template_name = 'post/post_list.html'
-#     context_object_name = 'posts'
-
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#         category = self.kwargs.get('category') # Obtiene la categoría de los parámetros de la URL
-#         if category:
-#             queryset = queryset.filter(category__title__iexact=category) 
-        
-#         return queryset
-
-
-    
-#     # TODO: sacar, ya que es solo para probar el filtro de categoría
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['selected_category'] = self.kwargs.get('category', '')
-#         return context
-
-
-# TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
-# Filtros post por fecha de publicación
-# class PostDateFilter(ListView):
-#     model = Post
-#     template_name = 'post/post_list.html'
-#     context_object_name = 'posts'
-
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#         date = self.request.GET.get('date')
-
-#         if date:
-#             queryset = queryset.filter(created_at__date=date) # busca el post por fecha de publicación
-        
-#         return queryset
-
-# TODO: se lo puede poner para filtrar por fecha de inicio y fin 
-# fecha_inicio = self.request.GET.get('desde')
-# fecha_fin = self.request.GET.get('hasta')
-
-# if fecha_inicio and fecha_fin:
-#     queryset = queryset.filter(created_at__date__range=[fecha_inicio, fecha_fin])
-
-# filtros post por estrellas
-# class PostStarFilter(ListView):
-#     model = Post
-#     template_name = 'post/post_list.html' 
-#     context_object_name = 'posts'
-
-#     def get_queryset(self):
-#         queryset = super().get_queryset().annotate(avg_score=Coalesce(Avg('comment__score'), Value(0)))  # Calcula el promedio de las calificaciones de los comentarios
-        
-#         score = self.request.GET.get('score') # valor que viene del formulario de búsqueda
-
-#         if score:
-#             try:
-#                 score = float(score)
-#                 queryset = queryset.filter(avg_score__gte=score) # filtra comentarios que tengan un valor de estrellas mayor o igual al ingresado
-#             except ValueError:
-#                 pass      # si el valor no es un número válido, no se aplica el filtro
-#         return queryset
-
-
+# Detalle de un post
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'pages/post_detail.html'
+    template_name = 'post/post_detail.html'
     context_object_name = 'post'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
@@ -232,20 +155,17 @@ class PostDetailView(DetailView):
         return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
 
 
-# CRUD PARA LOS POSTS
 
 # Crear un nuevo post
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     form_class = PostForm
     template_name = 'post/post_create.html'
     success_url = reverse_lazy('home')    # Redirige a la lista de posts después de crear uno
+    
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
-
-
-
 
 # TODO: agregar funcion 403 para que aparezca imagen del michi
     def form_valid(self, form):
@@ -255,49 +175,44 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         user = self.request.user
         return user.has_perm('post.add_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
-                            #modelo+'permiso(add, change, delete, view)'
 
 
 
 # Actualizar un post existente
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Post
+    form_class = PostForm
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
-    fields = ['titulo', 'contenido', 'categoria', 'imagen']
-    template_name = 'post_update.html'
+    template_name = 'post/post_update.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
+
+# TODO: agregar funcion 403 para que aparezca imagen del michi
+    def get_form_kwargs(self):
+            kwargs = super().get_form_kwargs()
+            kwargs['request'] = self.request
+            return kwargs
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:            # Filtra los post para que solo los autores o superusuarios editen el post
+            return Post.objects.all()
+        return Post.objects.filter(author=user)
 
     def form_valid(self, form):
         post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
         post.save()
-        return redirect (self.success_url)
-
-
-# Actualizar un post existente
-class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Post
-    slug_field = 'slug'
-    slug_url_kwarg = 'slug'
-    fields = ['titulo', 'contenido', 'categoria', 'imagen']
-    template_name = 'post_update.html'
-    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
-
-    def form_valid(self, form):
-        post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
-        post.save()
-
         return super().form_valid(form)    
     
     def test_func(self):
+        post = self.get_object()
         user = self.request.user
-        return user.is_staff or user.is_superuser  # Solo permite acceso a usuarios administradores y superusuarios
+        return user == post.author or user.is_superuser # Solo permite acceso a usuarios autores y superusuarios
 
 
 # Listar todos los posts
 class PostListView(ListView):
     model = Post
-    template_name = 'post_list.html'
+    template_name = 'post/post_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
@@ -313,14 +228,20 @@ class PostListView(ListView):
 
 
 # Eliminar un post existente
-class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
-    template_name = 'post_delete.html'
+    template_name = 'post/post_delete.html'
     success_url = reverse_lazy('post_list')  # Redirige a la lista de posts después de eliminar uno
-    
+
+# TODO: agregar funcion 403 para que aparezca imagen del michi     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['can_delete'] = user.has_perm('post.delete_post') or user.is_superuser
+        return context
+
     def test_func(self):
         user = self.request.user
-        return user.is_staff or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
-
+        return user.has_perm('post.delete_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios

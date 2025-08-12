@@ -9,7 +9,7 @@ ImagesFormSet = inlineformset_factory(
     PostImage, 
     fields=['image'], 
     extra=1, 
-    can_delete=True
+    can_delete=False
 )
 
 class PostForm(forms.ModelForm):
