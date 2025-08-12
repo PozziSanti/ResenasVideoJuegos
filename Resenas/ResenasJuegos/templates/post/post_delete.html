@@ -4,4 +4,22 @@
 {% block content_layout %}
 <h1 class="text-2xl font-bold mb-4"> Eliminacion de post</h1>
 
+  <h1>Eliminar post: {{ object.title }}</h1>
+
+  {% if can_delete %}
+    <p>¿Estás seguro que querés eliminar este post?</p>
+
+    <form method="post" action="">
+      {% csrf_token %}
+      <button type="submit">Eliminar</button>
+      <a href="{% url 'post_list' %}">Cancelar</a>
+    </form>
+
+  {% else %}
+    <h2>No tenés permisos para eliminar este post 😿</h2>
+    <p>Si pensás que esto es un error, contactate con un administrador.</p>
+    <a href="{% url 'post_list' %}">Volver a la lista de posts</a>
+  {% endif %}
+
+
 {% endblock content_layout %}
