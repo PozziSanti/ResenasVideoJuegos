@@ -1,68 +1,71 @@
-<!-- Registrar usuario -->
-{% extends 'layouts/base_layout.html' %}
-<!-- Iniciar sesion -->
+{% extends 'layouts/auth_layout.html' %}
 {% load static %}
+{% block title_layout %} | Register{% endblock title_layout %}
+
 {% block content_layout %}
+<div class="min-h-screen flex items-center justify-center bg-fixed bg-center bg-cover" 
+     style="background-image: url('{% static 'assets/login_register/fondo.png' %}')">
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel="stylesheet" href="{% static 'css/register.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
+  <div class="relative w-full max-w-2xl px-8">  
+    <!-- Icono de usuario -->
+    <div class="absolute w-28 h-28 border-2 border-accent-blue rounded-full bg-darker-morado
+                flex items-center justify-center text-5xl text-accent-blue z-10 mx-auto left-0 right-0 -top-12">  
+      <i class="fa fa-user text-purple-50"></i>
+    </div>
 
-<div class="main-container centered-flex">
-  <div class="form-container ">
-
-    <form method="post" class="centered-flex" onsubmit="return validarFormulario();">
+    <!-- Formulario -->
+    <form method="post" class="flex flex-col p-10 pt-20 rounded-3xl bg-darker-morado-transparent border-2 border-accent-blue shadow-md" onsubmit = "return validarFormulario();">
       {% csrf_token %}
-      <div class="icon fa fa-user "></div>
-     
-      <div class="title">Registrate acá</div>
-      <div class="msg"></div>
 
-      <div class="field">
-        <input type="text" placeholder="Nombre de Usuario" id="uname" name="username" required>
-        <span class="fa fa-user"></span>
+      <div class="relative mt-2 mb-4 text-xl font-bold text-text-light text-center">Registrate</div>  
+      <div class="msg py-3 text-center text-status-hot"></div>
+
+      <!-- Campo Usuario -->
+      <div class="relative w-full mb-6">  
+        <input type="text" placeholder="Usuario" id="uname" name="username" required
+               class="block w-full text-lg text-text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-3 py-3 placeholder-text-medium">  
+        <span class="fa fa-user text-purple-50 py-1 absolute text-base right-3 bottom-3 text-accent-blue"></span> 
       </div>
 
-      <div class="field">
-        <input type="password" placeholder="Contraseña" id="password1" name="password1" required>
-        <span class="far fa-eye"></span>
+      <!-- Campo Contraseña -->
+      <div class="relative w-full mb-6">
+        <input type="password" placeholder="Contraseña" id="password1" name="password" required
+               class="block w-full text-lg text-text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-3 py-3 placeholder-text-medium">
+        <span class="far fa-eye text-purple-50 px-3 py-1 absolute bottom-3 right-0 cursor-pointer text-accent-blue password-toggle"></span>
       </div>
 
-      <div class="field">
-        <input type="password" placeholder="Repetir Contraseña" id="password2" name="password2" required>
-        <span class="far fa-eye"></span>
+      <!-- Campo Repetir Contraseña -->
+      <div class="relative w-full mb-6">
+        <input type="password" placeholder="Repetir Contraseña" id="password2" name="password" required
+               class="block w-full text-lg text-text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-3 py-3 placeholder-text-medium">
+        <span class="far fa-eye text-purple-50 px-3 py-1 absolute bottom-3 right-0 cursor-pointer text-accent-blue password-toggle"></span>
       </div>
 
-      <div class="btn-container ">
-        <input type="submit" id="login-btn" value="Registrarse" class="login-btn">
+      <!-- Opciones -->
+      <div class="flex justify-between w-full text-base mb-6">  
+        <label for="remember" class="flex items-center text-text-medium cursor-pointer">
+          <input type="checkbox" id="remember" name="remember" class="mr-2 cursor-pointer h-4 w-4">
+          Recordarme
+        </label>
+        <a href="#" class="text-text-medium hover:text-text-light">¿Olvidaste tu contraseña?</a>
       </div>
 
-      <div class="signin"> ¿Ya tenes cuenta? <a href="{% url 'signin' %}?next={{ request.path }}">Inicia Sesión</a></div>
+
+      <!-- Botón Login -->
+      <div class="py-10 btn-container self-center">  
+        <input type="submit" id="login-btn" value="Registrarme"
+               class="content-center px-8 py-3 bg-accent-blue text-text-light font-semibold text-lg  rounded-xl
+                      transition duration-300 hover:bg-accent-blue-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">  
+      </div>
+
+      <!-- Enlace Registro -->
+      <div class="text-text-light text-center mt-4 text-base"> 
+        ¿Ya tenes cuenta? 
+        <a href="{% url 'signin' %}?next={{ request.path }}" class="text-text-medium hover:text-text-light">Inicia Sesión</a>
+      </div>
     </form>
   </div>
 </div>
 
 <script src="{% static 'js/register.js' %}"></script>
-</body>
-</html>
-
-{% if form.errors %}
-  <ul class="form-errors">
-    {% for field in form %}
-      {% for error in field.errors %}
-        <li>{{ field.label }}: {{ error }}</li>
-      {% endfor %}
-    {% endfor %}
-    {% for error in form.non_field_errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-
 {% endblock content_layout %}
