@@ -31,6 +31,7 @@ class UserSignupView(CreateView):
 
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
+    form_class = LoginForm
     redirect_authenticated_user = True
     
     def get_success_url(self):
