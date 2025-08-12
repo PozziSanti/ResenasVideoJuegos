@@ -1,4 +1,5 @@
 {% extends 'layouts/general_layout.html' %}
+
 {% block content_layout %}
   <h1>¿Estás seguro de eliminar este post?</h1>
   <p><strong>{{ post.titulo }}</strong></p>
@@ -9,3 +10,11 @@
     <a href="{% url 'post_list' %}">Cancelar</a>
   </form>
 {% endblock %}
+
+{% load static %}
+
+{% block content_layout %}
+<h1 class="text-2xl font-bold mb-4"> Eliminacion de post</h1>
+
+{% endblock content_layout %}
+

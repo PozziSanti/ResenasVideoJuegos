@@ -1,0 +1,26 @@
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <!-- LADO FRONTAL -->
+    <div class="flip-card-front">
+      {% with post.images.all|first as imagen %}
+        {% if imagen %}
+          <img src="{{ imagen.image.url }}" alt="{{ post.title }}" class="w-full rounded">
+        {% else %}
+          <div class="w-full h-40 bg-gray-200 flex items-center justify-center">Sin imagen</div>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <!-- LADO TRASERO -->
+    <div class="flip-card-back bg-gray-100 p-4 rounded shadow">
+      <h3 class="text-lg font-bold">{{ post.title }}</h3>
+      <p class="text-sm mt-2">{{ post.content|truncatewords:15 }}</p>
+      <a href="{% url 'post_detail' slug=post.slug %}" class="text-indigo-500 underline block mt-4">Ver más</a>
+    
+      <div class="mobile-flip-hint">
+        <span class="rotate-icon">↻</span>
+        <span class="hint-text">Tocá para girar</span>
+      </div>
+    </div>
+  </div>
+</div>

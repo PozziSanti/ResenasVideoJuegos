@@ -1,4 +1,5 @@
 {% extends 'layouts/general_layout.html' %}
+
 {% block content_layout %}
   {% if perms.post.add_post %}
     <h1>Crear Post</h1>
@@ -14,3 +15,23 @@
     </form>
   {% endif %}
 {% endblock %}
+
+{% load static %}
+
+
+{% block content_layout %}
+<h1 class="text-2xl font-bold mb-4"> Creacion de post</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ form.images.management_form }} <!-- Campos ocultos para el formset -->
+    {% for image_form in form.images %}
+        {{ image_form.as_p }}
+    {% endfor %}
+    <button type="submit">Guardar</button>
+</form>
+
+{% endblock content_layout %}
+
+

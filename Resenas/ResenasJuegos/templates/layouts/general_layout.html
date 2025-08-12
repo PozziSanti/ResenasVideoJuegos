@@ -7,3 +7,43 @@
 {% block content_layout %}
     
 {% endblock content_layout %}
+
+{% endblock content_layout %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.flip-card');
+
+    cards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+          // Evitar que se dispare dos veces en hijos
+          e.stopPropagation();
+
+          // Primero, sacar la clase a todas
+          cards.forEach(c => {
+            if (c !== card) {
+              c.querySelector('.flip-card-inner').classList.remove('touch-flip');
+            }
+          });
+
+          // Luego, alternar en la que tocaste
+          card.querySelector('.flip-card-inner').classList.toggle('touch-flip');
+        }
+      });
+    });
+
+    // Cerrar cualquier carta activa si tocás fuera
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768 && !e.target.closest('.flip-card')) {
+        cards.forEach(card => {
+          card.querySelector('.flip-card-inner').classList.remove('touch-flip');
+        });
+      }
+    });
+  });
+</script>
+{% endblock scripts %}
+
+

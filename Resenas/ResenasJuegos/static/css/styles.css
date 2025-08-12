@@ -33,7 +33,7 @@
 
 
 
-/* --- Estilos de Flip Card (con valores hexadecimales directos) --- */
+/* --- Estilos de Flip Card (Game Card)--- */
 .flip-card {
     background-color: transparent;
     width: 100%;
@@ -46,7 +46,7 @@
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.8s;
+    transition: transform 0.6s ease-in-out;
     transform-style: preserve-3d;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -56,6 +56,7 @@
     transform: rotateY(180deg);
 }
 
+/* Flip activado por tap en mobile */
 .flip-card-front,
 .flip-card-back {
     position: absolute;
@@ -136,4 +137,49 @@ input:-webkit-autofill:focus {
 /* Efecto de vidrio para el formulario */
 .backdrop-blur {
   backdrop-filter: blur(8px);
+}
+
+/* HOVER para desktop */
+@media (hover: hover) and (pointer: fine) {
+  .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+}
+
+/* TAP para mobile (sin necesidad de JS) */
+@media (hover: none) and (pointer: coarse) {
+  .flip-card:active .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+}
+
+/* --- Flip Hint (solo visible en mobile) --- */
+.mobile-flip-hint {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+.rotate-icon {
+  font-size: 1.5rem;
+  animation: rotateHint 1.5s infinite ease-in-out;
+}
+
+@keyframes rotateHint {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+}
+
+/* Mostrar el hint solo en dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-flip-hint {
+    display: flex;
+  }
 }

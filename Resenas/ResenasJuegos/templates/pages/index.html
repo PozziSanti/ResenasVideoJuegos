@@ -1,16 +1,36 @@
 {% extends 'layouts/general_layout.html' %}
+{% load static %}
 
 {% block content_layout %}
-<h1 class="text-4xl font-bold text-center mb-8">Bienvenido a Hit or Quit</h1>
 
-<!-- Sección de "Juegos Destacados" -->
-<h2 class="text-3xl font-bold mt-12 mb-6">Juegos Destacados</h2>
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    {% for game in games_data %}
-    {% include 'components/game_card.html' with game=game %}
-    {% endfor %}
-</div>
+<h1 class="text-3xl font-bold text-center my-6">Categorías de Juegos</h1>
 
-<!-- Agregar más secciones aca -->
+{% for categoria, posts in posts_por_categoria.items %}
+  <section class="mb-10">
+    <h2 class="text-xl font-semibold mb-4">{{ categoria }} ({{ posts.count }})</h2>
+
+    {% if posts %}
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {% for post in posts %}
+          {% include "components/cards/flip_card.html" with post=post %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-500">No hay posts para esta categoría.</p>
+    {% endif %}
+  </section>
+{% endfor %}
 
 {% endblock content_layout %}
+
+{% block scripts %}
+<script>
+  function scrollLeft(id) {
+    document.getElementById(id).scrollBy({ left: -300, behavior: 'smooth' });
+  }
+
+  function scrollRight(id) {
+    document.getElementById(id).scrollBy({ left: 300, behavior: 'smooth' });
+  }
+</script>
+{% endblock scripts %}

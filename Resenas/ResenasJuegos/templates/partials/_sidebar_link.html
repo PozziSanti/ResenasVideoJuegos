@@ -1,6 +1,11 @@
-<a href="{% url url_name %}"
-   class="text-white hover:text-text-light flex flex-col lg:flex-row items-center justify-center lg:justify-start p-2 rounded-md transition-colors duration-200">
-
+{% if url_args %}
+    <a href="{% url url_name url_args %}"
+    class="text-white hover:text-text-light flex flex-col lg:flex-row items-center justify-center lg:justify-start p-2 rounded-md transition-colors duration-200">
+{% else %}
+    <a href="{% url url_name %}"
+    class="text-white hover:text-text-light flex flex-col lg:flex-row items-center justify-center lg:justify-start p-2 rounded-md transition-colors duration-200">
+{% endif %}
+    
     <!-- Contenido del archivo SVG que le pasemos -->
     {% include icon_template_path %}
 
