@@ -3,7 +3,8 @@
 {% block title_layout %} | Login{% endblock title_layout %}
 
 {% block content_layout %}
-<div class="min-h-screen flex items-center justify-center bg-fixed bg-center bg-cover" style="background-image: url('{% static 'assets/login_register/fondo.png' %}') ">
+<div class="min-h-screen flex items-center justify-center bg-fixed bg-center bg-cover" 
+     class="background-image: url('{% static 'assets/login_register/fondo.png' %}');">
 
   <div class="relative w-full max-w-2xl px-8 ">  
     <!-- Icono de usuario -->
@@ -17,12 +18,14 @@
       {% csrf_token %}
 
       <div class="relative mt-2 mb-4 text-xl font-bold text-light text-center">Inicia Sesión</div>  
+
       <div class="msg py-3 text-center text-status-hot"></div>
 
       <!-- Campo Usuario -->
       <div class="relative w-full mb-6">  
         <input type="text" placeholder="Usuario" id="uname" name="username" required
                class="block w-full text-lg text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-3 py-3 placeholder-text-medium">  
+
         <span class="fa fa-user text-purple-50 py-1 absolute text-base right-3 bottom-3 text-accent-blue "></span> 
       </div>
 
@@ -30,6 +33,7 @@
       <div class="relative w-full mb-6">
         <input type="password" placeholder="Contraseña" id="password" name="password" required
                class="block w-full text-lg text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-3 py-3 placeholder-text-medium">
+
         <span class="far fa-eye text-purple-50 px-3 py-1 absolute bottom-3 right-0 cursor-pointer text-accent-blue password-toggle"></span>
       </div>
 
@@ -44,6 +48,7 @@
       <div class="text-light text-center mt-4 text-base"> 
         ¿No tenes cuenta? 
         <a href="{% url 'signup' %}" class="text-medium hover: text-light">Registrate</a>
+
       </div>
     </form>
   </div>

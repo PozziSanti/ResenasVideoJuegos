@@ -1,6 +1,28 @@
 {% extends 'layouts/general_layout.html' %}
 {% load static %}
 
+{% comment %} 
+{% block content_layout %}
+  <h1>Posts</h1>
+
+  {% if perms.post.add_post %}
+    <a href="{% url 'post_create' %}">Crear nuevo post</a>
+  {% endif %}
+
+  {% for post in posts %}
+    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px;">
+      <h2>{{ post.titulo }}</h2>
+      <p>{{ post.contenido }}</p>
+      <p><strong>Autor:</strong> {{ post.autor.username }}</p>
+
+      {% if user == post.autor or request.rol == 'admin' %}
+        <a href="{% url 'post_update' post.id %}">Editar</a> |
+        <a href="{% url 'post_delete' post.id %}">Eliminar</a>
+      {% endif %}
+  {% endfor %}
+{% endblock content_layout %}
+{% endcomment %}
+
 {% block content_layout %}
   <h1>Posts</h1>
 
@@ -33,3 +55,4 @@
 </div>
 
 {% endblock content_layout %}
+

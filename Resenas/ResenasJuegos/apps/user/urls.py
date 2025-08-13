@@ -1,11 +1,7 @@
 from django.urls import path
-from apps.user.views import (
-    UserSignupView,
-    UserLoginView,
-)
+from apps.user.views import UserSignupView, UserLoginView
 from blog.views import IndexView
-from .views import logout_view
-from .views import edit_profile
+from .views import logout_view, edit_profile
 
 urlpatterns = [
     path('signup/', UserSignupView.as_view(), name='signup'),

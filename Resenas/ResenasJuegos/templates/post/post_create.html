@@ -1,7 +1,8 @@
 {% extends 'layouts/general_layout.html' %}
 {% load static %}
 
-{% block content_layout %}
+
+{% comment %} {% block content_layout %}
   {% if perms.post.add_post %}
     <h1>Crear Post</h1>
     <form method="post">
@@ -15,7 +16,7 @@
       <button type="submit">Guardar</button>
     </form>
   {% endif %}
-{% endblock %}
+{% endblock %}  {% endcomment %}
 
 
 {% block content_layout %}
