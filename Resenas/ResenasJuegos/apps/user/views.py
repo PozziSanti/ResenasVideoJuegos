@@ -5,7 +5,7 @@ from django.views.generic import CreateView, TemplateView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from .forms import ProfileForm, RegisterForm
+from apps.user.forms import LoginForm, RegisterForm
 from apps.user.models import UserProfile
 from django.http import HttpResponse
 
@@ -31,6 +31,7 @@ class UserSignupView(CreateView):
 
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
+    form_class = LoginForm
     redirect_authenticated_user = True
     
     def get_success_url(self):

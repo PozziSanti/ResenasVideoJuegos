@@ -1,6 +1,7 @@
 {% extends 'layouts/general_layout.html' %}
 {% load static %}
 
+{% comment %} 
 {% block content_layout %}
   <h1>Posts</h1>
 
@@ -19,6 +20,8 @@
         <a href="{% url 'post_delete' post.id %}">Eliminar</a>
       {% endif %}
   {% endfor %}
+{% endblock content_layout %}
+{% endcomment %}
 
 {% block content_layout %}
 
