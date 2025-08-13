@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .forms import ProfileForm, RegisterForm
 from apps.user.models import UserProfile
-from .models import UserProfile
 from django.http import HttpResponse
 
 
