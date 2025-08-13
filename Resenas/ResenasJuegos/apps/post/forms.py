@@ -32,4 +32,4 @@ class PostForm(forms.ModelForm):
         post = super().save(commit)
         self.images.instance = post
         self.images.save()
-        return post 
+        return post
