@@ -1,4 +1,3 @@
-
 from django.views.generic import TemplateView, ListView, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from apps.post.models import Post, Category, PostImage
@@ -173,11 +172,51 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         kwargs['request'] = self.request
         return kwargs
 
-
 # TODO: agregar funcion 403 para que aparezca imagen del michi
     def form_valid(self, form):
         form.instance.author = self.request.user
+        print("\n=== INICIO DEL PROCESO DE GUARDADO ===")
+    
+        try:
+            print("\n1. Guardando post principal...")
+            self.object = form.save(commit=True)
+            print(f"✅ Post guardado con ID: {self.object.id}")
+            
+            print("\n2. Procesando imágenes...")
+            form.images.instance = self.object
+            is_valid = form.images.is_valid()
+            print(f"🔍 Formset válido?: {is_valid}")
+            
+            if not is_valid:
+                print(f"❌ Errores en el formset: {form.images.errors}")
+                # Agregar errores del formset al formulario principal
+                for error in form.images.errors:
+                    form.add_error(None, error)
+                return self.form_invalid(form)
+            else:
+                print("✅ Formset válido, guardando imágenes...")
+                form.images.save()
+                print(f"📸 Imágenes guardadas correctamente para el post {self.object.id}")
+                
+        except Exception as e:
+            print(f"‼️ ERROR CRÍTICO: {str(e)}")
+            form.add_error(None, f"Error al guardar imágenes: {str(e)}")
+            return self.form_invalid(form)
+        
+        print("\n=== PROCESO COMPLETADO CON ÉXITO ===")
         return super().form_valid(form)
+
+
+        # form.instance.author = self.request.user
+        # return super().form_valid(form) HABRIA QUE SACAR SI FUNCIONA *****************
+        # self.object = form.save(commit=True) # Guarda el post PRIMERO para obtener un ID
+        # form.images.instance = self.object # Asigna el post al formset y guarda las imágenes
+        # if form.images.is_valid(): #MODIFICADOOOO*************************
+        #     form.images.save()
+        # else:
+        #      pass  # Manejar errores del formset si es necesario
+        
+        # return super().form_valid(form)
     
     def test_func(self):
         user = self.request.user
@@ -190,14 +229,20 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
     template_name = 'post/post_update.html'
-    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
+    success_url = reverse_lazy('home')    # Redirige a la lista de posts después de crear uno
 
 #TODO: agregar funcion 403 para que aparezca imagen del michi
     def get_form_kwargs(self):
             kwargs = super().get_form_kwargs()
-            kwargs['request'] = self.request
+            kwargs['instance'] = self.get_object()
             return kwargs
 
+    def get_context_data(self, **kwargs): #SE AGREGOOOOOOOOOOO***********************
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['selected_category_ids'] = [c.id for c in self.object.category.all()] #SE AGREGOOOOOOOOOOO***********************
+        return context
+    
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:            # Filtra los post para que solo los autores o superusuarios editen el post
@@ -238,7 +283,8 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
     template_name = 'post/post_delete.html'
-    success_url = reverse_lazy('post_list')  # Redirige a la lista de posts después de eliminar uno
+    success_url = reverse_lazy('home')
+    #TODO=FALTARIA AGREGAR EN EL GET CONTEXT DATA UN IF PARA QUE LLEVE A INICIO
 
 # TODO: agregar funcion 403 para que aparezca imagen del michi     
     def get_context_data(self, **kwargs):
