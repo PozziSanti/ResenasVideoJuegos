@@ -186,21 +186,13 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 # Actualizar un post existente
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Post
-    slug_field = 'slug'
-    slug_url_kwarg = 'slug'
-    fields = ['titulo', 'contenido', 'categoria', 'imagen']
-    template_name = 'post_update.html'
-    success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
-
     form_class = PostForm
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
-
     template_name = 'post/post_update.html'
     success_url = reverse_lazy('post_list')    # Redirige a la lista de posts después de crear uno
 
-# TODO: agregar funcion 403 para que aparezca imagen del michi
+#TODO: agregar funcion 403 para que aparezca imagen del michi
     def get_form_kwargs(self):
             kwargs = super().get_form_kwargs()
             kwargs['request'] = self.request
@@ -215,8 +207,8 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
         post.save()
-        return super().form_valid(form)    
-    
+        return super().form_valid(form)
+
     def test_func(self):
         post = self.get_object()
         user = self.request.user
