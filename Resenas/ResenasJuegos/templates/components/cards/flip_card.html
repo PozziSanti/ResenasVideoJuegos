@@ -1,26 +1,24 @@
-<div class="flip-card">
+<div class="flip-card" onclick="this.classList.toggle('is-flipped')">
   <div class="flip-card-inner">
-    <!-- LADO FRONTAL -->
-    <div class="flip-card-front">
+
+    <!-- Frente -->
+    <div class="flip-card-front relative">
       {% with post.images.all|first as imagen %}
         {% if imagen %}
-          <img src="{{ imagen.image.url }}" alt="{{ post.title }}" class="w-full rounded">
+          <img src="{{ imagen.image.url }}" alt="{{ post.title }}">
         {% else %}
-          <div class="w-full h-40 bg-gray-200 flex items-center justify-center">Sin imagen</div>
+          <div class="no-image">Sin imagen</div>
         {% endif %}
       {% endwith %}
+      <div class="card-title">{{ post.title }}</div>
     </div>
 
-    <!-- LADO TRASERO -->
-    <div class="flip-card-back bg-gray-100 p-4 rounded shadow">
-      <h3 class="text-lg font-bold">{{ post.title }}</h3>
-      <p class="text-sm mt-2">{{ post.content|truncatewords:15 }}</p>
-      <a href="{% url 'post_detail' slug=post.slug %}" class="text-indigo-500 underline block mt-4">Ver más</a>
-    
-      <div class="mobile-flip-hint">
-        <span class="rotate-icon">↻</span>
-        <span class="hint-text">Tocá para girar</span>
-      </div>
+    <!-- Dorso -->
+    <div class="flip-card-back">
+      <h3>{{ post.title }}</h3>
+      <p>Contenido: "{{ post.content|default:'Sin contenido' }}"</p>
+      <a href="{% url 'post_detail' slug=post.slug %}">Ver más</a>
     </div>
+
   </div>
 </div>
