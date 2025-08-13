@@ -251,3 +251,49 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         user = self.request.user
 
         return user.has_perm('post.delete_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
+
+
+
+# CRUD PARA LAS CATEGORIAS
+
+# Crear una nueva categoría
+class CategoryCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Category
+    fields = ['title']
+    template_name = 'category/category_create.html'
+    success_url = reverse_lazy('home')  # Redirige a la lista de categorías después de crear una
+
+    def test_func(self):
+        user = self.request.user
+        return user.has_perm('post.add_category') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
+
+
+# Listar todas las categorías
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'category/category_list.html'
+    context_object_name = 'categories'
+
+# Editar una categoría existente
+class CategoryUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Category
+    fields = ['title']
+    template_name = 'category/category_update.html'
+    success_url = reverse_lazy('home')  # Redirige a la lista de categorías después de editar una
+
+    def test_func(self):
+        user = self.request.user
+        return user.has_perm('post.change_category') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
+
+
+# Eliminar una categoría existente
+class CategoryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Category
+    template_name = 'category/category_delete.html'
+    success_url = reverse_lazy('home')  # Redirige a la lista de categorías después de eliminar una
+
+    def test_func(self):
+        user = self.request.user
+        return user.has_perm('post.delete_category') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios 
+
+ 

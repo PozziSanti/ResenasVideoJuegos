@@ -1,0 +1,9 @@
+{% comment %} <!-- templates/category/category_confirm_delete.html -->
+<h1>Eliminar categoría</h1>
+<p>¿Estás seguro de que querés eliminar la categoría "{{ object.title }}"?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+    <a href="{% url 'category_list' %}">Cancelar</a>
+</form> {% endcomment %}
