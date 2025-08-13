@@ -1,19 +1,13 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import logout
+from django.contrib.auth import logout, get_user_model
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-<<<<<<< HEAD
-from .forms import ProfileForm
+from apps.user.forms import LoginForm, RegisterForm
 from apps.user.models import UserProfile
-=======
-from .forms import RegisterForm
-from .models import UserProfile
-from django.contrib.auth import get_user_model
 from django.http import HttpResponse
->>>>>>> 9b01a82081ca73d1e5c0499ad4907b8e72bc6352
 
 
 User = get_user_model()
@@ -21,26 +15,21 @@ User = get_user_model()
 def inicio(request):
     rol = request.session.get('rol', 'invitado')
     return HttpResponse(f"Rol actual: {rol}")
+
 class UserSignupView(CreateView):
     template_name = 'registration/signup.html'
     form_class = RegisterForm
+    success_url = reverse_lazy('signin')
 
     def form_valid(self, form):
-        user = form.save()
-<<<<<<< HEAD
-        UserProfile.objects.create(user=user)  # crea perfil en blanco automáticamente
-        next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
-        signin_url = f"{reverse('signin')}?next={next_url}"
-        return redirect(signin_url)    # redirige al formulario para que lo complete
+        return super().form_valid(form)
 
-=======
-        next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
-        signin_url = f"{reverse('signin')}?next={next_url}"
-        return redirect(signin_url)    # redirige al formulario para que lo complete
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
         
->>>>>>> 9b01a82081ca73d1e5c0499ad4907b8e72bc6352
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
+    form_class = LoginForm
     redirect_authenticated_user = True
     
     def get_success_url(self):
