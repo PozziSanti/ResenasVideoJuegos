@@ -59,12 +59,21 @@
 
             <!-- Liked Games -->
             <div class="bg-darker-morado-transparent rounded-xl p-6 border border-accent-blue">
-                <h2 class="text-light font-bold mb-4">My liked games</h2>
-                <p class="text-medium text-center">
-                    Tus juegos con "me gusta" aparecerán aquí.
-                </p>
+                <h2 class="text-light font-bold mb-4">Mis favoritos</h2>
+                {% if favorites %}
+                    <ul class="space-y-2">
+                        {% for fav in favorites %}
+                            <li>
+                                <a href="{% url 'post_detail' fav.post.slug %}" class="text-accent-blue hover:underline">
+                                    {{ fav.post.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-medium text-center">Todavía no tienes juegos en favoritos.</p>
+                {% endif %}
             </div>
-
         </div>
     </div>
 </div>

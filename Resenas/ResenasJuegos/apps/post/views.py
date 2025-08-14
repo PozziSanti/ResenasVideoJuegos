@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from .forms import PostForm
 from apps.comment.models import Comment
+from apps.favorite.models import Favorite
 
 
 class IndexView(TemplateView):
@@ -144,7 +145,16 @@ class PostDetailView(DetailView):
         #Agrega los botones de navegación (post siguiente y anterior).
         # if self.request.user.is_authenticated:
         #     context['form'] = CommentForm()
+
         # return context #Si el usuario está logueado, le pasa el formulario para comentar
+        # Saber si este post ya está en favoritos
+        if self.request.user.is_authenticated:
+            context['is_favorited'] = Favorite.objects.filter(
+                user=self.request.user,
+                post=post
+            ).exists()
+        else:
+            context['is_favorited'] = False
 
         if self.request.user.is_authenticated:
             edit_comment_id = self.request.GET.get('edit_comment_id')
