@@ -2,27 +2,26 @@
 
 {% extends 'layouts/general_layout.html' %}
 
-
 {% block content_layout %}
 <article class="max-w-3xl mx-auto p-6 bg-white shadow rounded">
   <!-- TITULO Y FECHA -->
   <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
   <p class="text-gray-500 text-sm mb-6">Publicado el {{ post.created_at|date:"d M Y" }}</p>
-  
-{% if user.is_authenticated %}
-    <form method="post" action="{% url 'toggle_favorite' post.slug %}">
-        {% csrf_token %}
-        {% if is_favorited %}
-            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">
-                Quitar de favoritos
-            </button>
-        {% else %}
-            <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded">
-                Agregar a favoritos
-            </button>
-        {% endif %}
-    </form>
-{% endif %}
+
+  {% if user.is_authenticated %}
+  <form method="post" action="{% url 'toggle_favorite' post.slug %}">
+    {% csrf_token %}
+    {% if is_favorited %}
+    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">
+      Quitar de favoritos
+    </button>
+    {% else %}
+    <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded">
+      Agregar a favoritos
+    </button>
+    {% endif %}
+  </form>
+  {% endif %}
 
   {% if post.images.all %}
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -122,6 +121,7 @@
 
 
 
+
 <!-- ######################################ORIGINAL-ORIGINAL################################################## -->
 
 <!-- #TODO: REVISAR LOS ROLES Y PERMISOS
@@ -183,7 +183,7 @@
       </div>
     </div>
 
-    <!-- Informacion -->
+    <!-- Información lateral -->
     <div class="space-y-6">
       <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44]">
         <h2 class="text-2xl font-bold mb-4 text-[#f0f1f4]">Información</h2>
@@ -213,7 +213,6 @@
     <p class="text-[#f0f1f4] opacity-80 pb-6 border-b border-[#241D44]">No hay comentarios aún.</p>
     {% endfor %}
 
-
     {% if user.is_authenticated %}
     <h3 class="text-xl font-semibold mb-4 mt-6 text-[#f0f1f4]">Dejá tu reseña</h3>
     <form method="post">
@@ -226,7 +225,7 @@
             rows="4" placeholder="Escribí tu reseña acá..."></textarea>
         </div>
 
-        <!-- Sistema de puntuación por estrellas  -->
+        <!-- Sistema de puntuación por estrellas -->
         <div class="form-group">
           <label class="block mb-2 text-[#f0f1f4] font-medium">Puntuación</label>
           <div class="flex items-center space-x-1 star-rating">
@@ -250,119 +249,36 @@
     {% endif %}
   </div>
 
-  <!-- Modal de Confirmación de Eliminación -->
-  <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 p-4 hidden">
-    <div class="flex items-center justify-center h-full">
-      <div class="bg-[#0B071A] border border-[#241D44] rounded-xl p-6 max-w-md w-full">
-        <div class="text-center mb-4">
-          <h2 class="text-2xl font-bold text-[#f0f1f4]">Eliminar Post: {{ post.title }}</h2>
-        </div>
-
-        <div class="flex items-start mb-6">
-          <div class="p-2 bg-[#241D44] rounded-lg mr-4">
-            {% include 'partials/home_icons/warning_icon.html' %}
-          </div>
-          <div>
-            <p class="text-[#A7A1B8]">
-              Esta acción eliminará permanentemente el post y todos sus datos asociados.
-              ¿Estás completamente seguro de continuar?
-            </p>
-          </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <form method="post" action="{% url 'post_delete' post.id %}" class="m-0 flex-1">
-            {% csrf_token %}
-            <button type="submit"
-              class="w-full px-6 py-3 bg-[#EF4444] hover:bg-[#DC2626] text-white font-bold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#EF4444]/50 flex items-center justify-center gap-2">
-              <span class="w-6 h-6">{% include 'partials/home_icons/delete_icon.html' %}</span>
-              Sí, eliminar definitivamente
-            </button>
-          </form>
-          <button onclick="closeDeleteModal()"
-            class="flex-1 px-6 py-3 bg-[#241D44] hover:bg-[#4F46E5] text-[#f0f1f4] font-bold rounded-lg transition-colors duration-300">
-            Cancelar y volver
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  <!-- Incluimos el modal -->
+  {% include 'post/post_delete.html' %}
 
 {% endblock content_layout %}
 
 {% block scripts %}
 <script>
-  // Sistema de estrellas mejorado
-  document.querySelectorAll('.star-rating input[type="radio"]').forEach(radio => {
-    // Al hacer clic
-    radio.addEventListener('change', function () {
-      const selectedValue = parseInt(this.value);
-      const stars = document.querySelectorAll('.star-rating span');
-
-      stars.forEach((star, index) => {
-        if (index < selectedValue) {
-          star.classList.remove('text-gray-400');
-          star.classList.add('text-yellow-500');
-        } else {
-          star.classList.remove('text-yellow-500');
-          star.classList.add('text-gray-400');
-        }
-      });
-    });
-
-    // Efecto hover
-    radio.addEventListener('mouseover', function () {
-      const hoverValue = parseInt(this.value);
-      const stars = document.querySelectorAll('.star-rating span');
-
-      stars.forEach((star, index) => {
-        if (index < hoverValue) {
-          star.classList.add('text-yellow-500');
-        }
-      });
-    });
-
-    radio.addEventListener('mouseout', function () {
-      const selectedRadio = document.querySelector('.star-rating input[type="radio"]:checked');
-      const stars = document.querySelectorAll('.star-rating span');
-
-      if (!selectedRadio) {
-        stars.forEach((star, index) => {
-          star.classList.remove('text-yellow-500');
-          star.classList.add('text-gray-400');
-        });
-        return;
-      }
-
-      const selectedValue = parseInt(selectedRadio.value);
-      stars.forEach((star, index) => {
-        if (index < selectedValue) {
-          star.classList.add('text-yellow-500');
-        } else {
-          star.classList.remove('text-yellow-500');
-          star.classList.add('text-gray-400');
-        }
-      });
+// Sistema de estrellas
+document.querySelectorAll('.star-rating input[type="radio"]').forEach(radio => {
+  radio.addEventListener('change', function () {
+    const selectedValue = parseInt(this.value);
+    const stars = document.querySelectorAll('.star-rating span');
+    stars.forEach((star, index) => {
+      star.classList.toggle('text-yellow-500', index < selectedValue);
+      star.classList.toggle('text-gray-400', index >= selectedValue);
     });
   });
+});
 
-  // Funciones para manejar el modal
-  function openDeleteModal() {
-    document.getElementById('deleteModal').classList.remove('hidden');
-    document.body.classList.add('overflow-hidden'); // Bloquear scroll
-  }
-
-  function closeDeleteModal() {
-    document.getElementById('deleteModal').classList.add('hidden');
-    document.body.classList.remove('overflow-hidden'); // Restaurar scroll
-  }
-
-  // Cerrar modal al hacer clic fuera del contenido
-  document.getElementById('deleteModal').addEventListener('click', function (e) {
-    if (e.target === this) {
-      closeDeleteModal();
-    }
-  });
+// Modal
+function openDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+}
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+}
+document.getElementById('deleteModal').addEventListener('click', function(e){
+  if(e.target === this) closeDeleteModal();
+});
 </script>
 {% endblock scripts %}

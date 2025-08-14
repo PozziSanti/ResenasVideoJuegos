@@ -1,69 +1,36 @@
-{% extends 'layouts/general_layout.html' %}
-
-{% block content_layout %}
-<div class="max-w-3xl mx-auto px-4 py-8">
-  {% if can_delete %}
-  <!-- Sección cuando SÍ tiene permisos -->
-  <div class="text-center mb-8">
-    <h1 class="text-3xl font-bold text-[#f0f1f4] mb-6">
-      Eliminar Post: <span class="text-[#f0f1f4]">{{ object.title }}</span>
-    </h1>
-  </div>
-
-  <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44] mb-8">
-    <div class="flex items-start mb-4">
-      <div class="p-2 bg-[#241D44] rounded-lg mr-4">
-        {% include 'partials/home_icons/warning_icon.html' %}
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 p-4 hidden">
+  <div class="flex items-center justify-center h-full">
+    <div class="bg-[#0B071A] border border-[#241D44] rounded-xl p-6 max-w-md w-full">
+      <div class="text-center mb-4">
+        <h2 class="text-2xl font-bold text-[#f0f1f4]">Eliminar Post: {{ post.title }}</h2>
       </div>
-      <div>
-        <h2 class="text-xl font-semibold text-[#f0f1f4] mb-2">Confirmar eliminación</h2>
-        <p class="text-[#A7A1B8]">
-          Esta acción eliminará permanentemente el post y todos sus datos asociados.
-          ¿Estás completamente seguro de continuar?
-        </p>
+
+      <div class="flex items-start mb-6">
+        <div class="p-2 bg-[#241D44] rounded-lg mr-4">
+          {% include 'partials/home_icons/warning_icon.html' %}
+        </div>
+        <div>
+          <p class="text-[#A7A1B8]">
+            Esta acción eliminará permanentemente el post y todos sus datos asociados.
+            ¿Estás completamente seguro de continuar?
+          </p>
+        </div>
       </div>
-    </div>
 
-    <form method="post" class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
-      {% csrf_token %}
-      <button type="submit"
-        class="flex-1 px-6 py-3 bg-[#EF4444] hover:bg-[#DC2626] text-white font-bold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#EF4444]/50 flex items-center justify-center gap-2">
-        {% include 'partials/home_icons/delete_icon.html' %}
-        Sí, eliminar definitivamente
-      </button>
-      <a href="{% url 'post_list' %}"
-        class="flex-1 px-6 py-3 bg-[#241D44] hover:bg-[#4F46E5] text-[#f0f1f4] font-bold rounded-lg transition-colors duration-300 text-center">
-        Cancelar y volver
-      </a>
-    </form>
-  </div>
-
-  {% else %}
-  <!-- Sección cuando NO tiene permisos -->
-  <div class="text-center mb-8">
-    <h1 class="text-3xl font-bold text-[#f0f1f4] mb-6">
-      Acceso denegado <span class="text-[#EF4444]">😿</span>
-    </h1>
-  </div>
-
-  <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44]">
-    <div class="flex items-start">
-      <div class="p-2 bg-[#241D44] rounded-lg mr-4">
-        {% include 'partials/home_icons/warning_icon.html' %}
-      </div>
-      <div>
-        <h2 class="text-xl font-semibold text-[#f0f1f4] mb-2">No tienes permisos para esta acción</h2>
-        <p class="text-[#A7A1B8] mb-4">
-          Lo sentimos, pero no cuentas con los privilegios necesarios para eliminar este post.
-          Si crees que esto es un error, por favor contacta al administrador del sistema.
-        </p>
-        <a href="{% url 'post_list' %}"
-          class="inline-block px-6 py-3 bg-[#241D44] hover:bg-[#4F46E5] text-[#f0f1f4] font-bold rounded-lg transition-colors duration-300">
-          Volver al listado de posts
-        </a>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <form method="post" action="{% url 'post_delete' post.id %}" class="m-0 flex-1">
+          {% csrf_token %}
+          <button type="submit"
+            class="w-full px-6 py-3 bg-[#EF4444] hover:bg-[#DC2626] text-white font-bold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#EF4444]/50 flex items-center justify-center gap-2">
+            <span class="w-6 h-6">{% include 'partials/home_icons/delete_icon.html' %}</span>
+            Sí, eliminar definitivamente
+          </button>
+        </form>
+        <button onclick="closeDeleteModal()"
+          class="flex-1 px-6 py-3 bg-[#241D44] hover:bg-[#4F46E5] text-[#f0f1f4] font-bold rounded-lg transition-colors duration-300">
+          Cancelar y volver
+        </button>
       </div>
     </div>
   </div>
-  {% endif %}
 </div>
-{% endblock content_layout %}
