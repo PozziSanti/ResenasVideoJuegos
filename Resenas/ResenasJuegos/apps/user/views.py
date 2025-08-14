@@ -19,15 +19,12 @@ def inicio(request):
 class UserSignupView(CreateView):
     template_name = 'registration/signup.html'
     form_class = RegisterForm
-
+    success_url = reverse_lazy('signin')
     def form_valid(self, form):
-        user = form.save()
+        return super().form_valid(form)
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
-        UserProfile.objects.create(user=user)  # crea perfil en blanco automáticamente
-        next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
-        signin_url = f"{reverse('signin')}?next={next_url}"
-        return redirect(signin_url)    # redirige al formulario para que lo complete
-        
 
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
@@ -44,7 +41,7 @@ def logout_view(request):
 
 
 #PERMITE EDITAR PERFIL
-#TODO=cambiar redireccion de dashboard
+#TODO=MODIFICAR
 @login_required
 def edit_profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
@@ -52,7 +49,7 @@ def edit_profile(request):
         form = RegisterForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')  # lugar de redirección después de guardar el perfil
+            return redirect('user_profile.html')
     else:
         form = RegisterForm(instance=profile)
 

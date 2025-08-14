@@ -19,38 +19,47 @@
     <form method="post" class="flex flex-col p-10 pt-20 rounded-3xl bg-darker-morado-transparent border-2 border-accent-blue shadow-md" onsubmit = "return validarFormulario();">
       {% csrf_token %}
 
-      <div class="relative mt-2 mb-4 text-xl font-bold text-text-light text-center">Inicia Sesión</div>  
+      <div class="relative mt-2 mb-4 text-xl font-bold text-light text-center">Inicia Sesión</div>  
+
       <div class="msg py-3 text-center text-status-hot"></div>
 
       <!-- Campo Usuario -->
       <div class="relative w-full mb-6">  
         <input type="text" placeholder="Usuario" id="uname" name="username" required
-               class="block w-full text-lg text-text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-3 py-3 placeholder-text-medium">  
+               class="block w-full text-lg text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-3 py-3 placeholder-text-medium">  
+
         <span class="fa fa-user text-purple-50 py-1 absolute text-base right-3 bottom-3 text-accent-blue "></span> 
       </div>
 
       <!-- Campo Contraseña -->
       <div class="relative w-full mb-6">
         <input type="password" placeholder="Contraseña" id="password" name="password" required
-               class="block w-full text-lg text-text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-3 py-3 placeholder-text-medium">
+               class="block w-full text-lg text-light bg-transparent border-b-2 border-light-morado focus:outline-none px-3 py-3 placeholder-text-medium">
+
         <span class="far fa-eye text-purple-50 px-3 py-1 absolute bottom-3 right-0 cursor-pointer text-accent-blue password-toggle"></span>
       </div>
 
       <!-- Botón Login -->
       <div class="py-3 btn-container self-center">  
         <input type="submit" id="login-btn" value="Ingresar"
-               class="content-center px-8 py-3 bg-accent-blue text-text-light font-semibold text-lg  rounded-xl
+               class="content-center px-8 py-3 bg-accent-blue text-light font-semibold text-lg  rounded-xl
                       transition duration-300 hover:bg-accent-blue-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">  
       </div>
 
       <!-- Enlace Registro -->
-      <div class="text-text-light text-center mt-4 text-base"> 
+      <div class="text-light text-center mt-4 text-base"> 
         ¿No tenes cuenta? 
-        <a href="{% url 'signup' %}?next={{ request.path }}" class="text-text-medium hover:text-text-light">Registrate</a>
+        <a href="{% url 'signup' %}" class="text-medium hover: text-light">Registrate</a>
+
       </div>
     </form>
   </div>
 </div>
 
-<script src="{% static 'js/login.js' %}"></script>
 {% endblock content_layout %}
+
+{% block scripts %}
+
+<script src="{% static 'js/login.js' %}"></script>
+
+{% endblock scripts %}

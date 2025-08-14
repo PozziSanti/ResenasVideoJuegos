@@ -1,7 +1,7 @@
 from django.urls import path
 from apps.post.views import (IndexView, AboutView, TermsView, PrivacyPolicyView,
                             PostListView, PostUpdateView, PostDeleteView, PostCreateView, PostDetailView, 
-                            PostCategoryFilter, PostTitleFilter, PostDateFilter, PostStarFilter)
+                            PostCategoryFilter, PostTitleFilter, PostDateFilter, PostStarFilter,)
 
 
 urlpatterns = [

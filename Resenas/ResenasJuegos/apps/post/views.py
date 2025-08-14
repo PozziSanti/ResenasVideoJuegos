@@ -4,10 +4,10 @@ from apps.post.models import Post, Category, PostImage
 from django.db.models import Avg, Value, FloatField
 from django.db.models.functions import Coalesce
 from apps.comment.forms import CommentForm
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from .forms import PostForm
-# from apps.comment.models import Comment
+from apps.comment.models import Comment
 
 
 class IndexView(TemplateView):
@@ -142,23 +142,74 @@ class PostDetailView(DetailView):
         context['prev_post'] = Post.objects.filter(id__lt=post.id).order_by('-id').first()
         
         #Agrega los botones de navegación (post siguiente y anterior).
+        # if self.request.user.is_authenticated:
+        #     context['form'] = CommentForm()
+        # return context #Si el usuario está logueado, le pasa el formulario para comentar
+
         if self.request.user.is_authenticated:
-            context['form'] = CommentForm()
-        return context #Si el usuario está logueado, le pasa el formulario para comentar
+            edit_comment_id = self.request.GET.get('edit_comment_id')
+            if edit_comment_id:
+                comment_to_edit = get_object_or_404(Comment, pk=edit_comment_id, post=post)
+                if comment_to_edit.user == self.request.user:
+                    context['form'] = CommentForm(instance=comment_to_edit)
+                    context['editing'] = comment_to_edit
+                else:
+                    context['form'] = CommentForm()
+            else:
+                context['form'] = CommentForm()
+
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if not request.user.is_authenticated:
-            return redirect('login')
+        post = self.object
 
-        #Si el usuario no está logueado, lo manda a iniciar sesión
+        if not request.user.is_authenticated:
+            return redirect('login') #Si el usuario no está logueado, lo manda a iniciar sesión
+        
+        #ELIMINAR COMENTARIO
+        delete_comment_id = request.POST.get('delete_comment_id')
+        if delete_comment_id:
+            comment = get_object_or_404(Comment, pk=delete_comment_id, post=post)
+            if comment.user == request.user:  # Solo el dueño puede eliminar
+                comment.delete()
+            return redirect('post_detail', slug=post.slug)
+
+        #EDITAR COMENTARIO
+        comment_id = request.POST.get('comment_id')
+        if comment_id:
+            comment = get_object_or_404(Comment, pk=comment_id, post=post)
+            if comment.user != request.user:
+                return redirect('post_detail', slug=post.slug)
+
+            form = CommentForm(request.POST, instance=comment)
+            if form.is_valid():
+                form.save()
+                return redirect('post_detail', slug=post.slug)
+            else:
+                # Si el form no es válido, recargamos la página con errores
+                context = self.get_context_data()
+                context['form'] = form
+                context['editing'] = comment
+                return self.render_to_response(context)
+        
+        if Comment.objects.filter(user=request.user, post=post).exists():
+            context = self.get_context_data()
+            context['form'] = CommentForm()
+            context['error_message'] = "Ya has dejado una reseña para este post."
+            return self.render_to_response(context)
+        
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.user = request.user
             comment.post = self.object
             comment.save()
-        return redirect('post_detail', slug=self.object.slug) #Redirecciona a la misma página para que el comentario se vea en pantalla
+            return redirect('post_detail', slug=self.object.slug)
+        else:
+            context = self.get_context_data()
+            context['form'] = form
+            return self.render_to_response(context)
 
 
 # Crear un nuevo post
@@ -284,7 +335,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     slug_url_kwarg = 'slug'
     template_name = 'post/post_delete.html'
     success_url = reverse_lazy('home')
-    #FALTARIA AGREGAR EN EL GET CONTEXT DATA UN IF PARA QUE LLEVE A INICIO
+    #TODO=FALTARIA AGREGAR EN EL GET CONTEXT DATA UN IF PARA QUE LLEVE A INICIO
 
 # TODO: agregar funcion 403 para que aparezca imagen del michi     
     def get_context_data(self, **kwargs):
@@ -295,5 +346,4 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         user = self.request.user
-
-        return user.has_perm('post.delete_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
+        return user.has_perm('post.delete_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuario
