@@ -27,6 +27,7 @@ class UserSignupView(CreateView):
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
 
+
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
     form_class = LoginForm
