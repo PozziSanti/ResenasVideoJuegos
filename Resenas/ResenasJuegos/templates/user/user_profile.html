@@ -1,27 +1,95 @@
+{% extends 'layouts/general_layout.html' %}
+{% load static %}
 
-<!-- PAG EDITAR PERFIL -->
-{% block content %}
-<h1>Editar perfil</h1>
-
-<form method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Guardar cambios</button>
-</form>
-
-{% endblock %}
-
-
-<!-- {% extends 'layouts/base_layout.html' %}
-
-{% block title_layout %}
-| Mi Perfil 
-{% endblock title_layout %}
-
-{# No se define el bloque 'sidebar_layout' aquí, por lo tanto, no aparecerá el sidebar #}
+{% block title_layout %} | Mi Perfil {% endblock title_layout %}
 
 {% block content_layout %}
-    <h1>Bienvenido a tu perfil</h1>
-    <p>Aquí verás la información de tu cuenta.</p>
-    {# Contenido específico del perfil #}
-{% endblock content_layout %} -->
+
+<!-- Header / Portada -->
+<div class="relative w-full h-48 bg-cover bg-center"
+     style="background: linear-gradient(135deg, var(--color-light-morado), var(--color-primary-morado));">
+</div>
+
+<!-- Contenedor general -->
+<div class="relative max-w-6xl mx-auto px-6 -mt-16">
+
+    <!-- Avatar flotante -->
+    <div class="flex justify-center">
+        <div class="w-32 h-32 rounded-full border-4 border-accent-blue overflow-hidden bg-light-morado shadow-lg">
+            {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" 
+                     alt="Avatar de {{ user.alias|default:user.username }}" 
+                     class="w-full h-full object-cover"
+                     onerror="replaceWithIcon(this);">
+            {% else %}
+                <i class="fa fa-user text-6xl text-accent-blue flex items-center justify-center h-full"></i>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Nombre -->
+    <div class="mt-4 text-center">
+        <h1 class="text-2xl font-bold text-light">{{ user.alias|default:user.username }}</h1>
+        <a href="{% url 'edit_profile' %}" 
+           class="mt-3 inline-block px-4 py-2 bg-accent-blue text-light rounded-full hover:bg-accent-blue-hover transition">
+            Editar mi perfil
+        </a>
+    </div>
+
+    <!-- Pais -->
+
+
+    <!-- Contenido en dos columnas -->
+    <div class="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Columna izquierda -->
+        <div class="space-y-4">
+
+            <!-- Stats -->
+            <div class="bg-darker-morado-transparent rounded-xl p-4 border border-accent-blue">
+                <h2 class="text-light font-bold mb-2">Stats</h2>
+                <p class="text-medium">Member for: 8 days</p>
+                <p class="text-medium">Games liked: 0</p>
+                <p class="text-medium">Playstreak: 1 day</p>
+            </div>
+        </div>
+
+        <!-- Columna derecha (2 columnas de ancho) -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- Liked Games -->
+            <div class="bg-darker-morado-transparent rounded-xl p-6 border border-accent-blue">
+                <h2 class="text-light font-bold mb-4">Mis favoritos</h2>
+                {% if favorites %}
+                    <ul class="space-y-2">
+                        {% for fav in favorites %}
+                            <li>
+                                <a href="{% url 'post_detail' fav.post.slug %}" class="text-accent-blue hover:underline">
+                                    {{ fav.post.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-medium text-center">Todavía no tienes juegos en favoritos.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content_layout %}
+
+{% block scripts %}
+<script>
+    function replaceWithIcon(imgElement) {
+        const parent = imgElement.parentElement;
+        if (parent) {
+            const icon = document.createElement('i');
+            icon.className = 'fa fa-user text-6xl text-accent-blue flex items-center justify-center h-full';
+            parent.innerHTML = '';
+            parent.appendChild(icon);
+        }
+    }
+</script>
+{% endblock scripts %}

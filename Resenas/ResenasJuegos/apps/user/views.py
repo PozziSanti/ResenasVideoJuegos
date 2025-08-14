@@ -5,9 +5,11 @@ from django.views.generic import CreateView, TemplateView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from apps.user.forms import LoginForm, RegisterForm
+from apps.user.forms import LoginForm, RegisterForm, EditForm, ChangePasswordForm
 from apps.user.models import UserProfile
 from django.http import HttpResponse
+from django.contrib.auth import update_session_auth_hash
+from apps.favorite.models import Favorite
 
 
 User = get_user_model()
@@ -25,38 +27,52 @@ class UserSignupView(CreateView):
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
 
-        UserProfile.objects.create(user=user)  # crea perfil en blanco automáticamente
-        next_url = self.request.GET.get('next') or self.request.POST.get('next') or '/' # Tomar la URL de origen si existe
-        signin_url = f"{reverse('signin')}?next={next_url}"
-        return redirect(signin_url)    # redirige al formulario para que lo complete
-
-        
-
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
     form_class = LoginForm
     redirect_authenticated_user = True
     
     def get_success_url(self):
-        return self.request.GET.get('next') or reverse_lazy('home') # Si hay una URL de redirección pasada, usarla; si no, ir a home
+        return self.request.GET.get('next') or reverse_lazy('home')
 
 
 def logout_view(request):
     logout(request)
     return redirect('home')
 
-
 #PERMITE EDITAR PERFIL
-#TODO=cambiar redireccion de dashboard
 @login_required
 def edit_profile(request):
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    profile = request.user 
+    
     if request.method == 'POST':
-        form = RegisterForm(request.POST, request.FILES, instance=profile)
+        form = EditForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')  # lugar de redirección después de guardar el perfil
+            return redirect('user_profile') 
     else:
-        form = RegisterForm(instance=profile)
+        form = EditForm(instance=profile)
 
-    return render(request, 'user/user_profile.html', {'form': form})
+    return render(request, 'user/edit_profile.html', {'form': form})
+
+#PERMITE VER PERFIL
+@login_required
+def profile(request):
+    user_profile = request.user
+    favorites = Favorite.objects.filter(user=request.user).select_related('post')
+    return render(request, 'user/user_profile.html', {'user_profile': user_profile, 'favorites': favorites
+})
+
+@login_required
+def change_password(request):
+    user = request.user
+    if request.method == 'POST':
+        form = ChangePasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, user) # Required to keep the user logged in
+            return redirect('edit_profile')
+    else:
+        form = ChangePasswordForm(user)
+
+    return render(request, 'user/change_password.html', {'form': form})
