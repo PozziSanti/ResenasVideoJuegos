@@ -6,6 +6,21 @@
   <!-- TITULO Y FECHA -->
   <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
   <p class="text-gray-500 text-sm mb-6">Publicado el {{ post.created_at|date:"d M Y" }}</p>
+  
+{% if user.is_authenticated %}
+    <form method="post" action="{% url 'toggle_favorite' post.slug %}">
+        {% csrf_token %}
+        {% if is_favorited %}
+            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">
+                Quitar de favoritos
+            </button>
+        {% else %}
+            <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded">
+                Agregar a favoritos
+            </button>
+        {% endif %}
+    </form>
+{% endif %}
 
   {% if post.images.all %}
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">

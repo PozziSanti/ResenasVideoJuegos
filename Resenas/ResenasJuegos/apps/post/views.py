@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from .forms import PostForm
 from apps.comment.models import Comment
+from apps.favorite.models import Favorite
 
 
 class IndexView(TemplateView):
@@ -141,10 +142,20 @@ class PostDetailView(DetailView):
         context['next_post'] = Post.objects.filter(id__gt=post.id).order_by('id').first() #Agrega todos los comentarios del post actual, ordenados del más nuevo al más viejo
         context['prev_post'] = Post.objects.filter(id__lt=post.id).order_by('-id').first()
         
+        #TODO= VER QUE ONDA ESTE COMENTARIO
         #Agrega los botones de navegación (post siguiente y anterior).
         # if self.request.user.is_authenticated:
         #     context['form'] = CommentForm()
+
         # return context #Si el usuario está logueado, le pasa el formulario para comentar
+        # Saber si este post ya está en favoritos
+        if self.request.user.is_authenticated:
+            context['is_favorited'] = Favorite.objects.filter(
+                user=self.request.user,
+                post=post
+            ).exists()
+        else:
+            context['is_favorited'] = False
 
         if self.request.user.is_authenticated:
             edit_comment_id = self.request.GET.get('edit_comment_id')
@@ -256,18 +267,6 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         
         print("\n=== PROCESO COMPLETADO CON ÉXITO ===")
         return super().form_valid(form)
-
-
-        # form.instance.author = self.request.user
-        # return super().form_valid(form) HABRIA QUE SACAR SI FUNCIONA *****************
-        # self.object = form.save(commit=True) # Guarda el post PRIMERO para obtener un ID
-        # form.images.instance = self.object # Asigna el post al formset y guarda las imágenes
-        # if form.images.is_valid(): #MODIFICADOOOO*************************
-        #     form.images.save()
-        # else:
-        #      pass  # Manejar errores del formset si es necesario
-        
-        # return super().form_valid(form)
     
     def test_func(self):
         user = self.request.user
@@ -288,10 +287,10 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             kwargs['instance'] = self.get_object()
             return kwargs
 
-    def get_context_data(self, **kwargs): #SE AGREGOOOOOOOOOOO***********************
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
-        context['selected_category_ids'] = [c.id for c in self.object.category.all()] #SE AGREGOOOOOOOOOOO***********************
+        context['selected_category_ids'] = [c.id for c in self.object.category.all()]
         return context
     
     def get_queryset(self):
@@ -335,7 +334,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     slug_url_kwarg = 'slug'
     template_name = 'post/post_delete.html'
     success_url = reverse_lazy('home')
-    #TODO=FALTARIA AGREGAR EN EL GET CONTEXT DATA UN IF PARA QUE LLEVE A INICIO
+
 
 # TODO: agregar funcion 403 para que aparezca imagen del michi     
     def get_context_data(self, **kwargs):
