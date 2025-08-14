@@ -33,14 +33,16 @@
 
 
 
-/* --- Estilos de Flip Card (Game Card)--- */
+/* Contenedor principal */
 .flip-card {
     background-color: transparent;
     width: 100%;
     height: 250px;
     perspective: 1000px;
+    cursor: pointer;
 }
 
+/* Inner para rotar */
 .flip-card-inner {
     position: relative;
     width: 100%;
@@ -52,31 +54,35 @@
     overflow: hidden;
 }
 
+/* Hover en desktop */
 .flip-card:hover .flip-card-inner {
     transform: rotateY(180deg);
 }
 
-/* Flip activado por tap en mobile */
+/* Mobile con tap */
+.flip-card.is-flipped .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+/* Caras */
 .flip-card-front,
 .flip-card-back {
     position: absolute;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
     border-radius: 0.5rem;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
 }
 
+/* Frente */
 .flip-card-front {
     background-color: #241D44;
-    /* Valor directo de --color-light-morado */
     color: #f0f1f4;
-    /* Valor directo de --color-text-light */
     z-index: 2;
 }
 
@@ -84,17 +90,38 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0.5rem;
 }
 
+.card-title {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Sin imagen */
+.no-image {
+    width: 100%;
+    height: 100%;
+    background: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Dorso */
 .flip-card-back {
     background-color: #241D44;
-    /* Valor directo de --color-light-morado */
     color: #f0f1f4;
-    /* Valor directo de --color-text-light */
     transform: rotateY(180deg);
+    padding: 1rem;
     box-sizing: border-box;
+    text-align: left;
 }
+
 
 
 

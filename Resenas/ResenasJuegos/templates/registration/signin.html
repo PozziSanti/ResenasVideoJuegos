@@ -1,6 +1,8 @@
 {% extends 'layouts/auth_layout.html' %}
 {% load static %}
-{% block title_layout %} | Login{% endblock title_layout %}
+
+
+{% block title_layout %} | Iniciar Sesión {% endblock title_layout %}
 
 {% block content_layout %}
 <div class="min-h-screen flex items-center justify-center bg-fixed bg-center bg-cover" 
@@ -54,5 +56,10 @@
   </div>
 </div>
 
-<script src="{% static 'js/login.js' %}"></script>
 {% endblock content_layout %}
+
+{% block scripts %}
+
+<script src="{% static 'js/login.js' %}"></script>
+
+{% endblock scripts %}
