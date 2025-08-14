@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('__reload__/', include('django_browser_reload.urls')),
-    path('', IndexView.as_view(), name='home'), # Página principal 
+    path('', IndexView.as_view(), name='home'), # Página principal
     path('', include('apps.user.urls')), # URLs de usuarios
     path('', include('apps.post.urls')), # Rutas de la app de post
 ]

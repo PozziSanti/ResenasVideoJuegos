@@ -284,7 +284,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     slug_url_kwarg = 'slug'
     template_name = 'post/post_delete.html'
     success_url = reverse_lazy('home')
-    #TODO=FALTARIA AGREGAR EN EL GET CONTEXT DATA UN IF PARA QUE LLEVE A INICIO
+    #FALTARIA AGREGAR EN EL GET CONTEXT DATA UN IF PARA QUE LLEVE A INICIO
 
 # TODO: agregar funcion 403 para que aparezca imagen del michi     
     def get_context_data(self, **kwargs):
