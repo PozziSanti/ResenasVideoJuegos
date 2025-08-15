@@ -46,6 +46,12 @@ def edit_profile(request):
     
     if request.method == 'POST':
         form = EditForm(request.POST, request.FILES, instance=profile)
+        if "remove_avatar" in request.POST:
+            profile.avatar.delete(save=False)  # borra el archivo físico
+            profile.avatar = None              # limpia el campo en la BD
+            profile.save()
+            return redirect('edit_profile')    # redirige al perfil sin avatar
+            
         if form.is_valid():
             form.save()
             return redirect('user_profile') 
