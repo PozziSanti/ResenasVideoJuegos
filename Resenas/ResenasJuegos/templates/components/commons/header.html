@@ -15,15 +15,22 @@
     </div>
 
     <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-4 sm:px-0">
-        <input type="text" placeholder="Search"
-            class="w-full bg-light-morado text-text-light px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-accent-blue placeholder-text-medium text-sm sm:text-base">
-        <button
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-text-medium hover:text-text-light transition-colors duration-200">
-            <img src="{% static 'assets/header_icons/buscador.png' %}" alt="Buscar"
-                class="w-5 h-5 sm:w-6 sm:h-6 filter invert opacity-50">
-        </button>
-    </div>
+        <form method="get" action="{% url 'post_search' %}" class="relative">
+            <input type="text" name="q" id="search-input" placeholder="Search"
+                class="w-full bg-light-morado text-text-light px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-accent-blue placeholder-text-medium text-sm sm:text-base"
+                autocomplete="off" value="{{ request.GET.q|default:'' }}">
 
+            <div id="suggestions"
+                class="absolute mt-1 w-full bg-light-morado rounded-lg shadow-lg text-text-light hidden z-50 border border-accent-blue">
+            </div>
+
+            <button type="submit"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-text-medium hover:text-text-light transition-colors duration-200">
+                <img src="{% static 'assets/header_icons/buscador.png' %}" alt="Buscar"
+                    class="w-5 h-5 sm:w-6 sm:h-6 filter invert opacity-50">
+            </button>
+        </form>
+    </div>
 
     <div class="flex ml-auto">
         {% if user.is_authenticated %}
@@ -67,20 +74,7 @@
         {% endif %}
     </div>
 </header>
-<script>
-    function replaceWithIcon(imgElement) {
-        // Obtenemos el contenedor de la imagen
-        const parentContainer = document.getElementById('user-avatar-container');
-        if (parentContainer) {
-            // Creamos el nuevo elemento de icono
-            const iconElement = document.createElement('i');
-            iconElement.className = 'fa fa-user';
 
-            // Reemplazamos la imagen que falló por el nuevo icono
-            parentContainer.replaceChild(iconElement, imgElement);
-
-            // Evitamos un bucle infinito si el icono también falla
-            imgElement.onerror = null;
-        }
-    }
-</script>
+{% block scripts %}
+<script src="{% static 'js/header_logic.js' %}"></script>
+{% endblock scripts %}

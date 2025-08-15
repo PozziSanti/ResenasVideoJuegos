@@ -9,6 +9,8 @@ from django.urls import reverse_lazy, reverse
 from .forms import PostForm
 from apps.comment.models import Comment
 from apps.favorite.models import Favorite
+from django.views import View
+from django.http import JsonResponse
 
 class IndexView(TemplateView):
     template_name = 'pages/index.html'
@@ -53,6 +55,15 @@ class PostTitleFilter(ListView):
             queryset = queryset.filter(title__icontains=q) # busca en el título de los posts
         
         return queryset
+
+class PostAutocomplete(View):
+    def get(self, request, *args, **kwargs):
+        q = request.GET.get('q', '')
+        results = []
+        if q:
+            posts = Post.objects.filter(title__icontains=q)[:5]  # límite 5 resultados
+            results = list(posts.values_list('title', flat=True))
+        return JsonResponse(results, safe=False)
 
 # Filtros post por categoría
 class PostCategoryFilter (ListView):
