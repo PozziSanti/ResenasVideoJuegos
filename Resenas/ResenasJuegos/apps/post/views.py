@@ -8,6 +8,7 @@ from apps.comment.forms import CommentForm
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .forms import PostForm
+from django.db import transaction
 # from apps.comment.models import Comment
 
 
@@ -74,11 +75,11 @@ class PostCategoryFilter (ListView):
         
         return queryset
 
-    # TODO: sacar, ya que es solo para probar el filtro de categoría
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['selected_category'] = self.kwargs.get('category', '')
-        return context
+    # # TODO: sacar, ya que es solo para probar el filtro de categoría
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['selected_category'] = self.kwargs.get('category', '')
+    #     return context
 
 
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
@@ -175,9 +176,13 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 # TODO: agregar funcion 403 para que aparezca imagen del michi
+    @transaction.atomic
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)  # Guarda el Post
+        form.images.instance = self.object   # Vincula imágenes al Post recién creado
+        form.images.save()                   # Guarda imágenes
+        return response
     
     def test_func(self):
         user = self.request.user
