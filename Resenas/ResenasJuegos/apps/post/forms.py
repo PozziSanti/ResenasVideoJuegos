@@ -19,28 +19,34 @@ class PostForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request', None)
-        instance = kwargs.get('instance', None) #SE AGREGO**************
+        instance = kwargs.get('instance', None)
         super().__init__(*args, **kwargs)
 
-        self.fields['category'].queryset = Category.objects.all() #SE AGREGO**************
+        self.fields['category'].queryset = Category.objects.all()
         
+        prefix = "images"
         # Solo pasar POST/FIles si existe request
         if request:
             self.images = ImagesFormSet(
                 request.POST or None,
                 request.FILES or None,
-                instance=instance
+                instance=instance,
+                prefix=prefix,
             )
         else:
             # Para GET
-            self.images = ImagesFormSet(instance=instance) #SE MODIFICO**************
+            self.images = ImagesFormSet(
+                instance=instance,
+                prefix=prefix,
+            )
         
     def is_valid(self):
-        return super().is_valid() and self.images.is_valid()
+        ok_main = super().is_valid()
+        ok_imgs = self.images.is_valid()
+        return ok_main and ok_imgs
     
     def save(self, commit=True):
-        post = super().save(commit=commit) #SE MODIFICO COMIIT**************
-        if commit: #SE AGREGO**************
-            self.images.instance = post
-            self.images.save()
+        post = super().save(commit=commit)
+        self.images.instance = post
+        self.images.save()
         return post 
