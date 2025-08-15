@@ -1,8 +1,64 @@
 <!-- COMENTAR ALGUNO DE LOS DOS BLOQUES DE CODIGO (EL OTRO ESTA BIEEEEEN ABAJO) -->
 
-{% extends 'layouts/general_layout.html' %}
 
+  {% for comment in comments %}
+  <div class="mb-4 p-4 bg-gray-100 rounded shadow">
+    <div class="flex justify-between items-center">
+      <span class="font-bold">{{ comment.user.username }}</span>
+      <span class="text-yellow-500">{{ comment.score }} ⭐</span>
+    </div>
+    <p class="mt-2 text-gray-800">{{ comment.content }}</p>
 
+    {% if request.user == comment.user %}
+    <div class="flex gap-2 mt-2">
+      <!-- Botón Editar -->
+      <a href="?edit_comment_id={{ comment.id }}" class="text-indigo-600 hover:underline text-sm">
+        Editar
+      </a>
+
+      <!-- Botón Eliminar -->
+      <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="delete_comment_id" value="{{ comment.id }}">
+        <button type="submit" class="text-red-600 hover:underline text-sm">
+          Eliminar
+        </button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+  {% empty %}
+  <p class="text-gray-500">No hay reseñas aún.</p>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+  <hr class="my-6">
+  {% if editing %}
+  <h3 class="text-xl font-semibold mb-2">Editando tu reseña</h3>
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="comment_id" value="{{ editing.id }}">
+    {{ form.as_p }}
+    <div class="flex gap-2 mt-2">
+      <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Guardar cambios</button>
+      <a href="{% url 'post_detail' post.slug %}" class="px-4 py-2 bg-gray-300 rounded">Cancelar</a>
+    </div>
+  </form>
+  {% else %}
+  <h3 class="text-xl font-semibold mb-2">Dejá tu reseña</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded">Enviar</button>
+  </form>
+  {% endif %}
+  {% else %}
+  <p class="text-gray-500 mt-6">Iniciá sesión para dejar tu comentario y puntuación.</p>
+  {% endif %}
+
+  <a href="{% url 'home' %}" class="inline-block mt-8 text-indigo-600 hover:underline">← Volver al inicio</a>
+</article>
+{% endblock %}
 
 
 
@@ -171,3 +227,4 @@ document.getElementById('deleteModal').addEventListener('click', function(e){
 });
 </script>
 {% endblock scripts %}
+

@@ -185,7 +185,7 @@ class PostDetailView(DetailView):
         delete_comment_id = request.POST.get('delete_comment_id')
         if delete_comment_id:
             comment = get_object_or_404(Comment, pk=delete_comment_id, post=post)
-            if comment.user == request.user:  # Solo el dueño puede eliminar
+            if comment.user == request.user or post.author == request.user:  # Solo el dueño puede eliminar
                 comment.delete()
             return redirect('post_detail', slug=post.slug)
 
