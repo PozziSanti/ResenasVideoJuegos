@@ -5,11 +5,12 @@ from django.db.models import Avg, Value, FloatField
 from django.db.models.functions import Coalesce
 from apps.comment.forms import CommentForm
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from .forms import PostForm
 from apps.comment.models import Comment
 from apps.favorite.models import Favorite
-
+from django.views import View
+from django.http import JsonResponse
 
 class IndexView(TemplateView):
     template_name = 'pages/index.html'
@@ -31,18 +32,14 @@ class IndexView(TemplateView):
         print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
         return context
 
-
 class AboutView(TemplateView):
     template_name = 'pages/about.html'
-
 
 class TermsView(TemplateView):
     template_name = "pages/terms.html"
 
-
 class PrivacyPolicyView(TemplateView):
     template_name = 'pages/privacy.html'
-
 
 # Filtros post por titulo
 class PostTitleFilter(ListView):
@@ -59,6 +56,14 @@ class PostTitleFilter(ListView):
         
         return queryset
 
+class PostAutocomplete(View):
+    def get(self, request, *args, **kwargs):
+        q = request.GET.get('q', '')
+        results = []
+        if q:
+            posts = Post.objects.filter(title__icontains=q)[:5]  # límite 5 resultados
+            results = list(posts.values_list('title', flat=True))
+        return JsonResponse(results, safe=False)
 
 # Filtros post por categoría
 class PostCategoryFilter (ListView):
@@ -79,7 +84,6 @@ class PostCategoryFilter (ListView):
         context = super().get_context_data(**kwargs)
         context['selected_category'] = self.kwargs.get('category', '')
         return context
-
 
 # TODO: si se decide poner el filtro de la fecha en el buscador, se lo puede agregar a la vista PostTitleFilter
 # Filtros post por fecha de publicación
@@ -123,7 +127,6 @@ class PostStarFilter(ListView):
                 pass      # si el valor no es un número válido, no se aplica el filtro
         return queryset
     
-
 
 # CRUD PARA LOS POSTS
 # Detalle de un post
@@ -222,7 +225,6 @@ class PostDetailView(DetailView):
             context['form'] = form
             return self.render_to_response(context)
 
-
 # Crear un nuevo post
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     form_class = PostForm
@@ -272,14 +274,15 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         user = self.request.user
         return user.has_perm('post.add_post') or user.is_superuser # Solo permite acceso a usuarios administradores y superusuarios
 
-
 # Actualizar un post existente
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = PostForm
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
     template_name = 'post/post_update.html'
-    success_url = reverse_lazy('home')    # Redirige a la lista de posts después de crear uno
+
+    def get_success_url(self):
+        return reverse ('post_detail', kwargs={'slug': self.object.slug})
 
 #TODO: agregar funcion 403 para que aparezca imagen del michi
     def get_form_kwargs(self):
@@ -299,10 +302,18 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return Post.objects.all()
         return Post.objects.filter(author=user)
 
-    def form_valid(self, form):
-        post = form.save(commit=False)      # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
-        post.save()
-        return super().form_valid(form)
+    def form_valid(self, form): # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
+        self.object = form.save(commit=True)  
+        form.images.instance = self.object
+
+        if form.images.is_valid():
+            form.images.save()
+            return super().form_valid(form)
+
+        for subform_errors in form.images.errors:
+            for error in subform_errors.values():
+             form.add_error(None, error)
+        return self.form_invalid(form)
 
     def test_func(self):
         post = self.get_object()
@@ -326,7 +337,6 @@ class PostListView(ListView):
         .order_by('-created_at')
         )  # get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
 
-
 # Eliminar un post existente
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
@@ -334,7 +344,6 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     slug_url_kwarg = 'slug'
     template_name = 'post/post_delete.html'
     success_url = reverse_lazy('home')
-
 
 # TODO: agregar funcion 403 para que aparezca imagen del michi     
     def get_context_data(self, **kwargs):
