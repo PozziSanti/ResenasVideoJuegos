@@ -1,26 +1,44 @@
-<div class="flip-card">
-  <div class="flip-card-inner">
-    <!-- LADO FRONTAL -->
-    <div class="flip-card-front">
+<div 
+  class="flip-card group relative w-full h-[250px] perspective-1000 cursor-pointer"
+  onclick="this.classList.toggle('is-flipped')"
+>
+  <!-- Enlace que cubre toda la tarjeta -->
+  <a 
+    href="{% url 'post_detail' slug=post.slug %}" 
+    class="absolute inset-0 z-10"
+    aria-label="Ver detalle de {{ post.title }}"
+  ></a>
+
+  <!-- Contenedor interno -->
+  <div class="flip-card-inner relative w-full h-full text-center transition-transform duration-600 ease-in-out transform-style-preserve-3d rounded-lg overflow-hidden">
+
+    <!-- Cara frontal -->
+    <div class="flip-card-front absolute w-full h-full rounded-lg backface-hidden flex flex-col justify-center items-center bg-[#241D44] text-[#f0f1f4] z-20">
       {% with post.images.all|first as imagen %}
         {% if imagen %}
-          <img src="{{ imagen.image.url }}" alt="{{ post.title }}" class="w-full rounded">
+          <img 
+            src="{{ imagen.image.url }}" 
+            alt="{{ post.title }}" 
+            class="w-full h-full object-cover"
+          >
         {% else %}
-          <div class="w-full h-40 bg-gray-200 flex items-center justify-center">Sin imagen</div>
+          <div class="no-image w-full h-full bg-gray-300 flex justify-center items-center">
+            Sin imagen
+          </div>
         {% endif %}
       {% endwith %}
+      <div class="card-title absolute bottom-2 left-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded">
+        {{ post.title }}
+      </div>
     </div>
 
-    <!-- LADO TRASERO -->
-    <div class="flip-card-back bg-gray-100 p-4 rounded shadow">
-      <h3 class="text-lg font-bold">{{ post.title }}</h3>
-      <p class="text-sm mt-2">{{ post.content|truncatewords:15 }}</p>
-      <a href="{% url 'post_detail' slug=post.slug %}" class="text-indigo-500 underline block mt-4">Ver más</a>
-    
-      <div class="mobile-flip-hint">
-        <span class="rotate-icon">↻</span>
-        <span class="hint-text">Tocá para girar</span>
-      </div>
+    <!-- Cara trasera -->
+    <div class="flip-card-back absolute w-full h-full rounded-lg backface-hidden flex flex-col justify-center items-start p-4 bg-[#241D44] text-[#f0f1f4] transform-rotate-y-180 text-left">
+      <h3 class="text-lg font-bold mb-2">{{ post.title }}</h3>
+      <p class="text-sm mb-4">"{{ post.content|truncatewords:15|default:'Sin contenido' }}"</p>
+      <span class="text-xs opacity-70 group-hover:text-[#4F46E5] transition-colors">
+        Click para ver más
+      </span>
     </div>
   </div>
 </div>

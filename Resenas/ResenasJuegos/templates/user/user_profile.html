@@ -7,7 +7,7 @@
 
 <!-- Portada -->
 <div class="relative w-full h-48 bg-cover bg-center"
-     style="background: linear-gradient(135deg, var(--color-light-morado), var(--color-primary-morado));">
+     style="background: linear-gradient(135deg, var(--color-light-morado), var(--color-primary-morado));">   
 </div>
 
 <!-- Contenedor general -->
@@ -15,14 +15,12 @@
 
     <!-- Avatar flotante -->
     <div class="flex justify-center">
-        <div class="w-64 h-64 rounded-full border-4 border-accent-blue overflow-hidden bg-light-morado shadow-lg flex items-center justify-center">
+        <div class="w-32 h-32 rounded-full border-4 border-accent-blue overflow-hidden bg-light-morado shadow-lg">
             {% if user.avatar %}
-                <img src="{{ user.avatar.url }}" 
-                     alt="Avatar de {{ user.alias|default:user.username }}" 
-                     class="w-full h-full object-cover"
-                     onerror="replaceWithIcon(this);">
+            <img src="{{ user.avatar.url }}" alt="Avatar de {{ user.alias|default:user.username }}"
+                class="w-full h-full object-cover" onerror="replaceWithIcon(this);">
             {% else %}
-                <i class="fa fa-user text-[7rem] text-light"></i>
+            <i class="fa fa-user text-6xl text-accent-blue flex items-center justify-center h-full"></i>
             {% endif %}
         </div>
     </div>
@@ -30,8 +28,8 @@
     <!-- Nombre -->
     <div class="mt-4 text-center">
         <h1 class="text-2xl font-bold text-light">{{ user.alias|default:user.username }}</h1>
-        <a href="{% url 'edit_profile' %}" 
-           class="mt-3 inline-block px-4 py-2 bg-accent-blue text-light rounded-full hover:bg-accent-blue-hover transition">
+        <a href="{% url 'edit_profile' %}"
+            class="mt-3 inline-block px-4 py-2 bg-accent-blue text-light rounded-full hover:bg-accent-blue-hover transition">
             Editar mi perfil
         </a>
     </div>
@@ -45,8 +43,8 @@
             <!-- Stats -->
             <div class="bg-darker-morado-transparent rounded-xl p-4 border border-accent-blue">
                 <h2 class="text-light font-bold mb-2">Stats</h2>
-                <p class="text-medium">Member for: 8 days</p>
                 <p class="text-medium">Games liked: 0</p>
+
             </div>
         </div>
 
@@ -84,3 +82,4 @@
     }
 </script>
 {% endblock scripts %}
+

@@ -9,6 +9,8 @@ from apps.user.forms import LoginForm, RegisterForm, EditForm, ChangePasswordFor
 from apps.user.models import UserProfile
 from django.http import HttpResponse
 from django.contrib.auth import update_session_auth_hash
+from apps.favorite.models import Favorite
+
 
 
 User = get_user_model()
@@ -51,7 +53,7 @@ def edit_profile(request):
             profile.avatar = None              # limpia el campo en la BD
             profile.save()
             return redirect('edit_profile')    # redirige al perfil sin avatar
-            
+        
         if form.is_valid():
             form.save()
             return redirect('user_profile') 
@@ -64,7 +66,9 @@ def edit_profile(request):
 @login_required
 def profile(request):
     user_profile = request.user
-    return render(request, 'user/user_profile.html', {'user_profile': user_profile})
+    favorites = Favorite.objects.filter(user=request.user).select_related('post')
+    return render(request, 'user/user_profile.html', {'user_profile': user_profile, 'favorites': favorites
+})
 
 @login_required
 def change_password(request):

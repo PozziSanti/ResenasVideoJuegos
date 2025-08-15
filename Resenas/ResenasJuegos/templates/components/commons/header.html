@@ -10,24 +10,30 @@
 
         <a href=" {% url 'home' %}" class="flex items-center space-x-2">
             <img src="{% static 'assets/header_icons/hit_or_quit_logo.png' %}" alt="Hit or Quit Logo" class="h-12">
-            <span class="text-text-light text-2xl font-bold hidden sm:block leading-5">Hit or<br>Quit</span>
+            <span class="text-white text-2xl font-bold hidden sm:block leading-5">Hit or<br>Quit</span>
         </a>
     </div>
 
     <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-4 sm:px-0">
-        <input type="text" placeholder="Search"
-            class="w-full bg-light-morado text-text-light px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-accent-blue placeholder-text-medium text-sm sm:text-base">
-        <button
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-text-medium hover:text-text-light transition-colors duration-200">
-            <img src="{% static 'assets/header_icons/buscador.png' %}" alt="Buscar"
-                class="w-5 h-5 sm:w-6 sm:h-6 filter invert opacity-50">
-        </button>
-    </div>
+        <form method="get" action="{% url 'post_search' %}" class="relative">
+            <input type="text" name="q" id="search-input" placeholder="Search"
+                class="w-full bg-light-morado text-text-light px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-accent-blue placeholder-text-medium text-sm sm:text-base"
+                autocomplete="off" value="{{ request.GET.q|default:'' }}">
 
+            <div id="suggestions"
+                class="absolute mt-1 w-full bg-light-morado rounded-lg shadow-lg text-text-light hidden z-50 border border-accent-blue">
+            </div>
+
+            <button type="submit"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-text-medium hover:text-text-light transition-colors duration-200">
+                <img src="{% static 'assets/header_icons/buscador.png' %}" alt="Buscar"
+                    class="w-5 h-5 sm:w-6 sm:h-6 filter invert opacity-50">
+            </button>
+        </form>
+    </div>
 
     <div class="flex ml-auto">
         {% if user.is_authenticated %}
-            
             <a href="{% url 'user_profile' %}" class="flex items-center px-4 justify-center text-white text-2xl transition-all duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">
                 <span class="ml-2 px-4 text-1xl">
                     {% if user.alias %}
@@ -49,6 +55,7 @@
                     <i class="fa fa-user"></i>
                 {% endif %}
             </a>
+
         {% else %}
         <a href="{% url 'signin' %}?next={{ request.path }}" class="block w-40">
             <button class="relative w-40 h-12 bg-darker-morado cursor-pointer overflow-hidden -mr-4">
@@ -69,6 +76,10 @@
         {% endif %}
     </div>
 </header>
+
+{% block scripts %}
+
+<script src="{% static 'js/header_logic.js' %}"></script>
 <script>
     function replaceWithIcon(imgElement) {
         // Obtenemos el contenedor de la imagen
@@ -86,3 +97,6 @@
         }
     }
 </script>
+
+{% endblock scripts %}
+
