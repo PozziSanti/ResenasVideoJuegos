@@ -5,7 +5,9 @@ from apps.comment.models import Comment
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['content', 'score']
+        fields = ['content', 
+                  'score'
+                ]
         widgets = {
             'content': forms.Textarea(attrs={
                 'rows': 4, 
