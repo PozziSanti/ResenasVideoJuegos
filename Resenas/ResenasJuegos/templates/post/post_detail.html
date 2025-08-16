@@ -3,15 +3,30 @@
 {% block content_layout %}
 <div class="max-w-6xl mx-auto px-4 py-8">
   <!-- Sección principal con imagen y botones -->
-  <div class="relative mb-8 rounded-xl overflow-hidden bg-[#130C2A] border border-[#241D44]">
-    {% if post.images.all %}
+  <!-- Contenedor relativo de la imagen -->
+  <div class="relative">
     <a href="{% url 'post_detail' post.slug %}">
       <img src="{{ post.images.first.image.url }}" alt="{{ post.title }}"
-        class="w-full h-[400px] object-cover opacity-90">
+        class="w-full h-[400px] object-cover opacity-90 rounded-t-xl">
     </a>
+
+    <!-- Icono de favorito fijo en esquina superior derecha -->
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'toggle_favorite' post.slug %}">
+      {% csrf_token %}
+      <button class="absolute top-4 right-4 z-20 p-1 cursor-pointer 
+               hover:scale-125 hover:drop-shadow-[0_0_15px_rgb(255,215,0)] transition-all duration-200">
+        {% if is_favorited %}
+        {% include 'partials/home_icons/favorited_flag.html' %}
+        {% else %}
+        {% include 'partials/home_icons/unfavorited_flag.html' %}
+        {% endif %}
+      </button>
+    </form>
     {% endif %}
 
-    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#0B071A] to-transparent">
+    <!-- Título y botones abajo -->
+    <div class="absolute bottom-0 left-0 right-0 p-6 z-10 bg-gradient-to-t from-[#0B071A] to-transparent">
       <div class="flex justify-between items-end">
         <h1 class="text-4xl font-bold text-[#f0f1f4] mb-2">{{ post.title }}</h1>
         <div class="flex gap-3">

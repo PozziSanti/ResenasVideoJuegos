@@ -14,9 +14,9 @@
             </div>
 
             <!-- Campo de puntuación -->
-             <div class="flex items-center gap-2 my-3">
+            <div class="flex items-center gap-2 my-3">
                 <span class="text-[#f0f1f4] font-medium">Puntuación:</span>
-                <div class="w-20">  <!-- Ancho fijo para el selector -->
+                <div class="w-20">
                     {{ edit_comment_form.score }}
                 </div>
             </div>
@@ -46,15 +46,13 @@
             <a href="?edit_comment_id={{ comment.id }}" class="text-yellow-500 hover:underline mr-4">Editar</a>
 
             <!-- Botón Eliminar -->
-            <form method="post" style="display:inline;">
-                {% csrf_token %}
-                <input type="hidden" name="delete_comment_id" value="{{ comment.id }}">
-                <button type="submit" class="text-red-500 hover:underline">Eliminar</button>
-            </form>
+            <button type="button" data-comment-id="{{ comment.id }}"
+                class="text-red-500 hover:underline delete-comment-btn">
+                Eliminar
+            </button>
         </div>
         {% endif %}
         {% endif %}
-
     </div>
     {% empty %}
     <p class="text-[#f0f1f4] opacity-80 pb-6 border-b border-[#241D44]">No hay comentarios aún.</p>
@@ -96,3 +94,40 @@
     <p class="text-[#f0f1f4] opacity-80 mt-6">Iniciá sesión para dejar tu comentario y puntuación.</p>
     {% endif %}
 </div>
+
+{% include 'post/post_delete_comment.html' %}
+
+{% block scripts %}
+<script>
+    // Sistema de puntuación estrellas
+    document.querySelectorAll('.star-rating input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            const selectedValue = parseInt(this.value);
+            const stars = this.closest('.star-rating').querySelectorAll('span');
+            stars.forEach((star, index) => {
+                star.classList.toggle('text-yellow-500', index < selectedValue);
+                star.classList.toggle('text-gray-400', index >= selectedValue);
+            });
+        });
+    });
+
+    // Abrir modal de eliminación de comentario
+    document.querySelectorAll('.delete-comment-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const commentId = btn.dataset.commentId;
+            document.getElementById('deleteCommentId').value = commentId;
+            document.getElementById('deleteCommentModal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        });
+    });
+
+    function closeDeleteCommentModal() {
+        document.getElementById('deleteCommentModal').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    document.getElementById('deleteCommentModal')?.addEventListener('click', function (e) {
+        if (e.target === this) closeDeleteCommentModal();
+    });
+</script>
+{% endblock scripts %}
