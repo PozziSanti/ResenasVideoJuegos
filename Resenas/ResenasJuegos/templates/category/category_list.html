@@ -1,0 +1,10 @@
+{% comment %} <!-- templates/category/category_list.html -->
+<h1>Lista de categorías</h1>
+
+<ul>
+{% for category in categories %}
+    <li>{{ category.title }}</li>
+{% empty %}
+    <li>No hay categorías registradas.</li>
+{% endfor %}
+</ul> {% endcomment %}
