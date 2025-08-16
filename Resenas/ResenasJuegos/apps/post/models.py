@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.conf import settings
 import uuid
 import os
+import time
 
 # MODELO CATEGORIAS (RPG, ACCION, AVENTURA, etc.)
 class Category(models.Model):
@@ -62,8 +63,8 @@ class Post(models.Model):
 
         super().save(*args, **kwargs)
 
-        if not self.images.exists():
-            PostImage.objects.create(post=self, image='post/default/post_default.png')
+        # if not self.images.exists():
+        #     PostImage.objects.create(post=self, image='post/default/post_default.png')
     
     def generate_unique_slug(self):
         slug = slugify(self.title)
@@ -76,14 +77,20 @@ class Post(models.Model):
 
         return unique_slug
 
-
+#TODO=REVISAR RUTA DE LA IMAGEN
 def get_image_path(instance, filename):
+    if not instance.post.id:  # Si el post no tiene ID aún 
+        return os.path.join('post/temp/', filename)
+
     post_id = instance.post.id
-    images_count = instance.post.images.count()
-    base_filename, file_extension = os.path.splitext(filename)
-    new_filename = f"post_{post_id}_image_{images_count + 1}{file_extension}"
+    base, ext = os.path.splitext(filename)
+    timestamp = int(time.time())
     
-    return os.path.join('post/cover/', new_filename) #Ruta a donde se guardaran las imagenes (en media)
+    return os.path.join(
+        'post/images', 
+        str(post_id), 
+        f"{base}_{timestamp}{ext}"
+    )
 
 #MODELO POSTS IMAGE
 class PostImage(models.Model):

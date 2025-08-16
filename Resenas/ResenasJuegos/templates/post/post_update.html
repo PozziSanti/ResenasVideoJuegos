@@ -1,30 +1,143 @@
 {% extends 'layouts/general_layout.html' %}
-{% load static %}
 
 {% block content_layout %}
-    {% if perms.post.change_post %}
-    <h2>Editar Post</h2>
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8 text-center text-[#f0f1f4]">
+        Actualización de Post
+    </h1>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data"
+        class="space-y-6 bg-[#0B071A] p-6 rounded-xl border border-[#241D44]">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar cambios</button>
+
+        <!-- Campos principales -->
+        <div class="space-y-6">
+            <!-- Título -->
+            <div class="form-group">
+                <label class="block mb-2 text-[#f0f1f4] font-medium">Título</label>
+                <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}"
+                    value="{{ form.title.value|default:'' }}"
+                    class="w-full px-4 py-3 bg-[#241D44] border-2 border-[#4F46E5] rounded-lg text-[#f0f1f4] focus:ring-2 focus:ring-[#622bbf] focus:outline-none transition-all"
+                    placeholder="Escribe un título">
+                {% if form.title.errors %}
+                <ul class="mt-1 text-sm text-[#EF4444]">
+                    {% for error in form.title.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <!-- Descripción -->
+            <div class="form-group">
+                <label class="block mb-2 text-[#f0f1f4] font-medium">Descripción</label>
+                <textarea name="{{ form.content.name }}" id="{{ form.content.id_for_label }}"
+                    class="w-full px-4 py-3 bg-[#241D44] border-2 border-[#4F46E5] rounded-lg text-[#f0f1f4] focus:ring-2 focus:ring-[#622bbf] focus:outline-none transition-all"
+                    rows="6" placeholder="Escribe una descripción...">{{ form.content.value|default:'' }}</textarea>
+                {% if form.content.errors %}
+                <ul class="mt-1 text-sm text-[#EF4444]">
+                    {% for error in form.content.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <!-- Categoría -->
+            <div class="form-group">
+                <label class="block mb-2 text-[#f0f1f4] font-medium">Categoría</label>
+                <select name="category" id="id_category"
+                    class="w-full px-4 py-3 bg-[#241D44] border-2 border-[#4F46E5] rounded-lg text-[#f0f1f4] focus:ring-2 focus:ring-[#622bbf] focus:outline-none transition-all">
+                    <option value="">Selecciona una categoría</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category.id in selected_category_ids %}selected{% endif %}>
+                        {{ category.title }}
+                    </option>
+                    {% endfor %}
+                </select>
+                {% if form.category.errors %}
+                <ul class="mt-1 text-sm text-[#EF4444]">
+                    {% for error in form.category.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <!-- Imágenes -->
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold mb-4 text-[#f0f1f4]">Imágenes</h3>
+
+                <!-- Imagen principal -->
+                <div class="mb-6">
+                    <label class="block text-[#f0f1f4] mb-2">Selecciona una nueva imagen principal</label>
+                    <input type="file" name="image"
+                        class="w-full px-3 py-2 bg-[#241D44] border border-[#4F46E5] rounded text-[#f0f1f4] file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-[#622bbf] file:text-white hover:file:bg-[#4F46E5]">
+                </div>
+
+                <!-- Imágenes existentes -->
+                {% if form.active_images %}
+                <div class="space-y-4">
+                    {% for image in form.active_images %}
+                    <div class="bg-[#130C2A] p-4 rounded-lg border border-[#241D44]">
+                        <div class="flex items-center mb-2">
+                            <img src="{{ image.image.url }}"
+                                class="h-16 w-16 object-cover rounded mr-4 border border-[#4F46E5]"
+                                alt="Imagen del post">
+                            <div>
+                                <label for="keep_image_{{ image.id }}" class="text-[#f0f1f4]">
+                                    Mantener esta imagen
+                                </label>
+                                <input type="checkbox" name="keep_image_{{ image.id }}" id="keep_image_{{ image.id }}"
+                                    checked class="ml-2 bg-[#241D44] border-[#4F46E5] rounded">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Botón para añadir más imágenes -->
+                <button type="button" id="add-image-btn"
+                    class="mt-4 px-4 py-2 bg-[#241D44] hover:bg-[#4F46E5] text-[#f0f1f4] rounded-lg transition-colors flex items-center">
+                    <span class="mr-2">+</span> Añadir otra imagen
+                </button>
+            </div>
+
+            <!-- Botón de enviar -->
+            <button type="submit"
+                class="w-full py-3 px-6 bg-[#622bbf] hover:bg-[#4F46E5] text-white font-bold rounded-lg transition-colors duration-300 mt-6 shadow-lg hover:shadow-[#4F46E5]/50">
+                Actualizar Post
+            </button>
+        </div>
     </form>
-    {% else %}
-    <p>No tenés permiso para editar este post.</p>
-    {% endif %}
-{% endblock content_layout %}
+</div>
+{% endblock %}
 
-{% comment %} {% block content_layout %}
-<h1 class="text-2xl font-bold mb-4"> Actualizacion de post</h1>
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addButton = document.getElementById('add-image-btn');
+        const imagesContainer = document.querySelector('.space-y-4');
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ form.images.management_form }} <!-- Campos ocultos para el formset -->
-    {% for image_form in form.images %}
-        {{ image_form.as_p }}
-    {% endfor %}
-    <button type="submit">Guardar</button>
+        addButton.addEventListener('click', function () {
+            const newImageDiv = document.createElement('div');
+            newImageDiv.className = 'bg-[#130C2A] p-4 rounded-lg border border-[#241D44]';
+            newImageDiv.innerHTML = `
+            <label class="block text-[#f0f1f4] mb-2">Nueva imagen adicional</label>
+            <input type="file" name="images"
+                class="w-full px-3 py-2 bg-[#241D44] border border-[#4F46E5] rounded text-[#f0f1f4] file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-[#622bbf] file:text-white hover:file:bg-[#4F46E5]">
+        `;
 
-{% endblock content_layout %} {% endcomment %}
+            if (imagesContainer) {
+                imagesContainer.appendChild(newImageDiv);
+            } else {
+                const newContainer = document.createElement('div');
+                newContainer.className = 'space-y-4';
+                newContainer.appendChild(newImageDiv);
+                addButton.parentNode.insertBefore(newContainer, addButton);
+            }
+        });
+    });
+</script>
+{% endblock %}

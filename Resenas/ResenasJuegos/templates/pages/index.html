@@ -1,24 +1,35 @@
 {% extends 'layouts/general_layout.html' %}
-{% load static %}
 
 {% block content_layout %}
 
-<h1 class="text-3xl font-bold text-center my-6">Categorías de Juegos</h1>
+<h1 class="text-2xl font-bold text-center my-6">
+  <a href="{% url 'post_create' %}"
+    class="flex items-center justify-center gap-2 text-white hover:text-[#f0f1f4] group">
+    <span class="group-hover:text-[#f0f1f4] transition-colors">
+      {% include 'partials/home_icons/add_icon.html' %}
+    </span>
+    <span class="relative pb-1">
+      POST
+      <span
+        class="absolute left-0 bottom-0 w-0 h-[2px] bg-[#f0f1f4] group-hover:w-full transition-all duration-300 ease-out"></span>
+    </span>
+  </a>
+</h1>
 
 {% for categoria, posts in posts_por_categoria.items %}
-  <section class="mb-10">
-    <h2 class="text-xl font-semibold mb-4">{{ categoria }} ({{ posts.count }})</h2>
+<section class="mb-10">
+  <h2 class="text-xl font-semibold mb-4">{{ categoria }} ({{ posts.count }})</h2>
 
-    {% if posts %}
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {% for post in posts %}
-          {% include "components/cards/flip_card.html" with post=post %}
-        {% endfor %}
-      </div>
-    {% else %}
-      <p class="text-gray-500">No hay posts para esta categoría.</p>
-    {% endif %}
-  </section>
+  {% if posts %}
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    {% for post in posts %}
+    {% include 'components/cards/flip_card.html' with post=post %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-gray-500">No hay posts para esta categoría.</p>
+  {% endif %}
+</section>
 {% endfor %}
 
 {% endblock content_layout %}

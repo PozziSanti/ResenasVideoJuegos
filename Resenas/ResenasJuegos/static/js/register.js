@@ -1,7 +1,7 @@
-
 document.addEventListener('DOMContentLoaded', function() {
   // Elementos del DOM
   const uname = document.getElementById('uname');
+  const correo = document.getElementById('correo');
   const pass1 = document.getElementById('password1');
   const pass2 = document.getElementById('password2');
   const btnContainer = document.querySelector('.btn-container');
@@ -10,38 +10,59 @@ document.addEventListener('DOMContentLoaded', function() {
   const msg = document.querySelector('.msg');
   const eye = document.querySelectorAll('.password-toggle')[0];
   const eye1 = document.querySelectorAll('.password-toggle')[1];
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
 
   // Estados iniciales
   btn.disabled = true;
   const positions = ['shift-left', 'shift-top', 'shift-right', 'shift-bottom'];
 
   // Función para mover el botón
+
   function shiftButton() {
-    showMsg();
-    const currentPosition = positions.find(pos => btn.classList.contains(pos));
-    let nextIndex = 0;
-    
-    if (currentPosition) {
-      nextIndex = (positions.indexOf(currentPosition) + 1) % positions.length;
-      btn.classList.remove(currentPosition);
+    const isEmpty = (uname.value.trim() === '' || pass1.value.trim() === '' || pass2.value.trim() === '' || correo.value.trim() === '');
+ 
+    if (isEmpty) {
+        showMsg();
+        const currentPosition = positions.find(pos => btn.classList.contains(pos));
+        let nextIndex = 0;
+        
+        if (currentPosition) {
+            nextIndex = (positions.indexOf(currentPosition) + 1) % positions.length;
+            btn.classList.remove(currentPosition);
+        }
+        
+        btn.classList.add(positions[nextIndex]);
+    } else {
+
+        btn.classList.remove('shift-left', 'shift-top', 'shift-right', 'shift-bottom');
+        btn.classList.add('no-shift');
     }
-    
-    btn.classList.add(positions[nextIndex]);
-  }
+  } 
 
   // Función para mostrar mensajes
   function showMsg() {
-    const isEmpty = uname.value.trim() === '' || pass.value.trim() === '';
+    const isEmpty = (uname.value.trim() === '' || pass1.value.trim() === '' || pass2.value.trim() === '' || correo.value.trim() === '');
+    const contrasCoinciden = (pass1.value.trim() === pass2.value.trim());
+    const esEmailValido = emailRegex.test(correo.value.trim());
     btn.classList.toggle('no-shift', !isEmpty);
 
     if (isEmpty) {
       btn.disabled = true;
       msg.style.color = 'rgb(218, 49, 49)';
       msg.textContent = 'Rellena todos los campos';
+    } else if (!esEmailValido) {
+      btn.disabled = true;
+      msg.style.color = 'rgb(218, 49, 49)';
+      msg.textContent = 'El correo electrónico no es válido';
+    } else if (!contrasCoinciden) { 
+      btn.disabled = true;
+      msg.style.color = 'rgb(218, 49, 49)';
+      msg.textContent = 'Las contraseñas no coinciden';
     } else {
+      // Si todas las validaciones pasan
       msg.textContent = 'Perfecto, puedes iniciar sesión';
       msg.style.color = '#92ff92';
-      btn.disabled = false;
+      btn.disabled = false; // <-- El botón se habilita aquí
       btn.classList.add('no-shift');
     }
   }
