@@ -30,22 +30,17 @@
     </div>
 
     <!-- Flecha izquierda -->
-    <!-- Flecha izquierda (sin bordes redondeados) -->
     <button type="button" onclick="scrollRowLeft('scroll-{{ forloop.counter }}')" class="absolute left-0 top-0 h-full px-3 bg-[rgba(11,7,26,0.6)] text-[var(--color-text-light)] z-10
          flex items-center justify-center opacity-80 md:group-hover:opacity-100
          transition-all duration-300 hover:bg-[rgba(11,7,26,0.8)] pointer-events-auto">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
+        {% include 'partials/home_icons/arrow_left.html' %}
     </button>
 
-    <!-- Flecha derecha (sin bordes redondeados) -->
+    <!-- Flecha derecha -->
     <button type="button" onclick="scrollRowRight('scroll-{{ forloop.counter }}')" class="absolute right-0 top-0 h-full px-3 bg-[rgba(11,7,26,0.6)] text-[var(--color-text-light)] z-10
          flex items-center justify-center opacity-80 md:group-hover:opacity-100
          transition-all duration-300 hover:bg-[rgba(11,7,26,0.8)] pointer-events-auto">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-      </svg>
+        {% include 'partials/home_icons/arrow_right.html' %}
     </button>
 
   </div>
