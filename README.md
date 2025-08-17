@@ -55,7 +55,6 @@ Para poner en marcha el proyecto en tu entorno local, sigue los siguientes pasos
 
   ```bash
    source env/bin/activate
-   
 5. Instala las dependencias desde `requirements.txt`:
    
    ```bash
