@@ -48,7 +48,7 @@
             <div class="bg-darker-morado-transparent rounded-xl p-4 border border-accent-blue">
                 <h2 class="text-light font-bold mb-2">Estadísticas</h2>
                 <p class="text-medium">
-                    Juegos Favoritos: {{ request.user.favorite_set.count }}
+                    Juegos Favoritos: {{ request.user.favorite.count }}
                 </p>
             </div>
         </div>
@@ -59,13 +59,13 @@
             <!-- Liked Games -->
             <div class="bg-darker-morado-transparent rounded-xl p-6 border border-accent-blue">
                 <h2 class="text-light font-bold mb-4">Tus juegos favoritos</h2>
-                {% if request.user.favorite_set.all %}
+                {% if request.user.favorite.exists %}
                     <ul class="space-y-3">
-                        {% for fav in request.user.favorite_set.all %}
+                        {% for fav in request.user.favorite.all %}
                             <li class="flex items-center justify-between bg-dark-morado rounded-lg p-3 hover:bg-accent-blue/20 transition">
                                 <a href="{% url 'post_detail' slug=fav.post.slug %}" class="text-light font-semibold hover:text-accent-blue">
                                     {{ fav.post.title }}
-                                </a>
+                                </a>++
                                 <span class="text-sm text-medium">❤️</span>
                             </li>
                         {% endfor %}
