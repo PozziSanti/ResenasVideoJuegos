@@ -2,10 +2,8 @@ from .base import *
 
 DEBUG=False
 
-#TODO:CONFIGURAR DOMINIO AL HACER DEPLOY A PRODUCTION 
 ALLOWED_HOSTS=["127.0.0.1","midominio-production.com"]
 
-#TODO:CONFIGURAR DB PARA PRODUCTION
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
