@@ -56,5 +56,3 @@ Una vez que la aplicación esté en funcionamiento, puedes acceder a las siguien
 - HTML & CSS
 - JavaScript
 - Tailwind
-
-- **Administración:** Los administradores tienen la capacidad de moderar contenido y gestionar usuarios.
