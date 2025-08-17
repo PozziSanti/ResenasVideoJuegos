@@ -1,19 +1,19 @@
 {% extends 'layouts/general_layout.html' %}
 
 {% block content_layout %}
-<div class="max-w-6xl mx-auto px-4 py-8">
-  <!-- Sección principal con imagen y botones -->
-  <div class="relative mb-8">
+<div class="max-w-3xl mx-auto px-4 py-8 space-y-8">
+
+  <!-- Imagen principal con botones -->
+  <div class="relative rounded-xl overflow-hidden">
     <a href="{% url 'post_detail' post.slug %}">
       <img src="{{ post.images.first.image.url }}" alt="{{ post.title }}"
-        class="w-full h-[400px] object-cover opacity-90 rounded-t-xl">
+        class="w-full h-64 sm:h-80 md:h-96 object-cover opacity-90">
     </a>
 
-    <!-- Agregar a favorito -->
     {% if user.is_authenticated %}
     <form method="post" action="{% url 'toggle_favorite' post.slug %}">
       {% csrf_token %}
-      <button class="absolute top-4 right-4 z-20 p-1 cursor-pointer 
+      <button class="absolute top-4 right-4 p-1 cursor-pointer
                hover:scale-125 hover:drop-shadow-[0_0_15px_rgb(255,215,0)] transition-all duration-200">
         {% if is_favorited %}
         {% include 'partials/home_icons/favorited_flag.html' %}
@@ -24,42 +24,37 @@
     </form>
     {% endif %}
 
-    <!-- Título y botones abajo -->
-    <div class="absolute bottom-0 left-0 right-0 p-6 z-10 bg-gradient-to-t from-[#0B071A] to-transparent">
-      <div class="flex justify-between items-end">
-        <h1 class="text-4xl font-bold text-[#f0f1f4] mb-2">{{ post.title }}</h1>
-        {% if user.is_authenticated %}
-          {% if user == post.author or user.is_superuser %}
-          <div class="flex gap-3">
-            <a href="{% url 'post_update' post.slug %}"
-              class="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#4F46E5]/50">
-              Editar
-            </a>
-            <button type="button" onclick="openDeleteModal()"
-              class="bg-[#EF4444] hover:bg-[#DC2626] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#EF4444]/50">
-              Eliminar
-            </button>
-          </div>
-        {% endif %}
+    <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-t from-[#0B071A] to-transparent">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-0">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#f0f1f4]">{{ post.title }}</h1>
+        {% if user.is_authenticated and user == post.author or user.is_superuser %}
+        <div class="flex gap-3 flex-wrap">
+          <a href="{% url 'post_update' post.slug %}"
+            class="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#4F46E5]/50">
+            Editar
+          </a>
+          <button type="button" onclick="openDeleteModal()"
+            class="bg-[#EF4444] hover:bg-[#DC2626] text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#EF4444]/50">
+            Eliminar
+          </button>
+        </div>
         {% endif %}
       </div>
     </div>
   </div>
 
-  <!-- Sección de información del juego -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-    <!-- Descripción -->
+  <!-- Información del juego -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
     <div class="md:col-span-2 space-y-6">
       <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44]">
-        <h2 class="text-2xl font-bold mb-4 text-[#f0f1f4]">Descripción</h2>
+        <h2 class="text-xl sm:text-2xl font-bold mb-4 text-[#f0f1f4]">Descripción</h2>
         <div class="text-[#f0f1f4] leading-relaxed">
           {{ post.content|linebreaks }}
         </div>
       </div>
 
-      <!-- Categorías -->
       <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44]">
-        <h3 class="text-xl font-semibold mb-3 text-[#f0f1f4]">Categorías</h3>
+        <h3 class="text-lg sm:text-xl font-semibold mb-3 text-[#f0f1f4]">Categorías</h3>
         <div class="flex flex-wrap gap-2">
           {% for cat in post.category.all %}
           <span class="bg-[#241D44] text-[#f0f1f4] px-3 py-1 rounded-full text-sm">{{ cat.title }}</span>
@@ -68,10 +63,9 @@
       </div>
     </div>
 
-    <!-- Información lateral -->
     <div class="space-y-6">
       <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44]">
-        <h2 class="text-2xl font-bold mb-4 text-[#f0f1f4]">Información</h2>
+        <h2 class="text-xl sm:text-2xl font-bold mb-4 text-[#f0f1f4]">Información</h2>
         <div class="space-y-3 text-[#f0f1f4]">
           <div>
             <span class="font-semibold">Calificación:</span>
@@ -87,7 +81,6 @@
 
   <!-- Modal eliminar -->
   {% include 'post/post_delete.html' %}
-
 </div>
 {% endblock content_layout %}
 
