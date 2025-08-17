@@ -14,7 +14,6 @@ DATABASES = {
         # En caso de usar una postres utilizo:
         # "ENGINE": "django.db.backends.postgresql",
 
-        # En caso de usar una postres utilizo:
         # "ENGINE": "django.db.backends.mysql",
 
         # "NAME": os.getenv('DB_NAME'),
