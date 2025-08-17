@@ -6,38 +6,31 @@ Hit or Quit es una plataforma colaborativa donde los usuarios pueden compartir y
 
 ## 🗂️ Estructura
 
-ResenasVideoJuegos/
-│
-├── manage.py
-├── requirements.txt
-├── README.md
-├── db.sqlite3
-│
-├── resenas/                # App principal de reseñas
-│   ├── migrations/
-│   ├── templates/
-│   │   └── resenas/
-│   ├── static/
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── views.py
-│   └── urls.py
-│
-├── users/                  # App de usuarios y autenticación
-│   ├── migrations/
-│   ├── templates/
-│   │   └── users/
-│   ├── static/
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── views.py
-│   └── urls.py
-│
-├── staticfiles/            # Archivos estáticos compilados
-│
-└── templates/              # Plantillas base globales
+- **ResenasVideoJuegos/**  
+  - `manage.py`  
+  - `requirements.txt`  
+  - `README.md`  
+  - `db.sqlite3`  
+  - **resenas/** (App principal de reseñas)  
+    - **migrations/**  
+    - **templates/resenas/**  
+    - **static/**  
+    - `admin.py`  
+    - `apps.py`  
+    - `models.py`  
+    - `views.py`  
+    - `urls.py`  
+  - **users/** (App de usuarios y autenticación)  
+    - **migrations/**  
+    - **templates/users/**  
+    - **static/**  
+    - `admin.py`  
+    - `apps.py`  
+    - `models.py`  
+    - `views.py`  
+    - `urls.py`  
+  - **staticfiles/** (Archivos estáticos compilados)  
+  - **templates/** (Plantillas base globales)
 
 ## Instalación
 
