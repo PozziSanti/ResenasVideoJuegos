@@ -83,7 +83,7 @@ Estas cuentas permiten acceder a las funcionalidades básicas y administrativas 
 - Python 3
 - HTML & CSS
 - JavaScript
-- Tailwind
+- Tailwind CSS
 
 ## 📄 Licencia
 Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo LICENSE para más información.
