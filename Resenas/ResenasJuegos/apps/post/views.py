@@ -86,38 +86,43 @@ class PostCategoryFilter (ListView):
 
 
 # SE PUEDE REUTILIZAR PARA FILTRO MAS RECIENTES, MAS ANTIGUOS
-# class PostDateFilter(ListView):
-#     model = Post
-#     template_name = 'post/post_list.html'
-#     context_object_name = 'posts'
+class PostDateFilter(ListView):
+    model = Post
+    template_name = 'post/post_list.html'
+    context_object_name = 'posts'
 
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#         date = self.request.GET.get('date')
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        date = self.request.GET.get('date')
 
-#         if date:
-#             queryset = queryset.filter(created_at__date=date) # busca el post por fecha de publicación
+        if date:
+            queryset = queryset.filter(created_at__date=date) # busca el post por fecha de publicación
         
-#         return queryset
+        return queryset
 
 
 # Filtros post por estrellas - REUTILIZAR EL IF SCORE PARA FILTRO DE MAYOR PUNTUACION A MENOR PUNTUACION
 class PostStarFilter(ListView):
     model = Post
-    template_name = 'post/post_list.html' 
+    template_name = 'post/post_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
-        queryset = super().get_queryset().annotate(avg_score=Coalesce(Avg('comment__score'), Value(0)))  # Calcula el promedio de las calificaciones de los comentarios
-        
-        score = self.request.GET.get('score') # valor que viene del formulario de búsqueda
+        queryset = super().get_queryset().annotate(
+            avg_score=Coalesce(
+                Avg('comment__score', output_field=FloatField()),
+                Value(0.0, output_field=FloatField())
+            )
+        ).distinct()
 
+        score = self.request.GET.get('score')
         if score:
             try:
                 score = float(score)
-                queryset = queryset.filter(avg_score__gte=score) # filtra comentarios que tengan un valor de estrellas mayor o igual al ingresado
+                queryset = queryset.filter(avg_score__gte=score).order_by('-avg_score')
             except ValueError:
-                pass      # si el valor no es un número válido, no se aplica el filtro
+                pass
+
         return queryset
     
 

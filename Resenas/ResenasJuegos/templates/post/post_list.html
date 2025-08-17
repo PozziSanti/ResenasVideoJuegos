@@ -1,42 +1,26 @@
 {% extends 'layouts/general_layout.html' %}
 
-{% block title_layout %}
-  {% if selected_category %}
-    | {{ selected_category }}
-  {% else %}
-    | Resultados de búsqueda
-  {% endif %}
-{% endblock title_layout %}
-
 {% block content_layout %}
 <div class="container mx-auto px-4 py-8">
   <!-- Título principal -->
-
-  {% if selected_category %}
   <h1 class="text-2xl font-bold mb-8 text-white">
     Juegos de {{ selected_category }}
   </h1>
-  {% else %}
-  <h1 class="text-2xl font-bold mb-8 text-white">
-    Resultados de búsqueda
-  </h1>
-  {% endif %}
-
+  
   <!-- Listado de juegos -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     {% for post in posts %}
-    <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      {% include 'components/cards/flip_card.html' with post=post %}
-    </div>
-    {% empty %}
-    <div class="col-span-full py-12 text-center">
-      <div class="inline-flex items-center justify-center bg-gray-100 dark:bg-gray-500 rounded-full p-4 mb-4">
-        {% include 'partials/home_icons/sad_icon.html' %}
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        {% include 'components/cards/flip_card.html' with post=post %}
       </div>
-      <h3 class="text-xl font-medium text-gray-100 mb-2">No hay juegos disponibles</h3>
-      <p class="text-gray-200">Prueba con otra categoría o vuelve más tarde</p>
-    </div>
+    {% empty %}
+      <div class="col-span-full py-12 text-center">
+        <div class="inline-flex items-center justify-center bg-gray-100 dark:bg-gray-500 rounded-full p-4 mb-4">
+          {% include 'partials/home_icons/sad_icon.html' %}
+        </div>
+        <h3 class="text-xl font-medium text-gray-100 mb-2">No hay juegos disponibles</h3>
+        <p class="text-gray-200">Prueba con otra categoría o vuelve más tarde</p>
+      </div>
     {% endfor %}
   </div>
 </div>
