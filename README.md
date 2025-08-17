@@ -42,16 +42,40 @@ Para poner en marcha el proyecto en tu entorno local, sigue los siguientes pasos
    git clone https://github.com/PozziSanti/ResenasVideoJuegos.git
    cd ResenasVideoJuegos
 
-2. Instala las dependencias necesarias:
+2. Crea un entorno virtual:
 
    ```bash
-   npm install
+   python -m venv env
+
+3. Activa el entorno virtual (Windows):
    
-4. Configura las variables de entorno según sea necesario (por ejemplo, base de datos, claves de API).
-5. Inicia el servidor de desarrollo:
-
    ```bash
-   npm start
+   env\Scripts\activate
+   
+- En caso de tener Linux o Mac:
+
+  ```bash
+   source env/bin/activate
+   
+5. Instala las dependencias desde `requirements.txt`:
+   
+   ```bash
+   pip install -r requirements.txt
+   
+7. Aplica migraciones:
+   
+   ```bash
+   python manage.py migrate
+   
+9. Crea un superusuario (opcional, para acceder al panel de admin):
+    
+    ```bash
+   python manage.py createsuperuser
+    
+11. Ejecuta el servidor:
+    
+    ```bash
+     python manage.py runserver
 
 ## Uso
 Una vez que la aplicación esté en funcionamiento, puedes acceder a las siguientes funcionalidades:
