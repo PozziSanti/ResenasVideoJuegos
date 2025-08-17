@@ -87,12 +87,21 @@ Una vez que el servidor esté en funcionamiento (`python manage.py runserver`), 
   Los usuarios pueden registrarse o iniciar sesión con las cuentas de prueba indicadas en este README.
 
 - **Explorar reseñas**  
-  Cualquier usuario puede navegar por las reseñas de videojuegos publicadas.
+  Cualquier usuario puede navegar por los posts de videojuegos publicadas.
 
 - **Crear y gestionar reseñas**  
   Los usuarios logueados pueden:
-  - Publicar nuevas reseñas sobre videojuegos.
-  - Editar o eliminar sus propias reseñas.
+  - Guardar/Eliminar posts de sus favoritos.
+  - Ver y hacer comentarios en posts.
+  - Editar y eliminar sus propios comentarios.
+ 
+  En caso de que ese usuario logueado sea promovido a admin podrá:
+  - Crear posts y categorizarlos.
+  - Editar y Eliminar sus propios posts.
+  - Eliminar comentarios de sus propios posts.
+  - Guardar/Eliminar posts de sus favoritos.
+  - Hacer comentarios en posts.
+  - Editar y eliminar sus propios comentarios.
 
 - **Panel de administrador**  
   Accesible en `http://127.0.0.1:8000/admin/` con una cuenta de superusuario o la cuenta de prueba de administrador.  
@@ -125,5 +134,5 @@ Estas cuentas permiten acceder a las funcionalidades básicas y administrativas 
 - JavaScript
 - Tailwind CSS
 
-## 📄 Licencia
-Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo LICENSE para más información.
+## 📄 LicenciaEste proyecto está bajo la **Licencia MIT**.  
+Puedes consultar el texto completo de la licencia en el archivo [LICENSE](LICENSE).
