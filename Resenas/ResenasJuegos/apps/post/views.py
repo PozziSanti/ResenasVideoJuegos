@@ -19,19 +19,16 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-    
-        print("🟢 VERIFICANDO DATOS EN VISTA:") #TODO:SACAR
         categorias = Category.objects.all()
-        print("Categorías encontradas:", list(categorias.values('id', 'title'))) #TODO:SACAR
-    
         posts_por_categoria = {}
+
         for categoria in categorias:
             posts = Post.objects.filter(category=categoria).prefetch_related('images')
-            print(f"Posts en {categoria.title}:", list(posts.values('id', 'title'))) #TODO:SACAR
+
             posts_por_categoria[categoria.title] = posts
     
         context['posts_por_categoria'] = posts_por_categoria
-        print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
+
         return context
 
 class AboutView(TemplateView):
@@ -231,35 +228,24 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 # TODO: agregar funcion 403 para que aparezca imagen del michi
     def form_valid(self, form):
         form.instance.author = self.request.user
-        print("\n=== INICIO DEL PROCESO DE GUARDADO ===")
     
         try:
-            print("\n1. Guardando post principal...")
             self.object = form.save(commit=True)
-            print(f"✅ Post guardado con ID: {self.object.id}")
-            
-            print("\n2. Procesando imágenes...")
             form.images.instance = self.object
             is_valid = form.images.is_valid()
-            print(f"🔍 Formset válido?: {is_valid}")
             
             if not is_valid:
-                print(f"❌ Errores en el formset: {form.images.errors}")
                 # Agregar errores del formset al formulario principal
                 for error in form.images.errors:
                     form.add_error(None, error)
                 return self.form_invalid(form)
             else:
-                print("✅ Formset válido, guardando imágenes...")
                 form.images.save()
-                print(f"📸 Imágenes guardadas correctamente para el post {self.object.id}")
                 
         except Exception as e:
-            print(f"‼️ ERROR CRÍTICO: {str(e)}")
             form.add_error(None, f"Error al guardar imágenes: {str(e)}")
             return self.form_invalid(form)
         
-        print("\n=== PROCESO COMPLETADO CON ÉXITO ===")
         return super().form_valid(form)
     
     def test_func(self):
@@ -429,6 +415,5 @@ class CommentUpdateView(UpdateView):
         return context
         
     def get_success_url(self):
-        print('SLUG', self.object.post.slug)
         return reverse_lazy("post_detail", kwargs={"slug": self.object.post.slug})
 
