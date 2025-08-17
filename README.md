@@ -6,39 +6,31 @@ Hit or Quit es una plataforma colaborativa donde los usuarios pueden compartir y
 
 ## 🗂️ Estructura
 
-└── ResenasVideoJuegos
-    ├── Resenas
-    │   ├── ResenasJuegos
-    │   │   ├── __pycache__
-    │   │   ├── apps
-    │   │   │   ├── comment
-    │   │   │   ├── favorite
-    │   │   │   ├── post
-    │   │   │   └── user
-    │   │   ├── blog
-    │   │   │   ├── __pycache__
-    │   │   │   └── configurations
-    │   │   ├── media
-    │   │   │   └── post
-    │   │   ├── static
-    │   │   │   ├── assets
-    │   │   │   ├── css
-    │   │   │   └── js
-    │   │   ├── staticfiles
-    │   │   │   ├── admin
-    │   │   │   ├── assets
-    │   │   │   ├── css
-    │   │   │   ├── django-browser-reload
-    │   │   │   └── js
-    │   │   └── templates
-    │   │       ├── category
-    │   │       ├── components
-    │   │       ├── layouts
-    │   │       ├── pages
-    │   │       ├── partials
-    │   │       ├── post
-    │   │       ├── registration
-    │   │       └── user
+- **ResenasVideoJuegos/**  
+  - `manage.py`  
+  - `requirements.txt`  
+  - `README.md`  
+  - `db.sqlite3`  
+  - **resenas/** (App principal de reseñas)  
+    - **migrations/**  
+    - **templates/resenas/**  
+    - **static/**  
+    - `admin.py`  
+    - `apps.py`  
+    - `models.py`  
+    - `views.py`  
+    - `urls.py`  
+  - **users/** (App de usuarios y autenticación)  
+    - **migrations/**  
+    - **templates/users/**  
+    - **static/**  
+    - `admin.py`  
+    - `apps.py`  
+    - `models.py`  
+    - `views.py`  
+    - `urls.py`  
+  - **staticfiles/** (Archivos estáticos compilados)  
+  - **templates/** (Plantillas base globales)
 
 ## Instalación
 
