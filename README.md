@@ -1,10 +1,10 @@
-# ResenasVideoJuegos
+# Hit or Quit 👾
 
-## Acerca del proyecto
+##🗂️ Acerca del proyecto
 
 ResenasVideoJuegos es una plataforma colaborativa donde los usuarios pueden compartir y consultar reseñas de videojuegos. El objetivo es crear una comunidad activa que aporte valor a través de opiniones honestas y detalladas sobre diversos títulos. El proyecto está desarrollado utilizando tecnologías web modernas y busca ser una herramienta útil tanto para jugadores como para desarrolladores.
 
-## Integrantes
+##👥 Colaboradores
 
 - **Pozzi Santiago** – *Fullstack Developer*
 - **Prodanov Sofía** – *Frontend Developer*
@@ -51,6 +51,10 @@ Una vez que la aplicación esté en funcionamiento, puedes acceder a las siguien
 
 - **Inicio de sesión:** Utiliza las cuentas de prueba mencionadas anteriormente para acceder al sistema.
 
-- **Creación de reseñas:** Los usuarios pueden agregar reseñas detalladas de los videojuegos que han jugado.
+## Tecnologías Utilizadas
+- Python 3
+- HTML & CSS
+- JavaScript
+- Tailwind
 
 - **Administración:** Los administradores tienen la capacidad de moderar contenido y gestionar usuarios.
