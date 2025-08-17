@@ -11,10 +11,10 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
 
-        #En caso de usar una postres utilizo:
+        # En caso de usar una postres utilizo:
         # "ENGINE": "django.db.backends.postgresql",
 
-        #En caso de usar una postres utilizo:
+        # En caso de usar una postres utilizo:
         # "ENGINE": "django.db.backends.mysql",
 
         # "NAME": os.getenv('DB_NAME'),

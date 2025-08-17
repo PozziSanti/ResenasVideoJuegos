@@ -78,7 +78,7 @@ class Post(models.Model):
         return unique_slug
 
 #TODO=REVISAR RUTA DE LA IMAGEN
-def get_image_path(instance, filename): #SE AGREGA IF**************************
+def get_image_path(instance, filename):
     if not instance.post.id:  # Si el post no tiene ID aún 
         return os.path.join('post/temp/', filename)
 
