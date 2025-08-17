@@ -75,7 +75,7 @@ Para poner en marcha el proyecto en tu entorno local, sigue los siguientes pasos
     ```bash
      python manage.py runserver
 
-## Uso
+## 🚀 Uso
 
 Una vez que el servidor esté en funcionamiento (`python manage.py runserver`), accede a la aplicación en tu navegador en:
 
@@ -98,7 +98,7 @@ Una vez que el servidor esté en funcionamiento (`python manage.py runserver`), 
   Accesible en `http://127.0.0.1:8000/admin/` con una cuenta de superusuario o la cuenta de prueba de administrador.  
   Desde aquí se pueden gestionar usuarios, reseñas y permisos.
 
-## Cuentas de prueba
+## 🔑 Cuentas de prueba
 
 Para facilitar la prueba de la aplicación sin necesidad de registrarse, se han creado cuentas de usuario predefinidas:
 
