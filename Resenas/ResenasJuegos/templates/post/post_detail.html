@@ -3,14 +3,13 @@
 {% block content_layout %}
 <div class="max-w-6xl mx-auto px-4 py-8">
   <!-- Sección principal con imagen y botones -->
-  <!-- Contenedor relativo de la imagen -->
-  <div class="relative">
+  <div class="relative mb-8">
     <a href="{% url 'post_detail' post.slug %}">
       <img src="{{ post.images.first.image.url }}" alt="{{ post.title }}"
         class="w-full h-[400px] object-cover opacity-90 rounded-t-xl">
     </a>
 
-    <!-- Icono de favorito fijo en esquina superior derecha -->
+    <!-- Agregar a favorito -->
     {% if user.is_authenticated %}
     <form method="post" action="{% url 'toggle_favorite' post.slug %}">
       {% csrf_token %}
@@ -29,16 +28,20 @@
     <div class="absolute bottom-0 left-0 right-0 p-6 z-10 bg-gradient-to-t from-[#0B071A] to-transparent">
       <div class="flex justify-between items-end">
         <h1 class="text-4xl font-bold text-[#f0f1f4] mb-2">{{ post.title }}</h1>
-        <div class="flex gap-3">
-          <a href="{% url 'post_update' post.slug %}"
-            class="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#4F46E5]/50">
-            Editar
-          </a>
-          <button type="button" onclick="openDeleteModal()"
-            class="bg-[#EF4444] hover:bg-[#DC2626] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#EF4444]/50">
-            Eliminar
-          </button>
-        </div>
+        {% if user.is_authenticated %}
+          {% if user == post.author or user.is_superuser %}
+          <div class="flex gap-3">
+            <a href="{% url 'post_update' post.slug %}"
+              class="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#4F46E5]/50">
+              Editar
+            </a>
+            <button type="button" onclick="openDeleteModal()"
+              class="bg-[#EF4444] hover:bg-[#DC2626] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#EF4444]/50">
+              Eliminar
+            </button>
+          </div>
+        {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>
@@ -84,6 +87,7 @@
 
   <!-- Modal eliminar -->
   {% include 'post/post_delete.html' %}
+
 </div>
 {% endblock content_layout %}
 
