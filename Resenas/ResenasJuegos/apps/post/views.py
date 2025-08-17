@@ -13,6 +13,7 @@ from django.views import View
 from django.http import JsonResponse
 from django.conf import settings
 
+
 class IndexView(TemplateView):
     template_name = 'pages/index.html'
 
