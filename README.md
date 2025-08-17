@@ -6,10 +6,10 @@ ResenasVideoJuegos es una plataforma colaborativa donde los usuarios pueden comp
 
 ## Integrantes
 
-- **Pozzi Santi** – *Desarrollador principal*
-- **[Nombre del integrante 2]** – *Rol del integrante 2*
-- **[Nombre del integrante 3]** – *Rol del integrante 3*
-- **[Nombre del integrante 4]** – *Rol del integrante 4*
+- **Pozzi Santiago** – *Fullstack Developer*
+- **Prodanov Sofía** – *Frontend Developer*
+- **Suarez Fernando** – *Backend Developer*
+- **Gnus Matías** – *Backend Developer*
 
 ## Cuentas de prueba
 
@@ -34,3 +34,23 @@ Para poner en marcha el proyecto en tu entorno local, sigue los siguientes pasos
    ```bash
    git clone https://github.com/PozziSanti/ResenasVideoJuegos.git
    cd ResenasVideoJuegos
+
+2. Instala las dependencias necesarias:
+
+   ```bash
+   npm install
+   
+4. Configura las variables de entorno según sea necesario (por ejemplo, base de datos, claves de API).
+5. Inicia el servidor de desarrollo:
+
+   ```bash
+   npm start
+
+## Uso
+Una vez que la aplicación esté en funcionamiento, puedes acceder a las siguientes funcionalidades:
+
+- **Inicio de sesión:** Utiliza las cuentas de prueba mencionadas anteriormente para acceder al sistema.
+
+- **Creación de reseñas:** Los usuarios pueden agregar reseñas detalladas de los videojuegos que han jugado.
+
+- **Administración:** Los administradores tienen la capacidad de moderar contenido y gestionar usuarios.
