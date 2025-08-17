@@ -51,7 +51,6 @@ Para poner en marcha el proyecto en tu entorno local, sigue los siguientes pasos
    
    ```bash
    env\Scripts\activate
-   
 - En caso de tener Linux o Mac:
 
   ```bash
