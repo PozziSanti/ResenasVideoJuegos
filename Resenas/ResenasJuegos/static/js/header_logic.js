@@ -1,25 +1,21 @@
+// --- Avatar fallback ---
 function replaceWithIcon(imgElement) {
-    // Obtenemos el contenedor de la imagen
-    const parentContainer = document.getElementById('user-avatar-container');
-    if (parentContainer) {
-        // Creamos el nuevo elemento de icono
-        const iconElement = document.createElement('i');
-        iconElement.className = 'fa fa-user';
+    const parent = document.getElementById('user-avatar-container');
+    if (!parent) return;
 
-        // Reemplazamos la imagen que falló por el nuevo icono
-        parentContainer.replaceChild(iconElement, imgElement);
-
-        // Evitamos un bucle infinito si el icono también falla
-        imgElement.onerror = null;
-    }
+    const icon = document.createElement('i');
+    icon.className = 'fa fa-user';
+    parent.replaceChild(icon, imgElement);
+    imgElement.onerror = null;
 }
 
-// --- Autocompletado ---
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
+
+    // --- Autocompletado buscador ---
     const searchInput = document.getElementById("search-input");
     const suggestionsBox = document.getElementById("suggestions");
 
-    searchInput.addEventListener("input", function() {
+    searchInput.addEventListener("input", function () {
         const query = this.value;
         if (query.length < 2) {
             suggestionsBox.classList.add("hidden");
@@ -27,36 +23,42 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         fetch(`/autocomplete/?q=${encodeURIComponent(query)}`)
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 suggestionsBox.innerHTML = "";
-                if (data.length === 0) {
+                if (!data.length) {
                     suggestionsBox.classList.add("hidden");
                     return;
                 }
 
                 data.forEach(title => {
                     const option = document.createElement("div");
-                    option.classList.add(
-                        'px-4', 'py-2', 'cursor-pointer',
-                        'hover:bg-accent-blue', 'hover:text-white',
-                        'bg-light-morado', 'text-text-light'
-                    );
+                    option.className = 'px-4 py-2 cursor-pointer bg-light-morado text-text-light hover:bg-accent-blue hover:text-white';
                     option.textContent = title;
-                    option.addEventListener("click", function() {
+                    option.addEventListener("click", () => {
                         searchInput.value = title;
                         suggestionsBox.classList.add("hidden");
                         searchInput.form.submit();
                     });
                     suggestionsBox.appendChild(option);
                 });
+
                 suggestionsBox.classList.remove("hidden");
             });
     });
 
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", e => {
         if (!suggestionsBox.contains(e.target) && e.target !== searchInput) {
             suggestionsBox.classList.add("hidden");
         }
     });
+
+    // --- Menú hamburguesa ---
+    const menuToggle = document.getElementById('menu-toggle');
+    menuToggle?.addEventListener('click', () => {
+        document.body.classList.toggle('overflow-hidden'); // bloquea scroll
+        // Aquí abrís/cerrás tu sidebar: ej. document.getElementById('sidebar').classList.toggle('hidden');
+    });
+
 });
+

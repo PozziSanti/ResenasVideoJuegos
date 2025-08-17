@@ -1,276 +1,112 @@
-<!-- COMENTAR ALGUNO DE LOS DOS BLOQUES DE CODIGO (EL OTRO ESTA BIEEEEEN ABAJO) -->
 {% extends 'layouts/general_layout.html' %}
 
 {% block content_layout %}
-<article class="max-w-3xl mx-auto p-6 bg-white shadow rounded">
-  <!-- TITULO Y FECHA -->
-  <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
-  <p class="text-gray-500 text-sm mb-6">Publicado el {{ post.created_at|date:"d M Y" }}</p>
-  
-{% if user.is_authenticated %}
-    <form method="post" action="{% url 'toggle_favorite' post.slug %}">
-        {% csrf_token %}
-        {% if is_favorited %}
-            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">
-                Quitar de favoritos
-            </button>
-        {% else %}
-            <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded">
-                Agregar a favoritos
-            </button>
-        {% endif %}
-    </form>
-{% endif %}
+<div class="max-w-3xl mx-auto px-4 py-8 space-y-8">
 
-  {% if post.images.all %}
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-    {% for imagen in post.images.all %}
-    <img src="{{ imagen.image.url }}" alt="{{ post.title }}" class="w-full rounded">
-    {% endfor %}
-  </div>
-  {% endif %}
-
-  <div class="text-lg leading-relaxed mb-6">
-    {{ post.content|linebreaks }}
-  </div>
-
-  <div class="flex gap-4 text-sm text-gray-600 mb-6">
-    <div>
-      <strong>Categorías:</strong>
-      {% for cat in post.category.all %}
-      <span class="inline-block bg-gray-200 px-2 py-1 rounded">{{ cat.title }}</span>
-      {% endfor %}
-    </div>
-    <div>
-      <strong>Plataformas:</strong>
-      {% for plat in post.plataform.all %}
-      <span class="inline-block bg-gray-200 px-2 py-1 rounded">{{ plat.title }}</span>
-      {% endfor %}
-    </div>
-  </div>
-
-  <hr class="my-6">
-  <h2 class="text-2xl font-semibold mb-4">Reseñas</h2>
-
-  {% for comment in comments %}
-  <div class="mb-4 p-4 bg-gray-100 rounded shadow">
-    <div class="flex justify-between items-center">
-      <span class="font-bold">{{ comment.user.username }}</span>
-      <span class="text-yellow-500">{{ comment.score }} ⭐</span>
-    </div>
-    <p class="mt-2 text-gray-800">{{ comment.content }}</p>
-
-    {% if request.user == comment.user %}
-    <div class="flex gap-2 mt-2">
-      <!-- Botón Editar -->
-      <a href="?edit_comment_id={{ comment.id }}" class="text-indigo-600 hover:underline text-sm">
-        Editar
-      </a>
-
-      <!-- Botón Eliminar -->
-      <form method="post" style="display:inline;">
-        {% csrf_token %}
-        <input type="hidden" name="delete_comment_id" value="{{ comment.id }}">
-        <button type="submit" class="text-red-600 hover:underline text-sm">
-          Eliminar
-        </button>
-      </form>
-    </div>
-    {% endif %}
-  </div>
-  {% empty %}
-  <p class="text-gray-500">No hay reseñas aún.</p>
-  {% endfor %}
-
-  {% if user.is_authenticated %}
-  <hr class="my-6">
-  {% if editing %}
-  <h3 class="text-xl font-semibold mb-2">Editando tu reseña</h3>
-  <form method="post">
-    {% csrf_token %}
-    <input type="hidden" name="comment_id" value="{{ editing.id }}">
-    {{ form.as_p }}
-    <div class="flex gap-2 mt-2">
-      <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Guardar cambios</button>
-      <a href="{% url 'post_detail' post.slug %}" class="px-4 py-2 bg-gray-300 rounded">Cancelar</a>
-    </div>
-  </form>
-  {% else %}
-  <h3 class="text-xl font-semibold mb-2">Dejá tu reseña</h3>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded">Enviar</button>
-  </form>
-  {% endif %}
-  {% else %}
-  <p class="text-gray-500 mt-6">Iniciá sesión para dejar tu comentario y puntuación.</p>
-  {% endif %}
-
-  <a href="{% url 'home' %}" class="inline-block mt-8 text-indigo-600 hover:underline">← Volver al inicio</a>
-</article>
-{% endblock %}
-
-
-{% comment %}
-<!-- ######################################ORIGINAL-ORIGINAL################################################## -->
-
-<!-- #TODO: REVISAR LOS ROLES Y PERMISOS
-#TODO:REVISAR URLS -->
-
-{% block content_layout %}
-<div class="max-w-6xl mx-auto px-4 py-8">
-  <!-- Sección principal con imagen y botones -->
-  <div class="relative mb-8 rounded-xl overflow-hidden bg-[#130C2A] border border-[#241D44]">
-    {% if post.images.all %}
+  <!-- Imagen principal con botones -->
+  <div class="relative rounded-xl overflow-hidden">
     <a href="{% url 'post_detail' post.slug %}">
       <img src="{{ post.images.first.image.url }}" alt="{{ post.title }}"
-        class="w-full h-[400px] object-cover opacity-90">
+        class="w-full h-64 sm:h-80 md:h-96 object-cover opacity-90">
     </a>
+
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'toggle_favorite' post.slug %}">
+      {% csrf_token %}
+      <button class="absolute top-4 right-4 p-1 cursor-pointer
+               hover:scale-125 hover:drop-shadow-[0_0_15px_rgb(255,215,0)] transition-all duration-200">
+        {% if is_favorited %}
+        {% include 'partials/home_icons/favorited_flag.html' %}
+        {% else %}
+        {% include 'partials/home_icons/unfavorited_flag.html' %}
+        {% endif %}
+      </button>
+    </form>
     {% endif %}
 
-    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#0B071A] to-transparent">
-      <div class="flex justify-between items-end">
-        <div>
-          <h1 class="text-4xl font-bold text-[#f0f1f4] mb-2">{{ post.title }}</h1>
-        </div>
-        <div class="flex gap-3">
+    <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-t from-[#0B071A] to-transparent">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-0">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#f0f1f4]">{{ post.title }}</h1>
+        {% if user.is_authenticated and user == post.author or user.is_superuser %}
+        <div class="flex gap-3 flex-wrap">
           <a href="{% url 'post_update' post.slug %}"
-            class="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#4F46E5]/50">
+            class="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#4F46E5]/50">
             Editar
           </a>
           <button type="button" onclick="openDeleteModal()"
-            class="bg-[#EF4444] hover:bg-[#DC2626] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#EF4444]/50">
+            class="bg-[#EF4444] hover:bg-[#DC2626] text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#EF4444]/50">
             Eliminar
           </button>
         </div>
+        {% endif %}
       </div>
     </div>
   </div>
 
-  <!-- Sección de información del juego -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-    <!-- Contenido principal -->
+  <!-- Información del juego -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
     <div class="md:col-span-2 space-y-6">
       <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44]">
-        <h2 class="text-2xl font-bold mb-4 text-[#f0f1f4]">Descripción</h2>
+        <h2 class="text-xl sm:text-2xl font-bold mb-4 text-[#f0f1f4]">Descripción</h2>
         <div class="text-[#f0f1f4] leading-relaxed">
           {{ post.content|linebreaks }}
         </div>
       </div>
 
-      <!-- Categorías -->
       <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44]">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <h3 class="text-xl font-semibold mb-3 text-[#f0f1f4]">Categorías</h3>
-            <div class="flex flex-wrap gap-2">
-              {% for cat in post.category.all %}
-              <span class="bg-[#241D44] text-[#f0f1f4] px-3 py-1 rounded-full text-sm">{{ cat.title }}</span>
-              {% endfor %}
-            </div>
-          </div>
+        <h3 class="text-lg sm:text-xl font-semibold mb-3 text-[#f0f1f4]">Categorías</h3>
+        <div class="flex flex-wrap gap-2">
+          {% for cat in post.category.all %}
+          <span class="bg-[#241D44] text-[#f0f1f4] px-3 py-1 rounded-full text-sm">{{ cat.title }}</span>
+          {% endfor %}
         </div>
       </div>
     </div>
 
-    <!-- Información lateral -->
     <div class="space-y-6">
       <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44]">
-        <h2 class="text-2xl font-bold mb-4 text-[#f0f1f4]">Información</h2>
+        <h2 class="text-xl sm:text-2xl font-bold mb-4 text-[#f0f1f4]">Información</h2>
         <div class="space-y-3 text-[#f0f1f4]">
           <div>
             <span class="font-semibold">Calificación:</span>
-            <span>{{ post.rating|default:"-" }}/10 ({{ post.votes|default:"0" }} votos)</span>
+            <span>{{ post.average_score }}/10 ({{ post.amaount_comments }} votos)</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Sección de reseñas -->
-  <div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44] mb-8">
-    <h2 class="text-2xl font-bold mb-6 text-[#f0f1f4]">Comentarios</h2>
+  <!-- Comentarios -->
+  {% include 'post/post_comment.html' %}
 
-    {% for comment in comments %}
-    <div class="mb-4 p-4 bg-[#130C2A] rounded-lg border border-[#241D44]">
-      <div class="flex justify-between items-center mb-2">
-        <span class="font-bold text-[#f0f1f4]">{{ comment.user.username }}</span>
-        <span class="text-yellow-500">{{ comment.score }} ⭐</span>
-      </div>
-      <p class="text-[#f0f1f4]">{{ comment.content }}</p>
-    </div>
-    {% empty %}
-    <p class="text-[#f0f1f4] opacity-80 pb-6 border-b border-[#241D44]">No hay comentarios aún.</p>
-    {% endfor %}
-
-    {% if user.is_authenticated %}
-    <h3 class="text-xl font-semibold mb-4 mt-6 text-[#f0f1f4]">Dejá tu reseña</h3>
-    <form method="post">
-      {% csrf_token %}
-      <div class="space-y-4">
-        <!-- Campo de contenido -->
-        <div class="form-group">
-          <textarea name="content"
-            class="w-full bg-[#130C2A] text-[#f0f1f4] p-4 rounded-lg border border-[#241D44] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent"
-            rows="4" placeholder="Escribí tu reseña acá..."></textarea>
-        </div>
-
-        <!-- Sistema de puntuación por estrellas -->
-        <div class="form-group">
-          <label class="block mb-2 text-[#f0f1f4] font-medium">Puntuación</label>
-          <div class="flex items-center space-x-1 star-rating">
-            {% for i in "12345"|make_list %}
-            <label class="cursor-pointer">
-              <input type="radio" name="score" value="{{ i }}" class="hidden peer star-{{ i }}">
-                <span class="text-3xl text-gray-400 hover:text-yellow-500 transition-colors duration-200">★</span>
-            </label>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-      <button type="submit"
-        class="mt-4 bg-[#4F46E5] hover:bg-[#4338CA] text-white px-4 py-2 rounded-lg transition-colors">
-        Enviar
-      </button>
-    </form>
-    {% else %}
-    <p class="text-[#f0f1f4] opacity-80 mt-6">Iniciá sesión para dejar tu comentario y puntuación.</p>
-    {% endif %}
-  </div>
-
-  <!-- Incluimos el modal -->
+  <!-- Modal eliminar -->
   {% include 'post/post_delete.html' %}
-
+</div>
 {% endblock content_layout %}
 
 {% block scripts %}
 <script>
-// Sistema de estrellas
-document.querySelectorAll('.star-rating input[type="radio"]').forEach(radio => {
-  radio.addEventListener('change', function () {
-    const selectedValue = parseInt(this.value);
-    const stars = document.querySelectorAll('.star-rating span');
-    stars.forEach((star, index) => {
-      star.classList.toggle('text-yellow-500', index < selectedValue);
-      star.classList.toggle('text-gray-400', index >= selectedValue);
+  document.querySelectorAll('.star-rating input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+      const selectedValue = parseInt(this.value);
+      const stars = document.querySelectorAll('.star-rating span');
+      stars.forEach((star, index) => {
+        star.classList.toggle('text-yellow-500', index < selectedValue);
+        star.classList.toggle('text-gray-400', index >= selectedValue);
+      });
     });
   });
-});
 
-// Modal
-function openDeleteModal() {
-  document.getElementById('deleteModal').classList.remove('hidden');
-  document.body.classList.add('overflow-hidden');
-}
-function closeDeleteModal() {
-  document.getElementById('deleteModal').classList.add('hidden');
-  document.body.classList.remove('overflow-hidden');
-}
-document.getElementById('deleteModal').addEventListener('click', function(e){
-  if(e.target === this) closeDeleteModal();
-});
+  function openDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  }
+  function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+  }
+  document.getElementById('deleteModal').addEventListener('click', function (e) {
+    if (e.target === this) closeDeleteModal();
+  });
 </script>
 {% endblock scripts %}
-
- {% endcomment %}

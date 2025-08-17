@@ -1,148 +1,172 @@
 /* Scrollbar personalizada reutilizable */
 .scrollbar-purple {
-    --sb-track-color: #0B071A;
-    --sb-thumb-color: #622bbf;
-    --sb-thumb-border-color: #130C2A;
-    --sb-size: 6px;
+  --sb-track-color: #0B071A;
+  --sb-thumb-color: #622bbf;
+  --sb-thumb-border-color: #130C2A;
+  --sb-size: 6px;
 }
 
 /* Estilos para navegadores con WebKit (Chrome, Edge, Safari) */
 .scrollbar-purple::-webkit-scrollbar {
-    width: var(--sb-size);
+  width: var(--sb-size);
 }
 
 .scrollbar-purple::-webkit-scrollbar-track {
-    background: var(--sb-track-color);
-    border-radius: 3px;
+  background: var(--sb-track-color);
+  border-radius: 3px;
 }
 
 .scrollbar-purple::-webkit-scrollbar-thumb {
-    background: var(--sb-thumb-color);
-    border-radius: 3px;
-    border: 1px solid var(--sb-thumb-border-color);
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+  border: 1px solid var(--sb-thumb-border-color);
 }
 
 /* Estilo para navegadores que soportan scrollbar-color (Firefox) */
 @supports not selector(::-webkit-scrollbar) {
-    .scrollbar-purple {
-        scrollbar-width: thin;
-        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
-    }
+  .scrollbar-purple {
+    scrollbar-width: thin;
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
 }
 
 
 
 
-/* Contenedor principal */
-.flip-card {
-    background-color: transparent;
-    width: 100%;
-    height: 250px;
-    perspective: 1000px;
+
+/* FLIP CARD Y FLECHAS */
+/* Contenedor scrolleable horizontal */
+.hide-scrollbar {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  gap: 1rem;
+  padding: 0 1rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  /* Oculta barra en Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Oculta barra en WebKit */
+}
+
+/* Mostrar flechas en desktop solo al hover del section padre .group */
+@media (hover: hover) and (pointer: fine) {
+  .md\:group-hover\:opacity-100 {
+    opacity: 0.8;
+  }
+
+  .group:hover .md\:group-hover\:opacity-100 {
+    opacity: 1;
+  }
+}
+
+/* En mobile/tablet: flechas siempre visibles */
+@media (pointer: coarse) {
+  .md\:group-hover\:opacity-100 {
+    opacity: 1 !important;
+  }
+}
+
+/* Flip card utilidades */
+.h-80 {
+  height: 20rem;
+}
+
+.h-72 {
+  height: 18rem;
+}
+
+.h-64 {
+  height: 16rem;
+}
+
+.min-w-\[280px\] {
+  min-width: 280px;
+}
+
+.min-w-\[240px\] {
+  min-width: 240px;
+}
+
+.min-w-\[220px\] {
+  min-width: 220px;
+}
+
+[perspective\:1000px] {
+  perspective: 1000px;
+}
+
+[transform-style\:preserve-3d] {
+  transform-style: preserve-3d;
+}
+
+[backface-visibility\:hidden] {
+  backface-visibility: hidden;
+}
+
+/* Flip card responsive */
+@media (max-width: 767px) {
+
+  /* mobile y tablet */
+  .group {
     cursor: pointer;
-    position: relative;
+  }
 }
 
-/* Contenedor interno para la animación 3D */
-.flip-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s ease-in-out;
-    transform-style: preserve-3d;
-    border-radius: 0.5rem;
-    overflow: hidden;
+/* Transiciones suaves al girar */
+.group,
+.group>div {
+  transition: transform 0.5s;
 }
 
-/* Estados de flip */
-.flip-card:hover .flip-card-inner,
-.flip-card.is-flipped .flip-card-inner {
-    transform: rotateY(180deg);
-}
+/* Tamaño de texto y paddings adaptativos */
+@media (max-width: 767px) {
+  .group h1 {
+    font-size: 1rem;
+  }
 
-/* Estilos comunes para ambas caras */
-.flip-card-front,
-.flip-card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 0.5rem;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-}
+  .group p {
+    font-size: 0.75rem;
+  }
 
-/* Cara frontal específica */
-.flip-card-front {
-    background-color: #241D44;
-    color: #f0f1f4;
-    z-index: 2;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Imagen en el frente */
-.flip-card-front img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Título en la tarjeta frontal */
-.card-title {
-    position: absolute;
-    bottom: 0.5rem;
-    left: 0.5rem;
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
+  .group a {
     padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    max-width: calc(100% - 1rem);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: 0.75rem;
+  }
+
+  .group div {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 }
 
-/* Estilo cuando no hay imagen */
-.no-image {
-    width: 100%;
-    height: 100%;
-    background: #cccccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #333333;
+@media (min-width: 768px) and (max-width: 1023px) {
+  .group h1 {
+    font-size: 1.125rem;
+  }
+
+  .group p {
+    font-size: 0.875rem;
+  }
+
+  .group a {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .group div {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
 }
 
-/* Cara trasera */
-.flip-card-back {
-    background-color: #241D44;
-    color: #f0f1f4;
-    transform: rotateY(180deg);
-    padding: 1rem;
-    text-align: left;
-    justify-content: center;
-}
 
-/* Enlace invisible que cubre toda la tarjeta */
-.flip-card > a {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 10;
-}
 
-/* Efecto hover para el texto en la parte trasera */
-.flip-card-back span {
-    transition: color 0.2s ease;
-}
 
-.flip-card:hover .flip-card-back span {
-    color: #4F46E5;
-}
 
 
 
@@ -177,7 +201,7 @@
 
 /* Autofill personalizado */
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
+input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 30px var(--color-darker-morado) inset !important;
   -webkit-text-fill-color: var(--color-text-light) !important;
@@ -218,9 +242,12 @@ input:-webkit-autofill:focus {
 }
 
 @keyframes rotateHint {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: rotate(0deg);
   }
+
   50% {
     transform: rotate(180deg);
   }
@@ -231,6 +258,8 @@ input:-webkit-autofill:focus {
   .mobile-flip-hint {
     display: flex;
   }
-}bile-flip-hint {
-    display: flex;
-  }
+}
+
+bile-flip-hint {
+  display: flex;
+}
