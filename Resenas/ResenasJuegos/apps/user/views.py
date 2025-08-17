@@ -12,6 +12,7 @@ from django.contrib.auth import update_session_auth_hash
 from apps.favorite.models import Favorite
 
 
+
 User = get_user_model()
 
 def inicio(request):
@@ -26,7 +27,6 @@ class UserSignupView(CreateView):
         return super().form_valid(form)
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
-
 
 class UserLoginView(LoginView):
     template_name = 'registration/signin.html'
@@ -48,6 +48,12 @@ def edit_profile(request):
     
     if request.method == 'POST':
         form = EditForm(request.POST, request.FILES, instance=profile)
+        if "remove_avatar" in request.POST:
+            profile.avatar.delete(save=False)  # borra el archivo físico
+            profile.avatar = None              # limpia el campo en la BD
+            profile.save()
+            return redirect('edit_profile')    # redirige al perfil sin avatar
+        
         if form.is_valid():
             form.save()
             return redirect('user_profile') 
