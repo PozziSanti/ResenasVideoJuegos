@@ -84,3 +84,6 @@ Estas cuentas permiten acceder a las funcionalidades básicas y administrativas 
 - HTML & CSS
 - JavaScript
 - Tailwind
+
+## 📄 Licencia
+Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo LICENSE para más información.
