@@ -1,44 +1,33 @@
-<div 
-  class="flip-card group relative w-full h-[250px] perspective-1000 cursor-pointer"
-  onclick="this.classList.toggle('is-flipped')"
->
-  <!-- Enlace que cubre toda la tarjeta -->
-  <a 
-    href="{% url 'post_detail' slug=post.slug %}" 
-    class="absolute inset-0 z-10"
-    aria-label="Ver detalle de {{ post.title }}"
-  ></a>
-
-  <!-- Contenedor interno -->
-  <div class="flip-card-inner relative w-full h-full text-center transition-transform duration-600 ease-in-out transform-style-preserve-3d rounded-lg overflow-hidden">
+<div class="h-80 min-w-[280px] [perspective:1000px]">
+  <div
+    class="group relative h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] hover:[transform:rotateY(180deg)]">
 
     <!-- Cara frontal -->
-    <div class="flip-card-front absolute w-full h-full rounded-lg backface-hidden flex flex-col justify-center items-center bg-[#241D44] text-[#f0f1f4] z-20">
+    <div class="absolute inset-0 [backface-visibility:hidden]">
       {% with post.images.all|first as imagen %}
-        {% if imagen %}
-          <img 
-            src="{{ imagen.image.url }}" 
-            alt="{{ post.title }}" 
-            class="w-full h-full object-cover"
-          >
-        {% else %}
-          <div class="no-image w-full h-full bg-gray-300 flex justify-center items-center">
-            Sin imagen
-          </div>
-        {% endif %}
+      {% if imagen %}
+      <img src="{{ imagen.image.url }}" alt="{{ post.title }}"
+        class="h-full w-full rounded-xl object-cover shadow-xl shadow-black/40">
+      {% else %}
+      <div class="h-full w-full rounded-xl bg-gray-700 flex justify-center items-center text-gray-300">
+        Sin imagen
+      </div>
+      {% endif %}
       {% endwith %}
-      <div class="card-title absolute bottom-2 left-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded">
+      <div class="absolute bottom-2 left-2 bg-darker-morado-transparent text-text-light px-2 py-1 rounded">
         {{ post.title }}
       </div>
     </div>
 
     <!-- Cara trasera -->
-    <div class="flip-card-back absolute w-full h-full rounded-lg backface-hidden flex flex-col justify-center items-start p-4 bg-[#241D44] text-[#f0f1f4] transform-rotate-y-180 text-left">
-      <h3 class="text-lg font-bold mb-2">{{ post.title }}</h3>
-      <p class="text-sm mb-4">"{{ post.content|truncatewords:15|default:'Sin contenido' }}"</p>
-      <span class="text-xs opacity-70 group-hover:text-[#4F46E5] transition-colors">
-        Click para ver más
-      </span>
+    <div
+      class="absolute inset-0 h-full w-full rounded-xl bg-light-morado px-6 text-center text-text-light [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center">
+      <h1 class="text-lg font-bold mb-2">{{ post.title }}</h1>
+      <p class="text-sm mb-4">{{ post.content|truncatewords:20|default:"Sin descripción" }}</p>
+      <a href="{% url 'post_detail' post.slug %}"
+        class="mt-2 rounded-md bg-accent-blue py-2 px-4 text-sm font-semibold hover:bg-accent-blue-hover transition-colors">
+        Ver más
+      </a>
     </div>
   </div>
 </div>

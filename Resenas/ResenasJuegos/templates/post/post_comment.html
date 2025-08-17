@@ -1,16 +1,37 @@
-<div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44] mb-8">
+<div class="bg-[#0B071A] p-6 rounded-xl border border-[#241D44] mb-8 w-full">
     <h2 class="text-2xl font-bold mb-6 text-[#f0f1f4]">Comentarios</h2>
 
     {% for comment in comments %}
     <div class="mb-4 p-4 bg-[#130C2A] rounded-lg border border-[#241D44]">
         {% if comment.id == editing_comment_id %}
-        <form method="post" action="{% url 'comment_update' comment.id %}">
+        <form method="post" action="{% url 'comment_update' comment.id %}" class="space-y-4">
             {% csrf_token %}
-            <p>Contenido: {{ edit_comment_form.content }}</p>
-            <p>Puntuacion: {{ edit_comment_form.score }}</p>
+            <!-- Campo de contenido -->
+            <div class="form-group">
+                <textarea name="content"
+                    class="w-full bg-[#130C2A] text-[#f0f1f4] p-4 rounded-lg border border-[#241D44] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent"
+                    rows="4" placeholder="Escribí tu reseña acá...">{{ edit_comment_form.content.value }}</textarea>
+            </div>
 
-            <button type="submit">Guardar</button>
-            <a href="{% url 'post_detail' post.slug %}">Cancelar</a>
+            <!-- Campo de puntuación -->
+            <div class="flex items-center gap-2 my-3">
+                <span class="text-[#f0f1f4] font-medium">Puntuación:</span>
+                <div class="w-20">
+                    {{ edit_comment_form.score }}
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex space-x-2">
+                <button type="submit"
+                    class="bg-[#4F46E5] hover:bg-[#4338CA] text-white px-4 py-2 rounded-lg transition-colors">
+                    Guardar
+                </button>
+                <a href="{% url 'post_detail' post.slug %}"
+                    class="bg-[#241D44] hover:bg-[#1E1838] text-[#f0f1f4] px-4 py-2 rounded-lg transition-colors">
+                    Cancelar
+                </a>
+            </div>
         </form>
         {% else %}
         <div class="flex justify-between items-center mb-2">
@@ -25,15 +46,13 @@
             <a href="?edit_comment_id={{ comment.id }}" class="text-yellow-500 hover:underline mr-4">Editar</a>
 
             <!-- Botón Eliminar -->
-            <form method="post" style="display:inline;">
-                {% csrf_token %}
-                <input type="hidden" name="delete_comment_id" value="{{ comment.id }}">
-                <button type="submit" class="text-red-500 hover:underline">Eliminar</button>
-            </form>
+            <button type="button" data-comment-id="{{ comment.id }}"
+                class="text-red-500 hover:underline delete-comment-btn">
+                Eliminar
+            </button>
         </div>
         {% endif %}
         {% endif %}
-
     </div>
     {% empty %}
     <p class="text-[#f0f1f4] opacity-80 pb-6 border-b border-[#241D44]">No hay comentarios aún.</p>
@@ -75,3 +94,40 @@
     <p class="text-[#f0f1f4] opacity-80 mt-6">Iniciá sesión para dejar tu comentario y puntuación.</p>
     {% endif %}
 </div>
+
+{% include 'post/post_delete_comment.html' %}
+
+{% block scripts %}
+<script>
+    // Sistema de puntuación estrellas
+    document.querySelectorAll('.star-rating input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            const selectedValue = parseInt(this.value);
+            const stars = this.closest('.star-rating').querySelectorAll('span');
+            stars.forEach((star, index) => {
+                star.classList.toggle('text-yellow-500', index < selectedValue);
+                star.classList.toggle('text-gray-400', index >= selectedValue);
+            });
+        });
+    });
+
+    // Abrir modal de eliminación de comentario
+    document.querySelectorAll('.delete-comment-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const commentId = btn.dataset.commentId;
+            document.getElementById('deleteCommentId').value = commentId;
+            document.getElementById('deleteCommentModal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        });
+    });
+
+    function closeDeleteCommentModal() {
+        document.getElementById('deleteCommentModal').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    document.getElementById('deleteCommentModal')?.addEventListener('click', function (e) {
+        if (e.target === this) closeDeleteCommentModal();
+    });
+</script>
+{% endblock scripts %}

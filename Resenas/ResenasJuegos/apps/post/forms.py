@@ -49,7 +49,9 @@ class PostForm(forms.ModelForm):
         post = super().save(commit=commit)
         self.images.instance = post
         self.images.save()
-        return post 
+
+        return post
+
 
 
 class UpdatePostForm(forms.ModelForm):
@@ -88,3 +90,4 @@ class UpdatePostForm(forms.ModelForm):
                     if not self.cleaned_data.get(f"keep_image_{image.id}", True):
                         image.delete()
         return post
+
