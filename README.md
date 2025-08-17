@@ -79,7 +79,7 @@ Estas cuentas permiten acceder a las funcionalidades básicas y administrativas 
 - **Suarez Fernando** – *Backend Developer*
 - **Gnus Matías** – *Backend Developer*
 
-## Tecnologías Utilizadas
+## ⚙️ Tecnologías Utilizadas
 - Python 3
 - HTML & CSS
 - JavaScript
