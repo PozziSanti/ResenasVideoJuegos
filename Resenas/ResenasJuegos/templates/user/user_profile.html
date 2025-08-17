@@ -13,21 +13,25 @@
 <!-- Contenedor general -->
 <div class="relative max-w-6xl mx-auto px-6 -mt-16">
 
-    <!-- Avatar flotante -->
+        <!-- Avatar flotante -->
     <div class="flex justify-center">
-        <div class="w-32 h-32 rounded-full border-4 border-accent-blue overflow-hidden bg-light-morado shadow-lg">
-            {% if user.avatar %}
-            <img src="{{ user.avatar.url }}" alt="Avatar de {{ user.alias|default:user.username }}"
-                class="w-full h-full object-cover" onerror="replaceWithIcon(this);">
-            {% else %}
-            <i class="fa fa-user text-6xl text-accent-blue flex items-center justify-center h-full"></i>
-            {% endif %}
-        </div>
+    <div class="relative w-44 h-44 rounded-full overflow-hidden mx-auto my-4 border-2 border-accent-blue bg-light-morado flex items-center justify-center">
+        {% if user.avatar %}
+        <img src="{{ user.avatar.url }}" 
+            alt="Avatar de {{ user.alias|default:user.username }}" 
+            class="w-full h-full object-cover"
+            onerror="replaceWithIcon(this);">
+        {% else %}
+            <i class="fa fa-user text-6xl text-accent-blue inset-0 flex items-center justify-center text-purple-50"></i>
+        {% endif %}
     </div>
+    </div>
+
 
     <!-- Nombre -->
     <div class="mt-4 text-center">
         <h1 class="text-2xl font-bold text-light">{{ user.alias|default:user.username }}</h1>
+        <!-- Boton editar mi perfil -->
         <a href="{% url 'edit_profile' %}"
             class="mt-3 inline-block px-4 py-2 bg-accent-blue text-light rounded-full hover:bg-accent-blue-hover transition">
             Editar mi perfil
