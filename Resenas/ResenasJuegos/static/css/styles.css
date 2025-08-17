@@ -34,7 +34,7 @@
 
 
 
-/* FLIP CARD Y FLECHAS*/
+/* FLIP CARD Y FLECHAS */
 /* Contenedor scrolleable horizontal */
 .hide-scrollbar {
   overflow-x: auto;
@@ -50,9 +50,8 @@
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+  /* Oculta barra en WebKit */
 }
-
-/* Oculta barra en WebKit */
 
 /* Mostrar flechas en desktop solo al hover del section padre .group */
 @media (hover: hover) and (pointer: fine) {
@@ -65,19 +64,36 @@
   }
 }
 
+/* En mobile/tablet: flechas siempre visibles */
 @media (pointer: coarse) {
   .md\:group-hover\:opacity-100 {
     opacity: 1 !important;
   }
 }
 
-/* Flip card utilidades que usás */
+/* Flip card utilidades */
 .h-80 {
   height: 20rem;
 }
 
+.h-72 {
+  height: 18rem;
+}
+
+.h-64 {
+  height: 16rem;
+}
+
 .min-w-\[280px\] {
   min-width: 280px;
+}
+
+.min-w-\[240px\] {
+  min-width: 240px;
+}
+
+.min-w-\[220px\] {
+  min-width: 220px;
 }
 
 [perspective\:1000px] {
@@ -90,6 +106,62 @@
 
 [backface-visibility\:hidden] {
   backface-visibility: hidden;
+}
+
+/* Flip card responsive */
+@media (max-width: 767px) {
+
+  /* mobile y tablet */
+  .group {
+    cursor: pointer;
+  }
+}
+
+/* Transiciones suaves al girar */
+.group,
+.group>div {
+  transition: transform 0.5s;
+}
+
+/* Tamaño de texto y paddings adaptativos */
+@media (max-width: 767px) {
+  .group h1 {
+    font-size: 1rem;
+  }
+
+  .group p {
+    font-size: 0.75rem;
+  }
+
+  .group a {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .group div {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .group h1 {
+    font-size: 1.125rem;
+  }
+
+  .group p {
+    font-size: 0.875rem;
+  }
+
+  .group a {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .group div {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
 }
 
 
