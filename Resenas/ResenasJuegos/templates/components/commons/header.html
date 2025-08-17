@@ -1,7 +1,6 @@
 {% load static %}
 
-<header
-    class="fixed top-0 left-0 right-0 bg-darker-morado p-1 shadow-md flex justify-between items-center w-full z-50 h-16">
+<header class="fixed top-0 left-0 right-0 bg-darker-morado p-1 shadow-md flex justify-between items-center w-full z-50 h-16">
 
     <!-- Logo y menú -->
     <div class="flex items-center space-x-3">
@@ -16,10 +15,10 @@
         </a>
     </div>
 
-    <!-- Buscador central: solo tablet y desktop -->
-    <div
-        class="hidden sm:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-4 sm:px-0">
-        <form method="get" action="{% url 'post_search' %}" class="relative w-full">
+    <!-- Contenedor central para buscador y filtros -->
+    <div class="hidden sm:flex items-center justify-center flex-1 px-4">
+        <!-- Buscador -->
+        <form method="get" action="{% url 'post_search' %}" class="relative w-full max-w-md mr-4">
             <input type="text" name="q" id="search-input" placeholder="Buscar..."
                 class="w-full bg-light-morado text-text-light px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-accent-blue placeholder-text-medium text-sm sm:text-base"
                 autocomplete="off" value="{{ request.GET.q|default:'' }}">
@@ -34,10 +33,47 @@
                     class="w-5 h-5 sm:w-6 sm:h-6 filter invert opacity-50">
             </button>
         </form>
+
+        <!-- Filtros desplegable -->
+        <div class="relative ml-4">  <!-- Añadido ml-4 para separación -->
+            <button id="filters-toggle" class="bg-light-morado hover:bg-accent-blue text-white px-3 py-2 rounded-full transition flex items-center">
+                <img src="{% static 'assets/header_icons/filter_icon.png' %}" alt="Filtros" class="w-5 h-5 invert mr-1">
+                <span class="text-sm hidden md:inline">Filtros</span>
+            </button>
+            
+            <div id="filters-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-darker-morado rounded-lg shadow-lg z-50 border border-accent-blue p-3">
+                <h3 class="text-white font-semibold mb-2 text-sm">Filtrar Reseñas</h3>
+                <div class="space-y-2">
+                    <!-- Más Recientes -->
+                    <form method="get" action="{% url 'post_by_date' %}" class="w-full">
+                        <input type="hidden" name="date" value="{% now 'Y-m-d' %}">
+                        <button type="submit" class="w-full text-left bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md transition text-sm">
+                            Más Recientes
+                        </button>
+                    </form>
+                    
+                    <!-- Más Antiguos -->
+                    <form method="get" action="{% url 'post_by_date' %}" class="w-full">
+                        <input type="hidden" name="date" value="1970-01-01">
+                        <button type="submit" class="w-full text-left bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md transition text-sm">
+                            Más Antiguos
+                        </button>
+                    </form>
+                    
+                    <!-- Mejor Puntuados -->
+                    <form method="get" action="{% url 'post_by_star' %}" class="w-full">
+                        <input type="hidden" name="score" value="1">
+                        <button type="submit" class="w-full text-left bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md transition text-sm">
+                            Mejor Puntuados
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Usuario / Login -->
-    <div class="flex ml-auto">
+    <div class="flex items-center ml-auto space-x-4 mr-4">
         {% if user.is_authenticated %}
             <a href="{% url 'user_profile' %}" class="flex items-center px-4 justify-center text-white text-2xl transition-all duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">
                 <span class="ml-2 px-4 text-1xl">
@@ -62,22 +98,24 @@
             </a>
 
         {% else %}
-        <a href="{% url 'signin' %}?next={{ request.path }}" class="block w-40">
-            <button class="relative w-40 h-12 bg-darker-morado cursor-pointer overflow-hidden -mr-4">
-                <span
-                    class="absolute left-1/2 -translate-x-1/2 top-1 flex items-center justify-center w-[7em] h-[2em] bg-accent-blue border border-white rounded text-gray-100 text-lg font-semibold shadow-[0_0.2em_0.1em_0.019em_white] transition-all duration-200 hover:translate-y-2 hover:shadow-none">
-                    Iniciar Sesión
-                </span>
-            </button>
-        </a>
-        <a href="{% url 'signup' %}?next={{ request.path }}" class="block w-40">
-            <button class="relative w-40 h-12 bg-darker-morado cursor-pointer overflow-hidden -mr-1">
-                <span
-                    class="absolute left-1/2 -translate-x-1/2 top-1 flex items-center justify-center w-[7em] h-[2em] bg-accent-blue border border-white rounded text-gray-100 text-lg font-semibold shadow-[0_0.2em_0.1em_0.019em_white] transition-all duration-200 hover:translate-y-2 hover:shadow-none">
-                    Registrarse
-                </span>
-            </button>
-        </a>
+        <div class="flex space-x-4">
+            <a href="{% url 'signin' %}?next={{ request.path }}" class="block">
+                <button class="relative w-40 h-12 bg-darker-morado cursor-pointer overflow-hidden">
+                    <span
+                        class="absolute left-1/2 -translate-x-1/2 top-1 flex items-center justify-center w-[7em] h-[2em] bg-accent-blue border border-white rounded text-gray-100 text-lg font-semibold shadow-[0_0.2em_0.1em_0.019em_white] transition-all duration-200 hover:translate-y-2 hover:shadow-none">
+                        Iniciar Sesión
+                    </span>
+                </button>
+            </a>
+            <a href="{% url 'signup' %}?next={{ request.path }}" class="block">
+                <button class="relative w-40 h-12 bg-darker-morado cursor-pointer overflow-hidden">
+                    <span
+                        class="absolute left-1/2 -translate-x-1/2 top-1 flex items-center justify-center w-[7em] h-[2em] bg-accent-blue border border-white rounded text-gray-100 text-lg font-semibold shadow-[0_0.2em_0.1em_0.019em_white] transition-all duration-200 hover:translate-y-2 hover:shadow-none">
+                        Registrarse
+                    </span>
+                </button>
+            </a>
+        </div>
         {% endif %}
     </div>
 </header>
@@ -103,5 +141,3 @@
 </script>
 
 {% endblock scripts %}
-
-
