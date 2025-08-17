@@ -75,6 +75,12 @@ Para poner en marcha el proyecto en tu entorno local, sigue los siguientes pasos
     ```bash
      python manage.py runserver
 
+## Uso
+
+Una vez que el servidor esté en funcionamiento (`python manage.py runserver`), accede a la aplicación en tu navegador en:
+
+👉 `http://127.0.0.1:8000/`
+
 ### Funcionalidades principales
 
 - **Registro e inicio de sesión**  
