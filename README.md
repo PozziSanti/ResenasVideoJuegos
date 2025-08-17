@@ -75,10 +75,22 @@ Para poner en marcha el proyecto en tu entorno local, sigue los siguientes pasos
     ```bash
      python manage.py runserver
 
-## Uso
-Una vez que la aplicación esté en funcionamiento, puedes acceder a las siguientes funcionalidades:
+### Funcionalidades principales
 
-- **Inicio de sesión:** Utiliza las cuentas de prueba mencionadas anteriormente para acceder al sistema.
+- **Registro e inicio de sesión**  
+  Los usuarios pueden registrarse o iniciar sesión con las cuentas de prueba indicadas en este README.
+
+- **Explorar reseñas**  
+  Cualquier usuario puede navegar por las reseñas de videojuegos publicadas.
+
+- **Crear y gestionar reseñas**  
+  Los usuarios logueados pueden:
+  - Publicar nuevas reseñas sobre videojuegos.
+  - Editar o eliminar sus propias reseñas.
+
+- **Panel de administrador**  
+  Accesible en `http://127.0.0.1:8000/admin/` con una cuenta de superusuario o la cuenta de prueba de administrador.  
+  Desde aquí se pueden gestionar usuarios, reseñas y permisos.
 
 ## Cuentas de prueba
 
