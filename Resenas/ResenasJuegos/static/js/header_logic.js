@@ -60,5 +60,21 @@ document.addEventListener("DOMContentLoaded", function () {
         // Aquí abrís/cerrás tu sidebar: ej. document.getElementById('sidebar').classList.toggle('hidden');
     });
 
+    // --- Dropdown filtros ---
+    const filterToggle = document.getElementById('filters-toggle');
+    const filterDropdown = document.getElementById('filters-dropdown');
+
+    filterToggle?.addEventListener('click', (e) => {
+        e.preventDefault();
+        filterDropdown.classList.toggle('hidden');
+    });
+
+    // Cerrar dropdown si clickeas afuera
+    document.addEventListener('click', (e) => {
+        if (!filterToggle.contains(e.target) && !filterDropdown.contains(e.target)) {
+            filterDropdown.classList.add('hidden');
+        }
+    });
+
 });
 
