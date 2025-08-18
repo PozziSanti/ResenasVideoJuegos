@@ -6,6 +6,8 @@ function replaceWithIcon(imgElement) {
     const icon = document.createElement('i');
     icon.className = 'fa fa-user';
     parent.replaceChild(icon, imgElement);
+
+    // Evitamos un bucle infinito si el icono también falla
     imgElement.onerror = null;
 }
 
@@ -57,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const menuToggle = document.getElementById('menu-toggle');
     menuToggle?.addEventListener('click', () => {
         document.body.classList.toggle('overflow-hidden'); // bloquea scroll
-        // Aquí abrís/cerrás tu sidebar: ej. document.getElementById('sidebar').classList.toggle('hidden');
+        // Aquí abrís/cerrás tu sidebar;
     });
 
     // --- Dropdown filtros ---
@@ -77,4 +79,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
