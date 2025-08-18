@@ -93,8 +93,23 @@ class PostDateFilter(ListView):
         queryset = super().get_queryset()
         date = self.request.GET.get('date')
 
-        if date:
-            queryset = queryset.filter(created_at__date=date) # busca el post por fecha de publicación
+        if date == "asc":
+            # Ordenar de más antiguo a más nuevo
+            return queryset.order_by('category', 'created_at')
+
+        elif date == "desc":
+            # Ordenar de más nuevo a más antiguo
+            return queryset.order_by('category', '-created_at')
+
+        elif date:
+            # Intentar interpretar como fecha solo si parece un formato válido
+            try:
+                from datetime import datetime
+                datetime.strptime(date, "%Y-%m-%d")
+                return queryset.filter(created_at__date=date)
+            except ValueError:
+                # Si no es fecha válida, ignoro y devuelvo todo sin filtrar
+                return queryset
         
         return queryset
 

@@ -5,11 +5,10 @@
 
 {% block content_layout %}
 
-<div class="relative w-full h-48 bg-cover bg-center"
-    style="background: url('{% static 'assets/login_register/fondo.png' %}') no-repeat center center; background-size: cover;">
+<div class="relative w-full h-48 bg-cover bg-center" style="background: url('{% static 'assets/login_register/fondo.png' %}') no-repeat center center; background-size: cover;">
+
 </div>
 
-<!-- Contenedor general -->
 <div class="relative max-w-6xl mx-auto px-6 -mt-16">
 
     <!-- Avatar flotante -->
@@ -26,19 +25,21 @@
     </div>
 
 
+
     <!-- Nombre y botones -->
     <div class="mt-4 text-center">
         <h1 class="text-2xl font-bold text-light">{{ user.alias|default:user.username }}</h1>
+
         <div class="mt-3 space-x-4">
             <a href="{% url 'edit_profile' %}"
                 class="inline-block px-4 py-2 bg-accent-blue text-light rounded-full hover:bg-accent-blue-hover transition">
                 Editar Perfil
             </a>
             <a href="{% url 'logout' %}"
-                class="inline-block px-4 py-2 bg-status-hot text-light rounded-full hover:bg-red-700 transition duration-300">
-                Cerrar Sesión
+                class="mt-3 inline-block px-4 py-2 bg-accent-blue text-light rounded-full hover:bg-accent-blue-hover transition hover:bg-red-600">Cerrar Sesión</a>
             </a>
         </div>
+
     </div>
 
     <!-- Contenido en dos columnas -->
@@ -47,7 +48,19 @@
         <!-- Columna izquierda -->
         <div class="space-y-4">
 
-            <!-- Stats -->
+            <!-- Biografia -->
+            <div class="bg-darker-morado-transparent rounded-xl p-4 border border-accent-blue">
+                <h2 class="text-light font-bold mb-2">Biografía</h2>
+                <p class="text-medium">
+                    {% if request.user.bio %}
+                        {{ request.user.bio }}
+                    {% else %}
+                        No has agregado una biografía aún.
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Estadisticas -->
             <div class="bg-darker-morado-transparent rounded-xl p-4 border border-accent-blue">
                 <h2 class="text-light font-bold mb-2">Estadísticas</h2>
                 <p class="text-medium">
@@ -102,3 +115,4 @@
     }
 </script>
 {% endblock scripts %}
+

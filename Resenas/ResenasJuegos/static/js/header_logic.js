@@ -1,7 +1,8 @@
 // --- Avatar fallback ---
 function replaceWithIcon(imgElement) {
-    const parent = document.getElementById('user-avatar-container');
-    if (!parent) return;
+    // Obtenemos el contenedor de la imagen
+    const parentContainer = document.getElementById('user-avatar-container');
+    if (!parentContainer) return;
 
     const icon = document.createElement('i');
     icon.className = 'fa fa-user';
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
     const suggestionsBox = document.getElementById("suggestions");
 
-    searchInput.addEventListener("input", function () {
+    searchInput?.addEventListener("input", function () {
         const query = this.value;
         if (query.length < 2) {
             suggestionsBox.classList.add("hidden");
