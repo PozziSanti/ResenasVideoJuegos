@@ -6,31 +6,172 @@ Hit or Quit es una plataforma colaborativa donde los usuarios pueden compartir y
 
 ## 🗂️ Estructura
 
-- **ResenasVideoJuegos/**  
-  - `manage.py`  
-  - `requirements.txt`  
-  - `README.md`  
-  - `db.sqlite3`  
-  - **resenas/** (App principal de reseñas)  
-    - **migrations/**  
-    - **templates/resenas/**  
-    - **static/**  
-    - `admin.py`  
-    - `apps.py`  
-    - `models.py`  
-    - `views.py`  
-    - `urls.py`  
-  - **users/** (App de usuarios y autenticación)  
-    - **migrations/**  
-    - **templates/users/**  
-    - **static/**  
-    - `admin.py`  
-    - `apps.py`  
-    - `models.py`  
-    - `views.py`  
-    - `urls.py`  
-  - **staticfiles/** (Archivos estáticos compilados)  
-  - **templates/** (Plantillas base globales)
+┣ 📂env
+┃ ┣ 📂Scripts
+┃ ┃ ┣ 📜activate.bat
+┃ ┃ ┣ 📜deactivate.bat
+┃ ┃ ┗ ...
+┃ ┗ ...
+┣ 📂Resenas
+┃ ┣ 📂ResenasJuegos
+┃ ┃ ┣ 📂apps
+┃ ┃ ┃ ┣ 📂comment
+┃ ┃ ┃ ┃ ┣ 📂__pycache__
+┃ ┃ ┃ ┃ ┣ 📂migrations
+┃ ┃ ┃ ┃ ┣ 📜__init__.py
+┃ ┃ ┃ ┃ ┣ 📜admin.py
+┃ ┃ ┃ ┃ ┣ 📜apps.py
+┃ ┃ ┃ ┃ ┣ 📜forms.py
+┃ ┃ ┃ ┃ ┣ 📜models.py
+┃ ┃ ┃ ┃ ┣ 📜tests.py
+┃ ┃ ┃ ┃ ┣ 📜urls.py
+┃ ┃ ┃ ┃ ┗ 📜views.py
+┃ ┃ ┃ ┣ 📂favorite
+┃ ┃ ┃ ┃ ┣ 📂migrations
+┃ ┃ ┃ ┃ ┣ 📜__init__.py
+┃ ┃ ┃ ┃ ┣ 📜admin.py
+┃ ┃ ┃ ┃ ┣ 📜apps.py
+┃ ┃ ┃ ┃ ┣ 📜models.py
+┃ ┃ ┃ ┃ ┣ 📜tests.py
+┃ ┃ ┃ ┃ ┣ 📜urls.py
+┃ ┃ ┃ ┃ ┗ 📜views.py
+┃ ┃ ┃ ┣ 📂post
+┃ ┃ ┃ ┃ ┣ 📂migrations
+┃ ┃ ┃ ┃ ┣ 📜__init__.py
+┃ ┃ ┃ ┃ ┣ 📜admin.py
+┃ ┃ ┃ ┃ ┣ 📜apps.py
+┃ ┃ ┃ ┃ ┣ 📜forms.py
+┃ ┃ ┃ ┃ ┣ 📜models.py
+┃ ┃ ┃ ┃ ┣ 📜tests.py
+┃ ┃ ┃ ┃ ┣ 📜urls.py
+┃ ┃ ┃ ┃ ┗ 📜views.py
+┃ ┃ ┃ ┗ 📂user
+┃ ┃ ┃   ┣ 📂migrations
+┃ ┃ ┃   ┣ 📜__init__.py
+┃ ┃ ┃   ┣ 📜admin.py
+┃ ┃ ┃   ┣ 📜apps.py
+┃ ┃ ┃   ┣ 📜decorators.py
+┃ ┃ ┃   ┣ 📜forms.py
+┃ ┃ ┃   ┣ 📜models.py
+┃ ┃ ┃   ┣ 📜signals.py
+┃ ┃ ┃   ┣ 📜tests.py
+┃ ┃ ┃   ┣ 📜urls.py
+┃ ┃ ┃   ┗ 📜views.py
+┃ ┃ ┣ 📂blog
+┃ ┃ ┃ ┣ 📂configurations
+┃ ┃ ┃ ┃ ┣ 📜__init__.py
+┃ ┃ ┃ ┃ ┣ 📜base.py
+┃ ┃ ┃ ┃ ┣ 📜local.py
+┃ ┃ ┃ ┃ ┗ 📜production.py
+┃ ┃ ┃ ┣ 📜asgi.py
+┃ ┃ ┃ ┣ 📜settings.py
+┃ ┃ ┃ ┣ 📜urls.py
+┃ ┃ ┃ ┣ 📜views.py
+┃ ┃ ┃ ┗ 📜wsgi.py
+┃ ┃ ┣ 📂media
+┃ ┃ ┃ ┗ 📂post
+┃ ┃ ┃   ┣ 📂default
+┃ ┃ ┃   ┃ ┗ 📜post_default.png
+┃ ┃ ┃   ┗ 📂images
+┃ ┃ ┣ 📂static
+┃ ┃ ┃ ┣ 📂assets
+┃ ┃ ┃ ┃ ┣ 📂about_us
+┃ ┃ ┃ ┃ ┃ ┣ 📜profile_fer.png
+┃ ┃ ┃ ┃ ┃ ┣ 📜profile_mati.png
+┃ ┃ ┃ ┃ ┃ ┣ 📜profile_santi.png
+┃ ┃ ┃ ┃ ┃ ┗ 📜profile_sofi.png
+┃ ┃ ┃ ┃ ┣ 📂header_icons
+┃ ┃ ┃ ┃ ┃ ┣ 📜buscador.png
+┃ ┃ ┃ ┃ ┃ ┣ 📜favicon1.ico
+┃ ┃ ┃ ┃ ┃ ┣ 📜hit_or_quit_logo.png
+┃ ┃ ┃ ┃ ┃ ┗ 📜menu_hamburguesa.png
+┃ ┃ ┃ ┃ ┗ 📂login_register
+┃ ┃ ┃ ┃   ┗ 📜fondo.png
+┃ ┃ ┃ ┣ 📂css
+┃ ┃ ┃ ┃ ┣ 📜register.css
+┃ ┃ ┃ ┃ ┗ 📜styles.css
+┃ ┃ ┃ ┗ 📂js
+┃ ┃ ┃   ┣ 📜header_logic.js
+┃ ┃ ┃   ┣ 📜login.js
+┃ ┃ ┃   ┣ 📜register.js
+┃ ┃ ┃   ┣ 📜sidebar_logic.js
+┃ ┃ ┃   ┗ 📜tailwind.js
+┃ ┃ ┣ 📂staticfiles
+┃ ┃ ┃ ┗ 📂admin
+┃ ┃ ┃   ┣ 📂css
+┃ ┃ ┃   ┣ 📂img
+┃ ┃ ┃   ┗ 📂js
+┃ ┃ ┣ 📂templates
+┃ ┃ ┃ ┣ 📂category
+┃ ┃ ┃ ┃ ┣ 📜category_create.html
+┃ ┃ ┃ ┃ ┣ 📜category_delete.html
+┃ ┃ ┃ ┃ ┣ 📜category_detail.html
+┃ ┃ ┃ ┃ ┣ 📜category_list.html
+┃ ┃ ┃ ┃ ┗ 📜category_update.html
+┃ ┃ ┃ ┣ 📂components
+┃ ┃ ┃ ┃ ┣ 📂cards
+┃ ┃ ┃ ┃ ┃ ┗ 📜flip_card.html
+┃ ┃ ┃ ┃ ┣ 📂commons
+┃ ┃ ┃ ┃ ┃ ┣ 📜footer.html
+┃ ┃ ┃ ┃ ┃ ┗ 📜header.html
+┃ ┃ ┃ ┃ ┗ 📂ui
+┃ ┃ ┃ ┃   ┗ 📜sidebar.html
+┃ ┃ ┃ ┣ 📂layouts
+┃ ┃ ┃ ┃ ┣ 📜auth_layout.html
+┃ ┃ ┃ ┃ ┣ 📜base_layout.html
+┃ ┃ ┃ ┃ ┗ 📜general_layout.html
+┃ ┃ ┃ ┣ 📂pages
+┃ ┃ ┃ ┃ ┣ 📜about.html
+┃ ┃ ┃ ┃ ┣ 📜index.html
+┃ ┃ ┃ ┃ ┣ 📜privacy.html
+┃ ┃ ┃ ┃ ┗ 📜terms.html
+┃ ┃ ┃ ┣ 📂partials
+┃ ┃ ┃ ┃ ┣ 📂home_icons
+┃ ┃ ┃ ┃ ┃ ┣ 📜add_icon.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜arrow_left.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜arrow_right.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜delete_icon.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜favorited_flag.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜sad_icon.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜unfavorited_flag.html
+┃ ┃ ┃ ┃ ┃ ┗ 📜warning_icon.html
+┃ ┃ ┃ ┃ ┣ 📂sidebar_icons
+┃ ┃ ┃ ┃ ┃ ┣ 📜action.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜beauty.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜compass.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜ghost.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜home.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜motorcycle.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜multiplayer.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜perfil.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜puzzle.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜sports.html
+┃ ┃ ┃ ┃ ┃ ┣ 📜stars.html
+┃ ┃ ┃ ┃ ┃ ┗ 📜target.html
+┃ ┃ ┃ ┃ ┗ 📜_sidebar_link.html
+┃ ┃ ┃ ┣ 📂post
+┃ ┃ ┃ ┃ ┣ 📜post_comment.html
+┃ ┃ ┃ ┃ ┣ 📜post_create.html
+┃ ┃ ┃ ┃ ┣ 📜post_delete_comment.html
+┃ ┃ ┃ ┃ ┣ 📜post_delete.html
+┃ ┃ ┃ ┃ ┣ 📜post_detail.html
+┃ ┃ ┃ ┃ ┣ 📜post_list.html
+┃ ┃ ┃ ┃ ┗ 📜post_update.html
+┃ ┃ ┃ ┣ 📂registration
+┃ ┃ ┃ ┃ ┣ 📜signin.html
+┃ ┃ ┃ ┃ ┗ 📜signup.html
+┃ ┃ ┃ ┗ 📂user
+┃ ┃ ┃   ┣ 📜change_password.html
+┃ ┃ ┃   ┣ 📜edit_profile.html
+┃ ┃ ┃   ┗ 📜user_profile.html
+┃ ┃ ┣ 📜db.sqlite3
+┃ ┃ ┗ 📜manage.py
+┃ ┣ 📜.env
+┃ ┣ 📜.gitignore
+┃ ┗ 📜requirements.txt
+┣ 📜LICENSE
+┗ 📜README.md
+
 
 ## Instalación
 
