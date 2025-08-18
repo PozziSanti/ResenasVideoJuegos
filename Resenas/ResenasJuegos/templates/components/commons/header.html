@@ -121,23 +121,7 @@
 </header>
 
 {% block scripts %}
-<script src="{% static 'js/header_logic.js' %}"></script>
-<script>
-    function replaceWithIcon(imgElement) {
-        // Obtenemos el contenedor de la imagen
-        const parentContainer = document.getElementById('user-avatar-container');
-        if (parentContainer) {
-            // Creamos el nuevo elemento de icono
-            const iconElement = document.createElement('i');
-            iconElement.className = 'fa fa-user';
-            
-            // Reemplazamos la imagen que falló por el nuevo icono
-            parentContainer.replaceChild(iconElement, imgElement);
 
-            // Evitamos un bucle infinito si el icono también falla
-            imgElement.onerror = null; 
-        }
-    }
-</script>
+<script src="{% static 'js/header_logic.js' %}"></script>
 
 {% endblock scripts %}
