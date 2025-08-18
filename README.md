@@ -206,6 +206,7 @@ Para poner en marcha el proyecto en tu entorno local, sigue los siguientes pasos
 7. Aplica migraciones:
    
    ```bash
+   python manage.py makemigrations
    python manage.py migrate
    
 9. Crea un superusuario (opcional, para acceder al panel de admin):
