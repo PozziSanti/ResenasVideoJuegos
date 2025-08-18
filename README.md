@@ -173,6 +173,7 @@ Hit or Quit es una plataforma colaborativa donde los usuarios pueden compartir y
 ┗ 📜README.md
 
 
+
 ## Instalación
 
 Para poner en marcha el proyecto en tu entorno local, sigue los siguientes pasos:
