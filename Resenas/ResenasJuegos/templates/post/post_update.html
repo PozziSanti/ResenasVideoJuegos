@@ -105,10 +105,16 @@
             </div>
 
             <!-- Botón de enviar -->
-            <button type="submit"
-                class="w-full py-3 px-6 bg-[#622bbf] hover:bg-[#4F46E5] text-white font-bold rounded-lg transition-colors duration-300 mt-6 shadow-lg hover:shadow-[#4F46E5]/50">
-                Actualizar Post
-            </button>
+            <div class="flex space-x-4 mt-6">
+                <button type="submit"
+                    class="flex-1 py-3 px-6 bg-[#622bbf] hover:bg-[#4F46E5] text-white font-bold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#4F46E5]/50">
+                    Actualizar Post
+                </button>
+                <a href="{% url 'post_detail' post.slug %}"
+                    class="flex-1 py-3 px-6 bg-[#241D44] hover:bg-[#4F46E5] text-white font-bold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-[#4F46E5]/50 text-center">
+                    Cancelar
+                </a>
+            </div>
         </div>
     </form>
 </div>
