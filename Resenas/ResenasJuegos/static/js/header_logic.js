@@ -1,11 +1,14 @@
 // --- Avatar fallback ---
 function replaceWithIcon(imgElement) {
-    const parent = document.getElementById('user-avatar-container');
-    if (!parent) return;
+    // Obtenemos el contenedor de la imagen
+    const parentContainer = document.getElementById('user-avatar-container');
+    if (!parentContainer) return;
 
     const icon = document.createElement('i');
     icon.className = 'fa fa-user';
     parent.replaceChild(icon, imgElement);
+
+    // Evitamos un bucle infinito si el icono también falla
     imgElement.onerror = null;
 }
 
@@ -15,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
     const suggestionsBox = document.getElementById("suggestions");
 
-    searchInput.addEventListener("input", function () {
+    searchInput?.addEventListener("input", function () {
         const query = this.value;
         if (query.length < 2) {
             suggestionsBox.classList.add("hidden");
@@ -57,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const menuToggle = document.getElementById('menu-toggle');
     menuToggle?.addEventListener('click', () => {
         document.body.classList.toggle('overflow-hidden'); // bloquea scroll
-        // Aquí abrís/cerrás tu sidebar: ej. document.getElementById('sidebar').classList.toggle('hidden');
+        // Aquí abrís/cerrás tu sidebar;
     });
 
     // --- Dropdown filtros ---
@@ -77,4 +80,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-

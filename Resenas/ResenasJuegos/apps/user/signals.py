@@ -7,38 +7,52 @@ from apps.post.models import Post
 from apps.comment.models import Comment
 from apps.favorite.models import Favorite
 
+@receiver(post_save, sender=UserProfile)
+def asignar_grupo_usuario(sender, instance, created, **kwargs):
+    """
+    Asigna automáticamente el grupo 'usuario' a los nuevos usuarios.
+    """
+    if created:  # Solo cuando se crea por primera vez
+        try:
+            grupo_usuario = Group.objects.get(name='usuario')
+            instance.groups.add(grupo_usuario)
+            print(f"✅ Usuario {instance.username} asignado al grupo 'usuario'")
+        except Group.DoesNotExist:
+            print("⚠️ El grupo 'usuario' no existe. Ejecuta migrate primero.")
+
+
 @receiver(post_migrate)
 def crear_grupos_y_permisos(sender, **kwargs):
-    if sender.name != 'apps.user':
-        return
-    try:
-        # Obtener ContentTypes
-        post_ct = ContentType.objects.get_for_model(Post)
-        comentario_ct = ContentType.objects.get_for_model(Comment)
-        favorito_ct = ContentType.objects.get_for_model(Favorite)
+    """
+    Crea los grupos 'usuario' y 'admin' con los permisos correspondientes.
+    Se ejecuta automáticamente después de migrate.
+    """
+    # --- Grupo Usuario ---
+    usuario_group, _ = Group.objects.get_or_create(name="usuario")
 
-        # Obtener permisos por modelo
-        permisos_post = Permission.objects.filter(content_type=post_ct)
-        permisos_comentario = Permission.objects.filter(content_type=comentario_ct)
-        permisos_favorito = Permission.objects.filter(content_type=favorito_ct)
+    permisos_usuario = Permission.objects.filter(
+        codename__in=[
+            # Comentarios
+            "add_comment", "change_comment", "delete_comment", "view_comment",
+            # Posts
+            "view_post",
+            # Favoritos
+            "add_favorite", "delete_favorite", "view_favorite",
+        ]
+    )
+    usuario_group.permissions.set(permisos_usuario)
 
-        # Crear grupos
-        grupo_usuario, _ = Group.objects.get_or_create(name='usuario')
-        grupo_admin, _ = Group.objects.get_or_create(name='admin')
+    # --- Grupo Admin ---
+    admin_group, _ = Group.objects.get_or_create(name="admin")
 
-        # Limpiar permisos para mantenerlos actualizados
-        grupo_usuario.permissions.clear()
-        grupo_admin.permissions.clear()
-
-        # Admin → todos los permisos
-        for permiso in list(permisos_post) + list(permisos_comentario) + list(permisos_favorito):
-            grupo_admin.permissions.add(permiso)
-
-        # Usuario → solo comentarios y favoritos
-        for permiso in list(permisos_comentario) + list(permisos_favorito):
-            grupo_usuario.permissions.add(permiso)
-
-        print("✅ Grupos y permisos creados/actualizados correctamente.")
-
-    except Exception as e:
-        print(f"⚠️ Error al crear grupos y permisos: {e}")
+    permisos_admin = Permission.objects.filter(
+        codename__in=[
+            # Comentarios
+            "add_comment", "change_comment", "delete_comment", "view_comment",
+            # Posts
+            "add_post", "change_post", "delete_post", "view_post",
+            # Favoritos
+            "add_favorite", "delete_favorite", "view_favorite",
+        ]
+    )
+    admin_group.permissions.set(permisos_admin)
