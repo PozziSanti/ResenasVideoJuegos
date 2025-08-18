@@ -48,7 +48,19 @@
         <!-- Columna izquierda -->
         <div class="space-y-4">
 
-            <!-- Stats -->
+            <!-- Biografia -->
+            <div class="bg-darker-morado-transparent rounded-xl p-4 border border-accent-blue">
+                <h2 class="text-light font-bold mb-2">Biografía</h2>
+                <p class="text-medium">
+                    {% if request.user.bio %}
+                        {{ request.user.bio }}
+                    {% else %}
+                        No has agregado una biografía aún.
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Estadisticas -->
             <div class="bg-darker-morado-transparent rounded-xl p-4 border border-accent-blue">
                 <h2 class="text-light font-bold mb-2">Estadísticas</h2>
                 <p class="text-medium">
@@ -69,7 +81,7 @@
                             <li class="flex items-center justify-between bg-dark-morado rounded-lg p-3 hover:bg-accent-blue/20 transition">
                                 <a href="{% url 'post_detail' slug=fav.post.slug %}" class="text-light font-semibold hover:text-accent-blue">
                                     {{ fav.post.title }}
-                                </a>++
+                                </a>
                                 <span class="text-sm text-medium">❤️</span>
                             </li>
                         {% endfor %}

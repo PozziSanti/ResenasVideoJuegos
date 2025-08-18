@@ -46,7 +46,7 @@
                 <div class="space-y-2">
                     <!-- Más Recientes -->
                     <form method="get" action="{% url 'post_by_date' %}" class="w-full">
-                        <input type="hidden" name="date" value="{% now 'Y-m-d' %}">
+                        <input type="hidden" name="date" value="{desc}">
                         <button type="submit" class="w-full text-left bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md transition text-sm">
                             Más Recientes
                         </button>
@@ -54,7 +54,7 @@
                     
                     <!-- Más Antiguos -->
                     <form method="get" action="{% url 'post_by_date' %}" class="w-full">
-                        <input type="hidden" name="date" value="1970-01-01">
+                        <input type="hidden" name="date" value="asc"> <!-- Cambia la fecha según sea necesario -->
                         <button type="submit" class="w-full text-left bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md transition text-sm">
                             Más Antiguos
                         </button>
