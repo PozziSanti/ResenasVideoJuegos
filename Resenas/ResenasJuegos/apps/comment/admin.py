@@ -5,7 +5,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('user', 'post', 'score', 'approbed', 'created_at', 'updated_at')
     list_filter = ('approbed', 'score', 'created_at')
     search_fields = ('user__username', 'post__title', 'content')
-    list_editable = ('approbed',)  # se debería poder aprobar/desaprobar desde la lista
+    list_editable = ('approbed',)  
     ordering = ('-created_at',)
 
 

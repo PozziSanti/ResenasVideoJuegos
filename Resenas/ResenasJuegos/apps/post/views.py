@@ -19,19 +19,16 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-    
-        print("🟢 VERIFICANDO DATOS EN VISTA:") #TODO:SACAR
         categorias = Category.objects.all()
-        print("Categorías encontradas:", list(categorias.values('id', 'title'))) #TODO:SACAR
-    
         posts_por_categoria = {}
+
         for categoria in categorias:
             posts = Post.objects.filter(category=categoria).prefetch_related('images')
-            print(f"Posts en {categoria.title}:", list(posts.values('id', 'title'))) #TODO:SACAR
+
             posts_por_categoria[categoria.title] = posts
     
         context['posts_por_categoria'] = posts_por_categoria
-        print("🟢 CONTEXTO FINAL:", context) #TODO:SACAR
+
         return context
 
 class AboutView(TemplateView):
@@ -81,46 +78,49 @@ class PostCategoryFilter (ListView):
         
         return queryset
 
-    # DA LOS NOMBRES A CADA UNA DE LAS CATEGORIAS DEL SIDEBAR EN LA PAGINA (JUEGOS DE ...)********************************
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['selected_category'] = self.kwargs.get('category', '')
         return context
 
-
-# SE PUEDE REUTILIZAR PARA FILTRO MAS RECIENTES, MAS ANTIGUOS
-# class PostDateFilter(ListView):
-#     model = Post
-#     template_name = 'post/post_list.html'
-#     context_object_name = 'posts'
-
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#         date = self.request.GET.get('date')
-
-#         if date:
-#             queryset = queryset.filter(created_at__date=date) # busca el post por fecha de publicación
-        
-#         return queryset
-
-
-# Filtros post por estrellas - REUTILIZAR EL IF SCORE PARA FILTRO DE MAYOR PUNTUACION A MENOR PUNTUACION
-class PostStarFilter(ListView):
+#Filtro mas reciente, mas antiguo
+class PostDateFilter(ListView):
     model = Post
-    template_name = 'post/post_list.html' 
+    template_name = 'post/post_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
-        queryset = super().get_queryset().annotate(avg_score=Coalesce(Avg('comment__score'), Value(0)))  # Calcula el promedio de las calificaciones de los comentarios
-        
-        score = self.request.GET.get('score') # valor que viene del formulario de búsqueda
+        queryset = super().get_queryset()
+        date = self.request.GET.get('date')
 
+        if date:
+            queryset = queryset.filter(created_at__date=date) # busca el post por fecha de publicación
+        
+        return queryset
+
+
+# Filtros post por estrellas
+class PostStarFilter(ListView):
+    model = Post
+    template_name = 'post/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        queryset = super().get_queryset().annotate(
+            avg_score=Coalesce(
+                Avg('comment__score', output_field=FloatField()),
+                Value(0.0, output_field=FloatField())
+            )
+        ).distinct()
+
+        score = self.request.GET.get('score')
         if score:
             try:
                 score = float(score)
-                queryset = queryset.filter(avg_score__gte=score) # filtra comentarios que tengan un valor de estrellas mayor o igual al ingresado
+                queryset = queryset.filter(avg_score__gte=score).order_by('-avg_score')
             except ValueError:
-                pass      # si el valor no es un número válido, no se aplica el filtro
+                pass
+
         return queryset
     
 
@@ -228,38 +228,26 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         kwargs['request'] = self.request
         return kwargs
 
-# TODO: agregar funcion 403 para que aparezca imagen del michi
     def form_valid(self, form):
         form.instance.author = self.request.user
-        print("\n=== INICIO DEL PROCESO DE GUARDADO ===")
     
         try:
-            print("\n1. Guardando post principal...")
             self.object = form.save(commit=True)
-            print(f"✅ Post guardado con ID: {self.object.id}")
-            
-            print("\n2. Procesando imágenes...")
             form.images.instance = self.object
             is_valid = form.images.is_valid()
-            print(f"🔍 Formset válido?: {is_valid}")
             
             if not is_valid:
-                print(f"❌ Errores en el formset: {form.images.errors}")
                 # Agregar errores del formset al formulario principal
                 for error in form.images.errors:
                     form.add_error(None, error)
                 return self.form_invalid(form)
             else:
-                print("✅ Formset válido, guardando imágenes...")
                 form.images.save()
-                print(f"📸 Imágenes guardadas correctamente para el post {self.object.id}")
                 
         except Exception as e:
-            print(f"‼️ ERROR CRÍTICO: {str(e)}")
             form.add_error(None, f"Error al guardar imágenes: {str(e)}")
             return self.form_invalid(form)
         
-        print("\n=== PROCESO COMPLETADO CON ÉXITO ===")
         return super().form_valid(form)
     
     def test_func(self):
@@ -276,7 +264,6 @@ class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
     def get_success_url(self):
         return reverse_lazy ('post_detail', kwargs={'slug': self.object.slug})
 
-#TODO: agregar funcion 403 para que aparezca imagen del michi
     def get_form_kwargs(self):
             kwargs = super().get_form_kwargs()
             kwargs['active_images'] = self.get_object().images.filter(active=True)
@@ -295,7 +282,7 @@ class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
             return Post.objects.all()
         return Post.objects.filter(author=user)
 
-    def form_valid(self, form): # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
+    def form_valid(self, form):
         post=form.save(commit=False)
         active_images=form.active_images
         keep_any_image_active=False
@@ -326,22 +313,22 @@ class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
         return user == post.author or user.is_superuser # Solo permite acceso a usuarios autores y superusuarios
 
 
-# Listar todos los posts
-# class PostListView(ListView):
-#     model = Post
-#     template_name = 'post/post_list.html'
-#     context_object_name = 'posts'
+#Listar todos los posts
+class PostListView(ListView):
+    model = Post
+    template_name = 'post/post_list.html'
+    context_object_name = 'posts'
 
-#     def get_queryset(self):
-#         return (Post.objects.all()
-#         .prefetch_related('images')
-#         # .annotate(avg_score=Coalesce
-#         #         (Avg('comment__score'),
-#         #          Value(0.0, output_field=FloatField())
-#         #         )
-#         #     )
-#         .order_by('-created_at')
-#         )  # get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
+    def get_queryset(self):
+        return (Post.objects.all()
+        .prefetch_related('images')
+        # .annotate(avg_score=Coalesce
+        #         (Avg('comment__score'),
+        #          Value(0.0, output_field=FloatField())
+        #         )
+        #     )
+        .order_by('-created_at')
+        )  # get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
 
 
 # Eliminar un post existente
@@ -351,8 +338,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     slug_url_kwarg = 'slug'
     template_name = 'post/post_delete.html'
     success_url = reverse_lazy('home')
-
-# TODO: agregar funcion 403 para que aparezca imagen del michi     
+ 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
@@ -429,6 +415,5 @@ class CommentUpdateView(UpdateView):
         return context
         
     def get_success_url(self):
-        print('SLUG', self.object.post.slug)
         return reverse_lazy("post_detail", kwargs={"slug": self.object.post.slug})
 

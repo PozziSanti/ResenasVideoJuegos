@@ -1,9 +1,10 @@
-<div class="h-80 min-w-[280px] [perspective:1000px]">
+<div
+  class="flip-card h-64 sm:h-72 md:h-80 min-w-[220px] sm:min-w-[240px] md:min-w-[280px] relative perspective-1000 cursor-pointer">
   <div
-    class="group relative h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] hover:[transform:rotateY(180deg)]">
+    class="flip-card-inner relative w-full h-full rounded-xl transition-transform duration-500 [transform-style:preserve-3d]">
 
     <!-- Cara frontal -->
-    <div class="absolute inset-0 [backface-visibility:hidden]">
+    <div class="flip-card-front absolute inset-0 [backface-visibility:hidden]">
       {% with post.images.all|first as imagen %}
       {% if imagen %}
       <img src="{{ imagen.image.url }}" alt="{{ post.title }}"
@@ -21,13 +22,48 @@
 
     <!-- Cara trasera -->
     <div
-      class="absolute inset-0 h-full w-full rounded-xl bg-light-morado px-6 text-center text-text-light [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center">
-      <h1 class="text-lg font-bold mb-2">{{ post.title }}</h1>
-      <p class="text-sm mb-4">{{ post.content|truncatewords:20|default:"Sin descripción" }}</p>
+      class="flip-card-back absolute inset-0 h-full w-full rounded-xl bg-light-morado px-4 sm:px-6 text-center text-text-light [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center">
+      <h1 class="text-base sm:text-lg md:text-lg font-bold mb-2">{{ post.title }}</h1>
+      <p class="text-xs sm:text-sm md:text-sm mb-4">{{ post.content|truncatewords:20|default:"Sin descripción" }}</p>
       <a href="{% url 'post_detail' post.slug %}"
-        class="mt-2 rounded-md bg-accent-blue py-2 px-4 text-sm font-semibold hover:bg-accent-blue-hover transition-colors">
+        class="mt-2 rounded-md bg-accent-blue py-1 sm:py-2 px-2 sm:px-4 text-xs sm:text-sm font-semibold hover:bg-accent-blue-hover transition-colors">
         Ver más
       </a>
     </div>
   </div>
 </div>
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const flipCards = document.querySelectorAll('.flip-card');
+
+    flipCards.forEach(card => {
+      const inner = card.querySelector('.flip-card-inner');
+
+      // Tap en mobile/tablet
+      card.addEventListener('click', function () {
+        if (window.innerWidth < 768) {
+          if (inner.style.transform === 'rotateY(180deg)') {
+            inner.style.transform = 'rotateY(0deg)';
+          } else {
+            inner.style.transform = 'rotateY(180deg)';
+          }
+        }
+      });
+
+      // Hover en desktop
+      card.addEventListener('mouseenter', function () {
+        if (window.innerWidth >= 768) {
+          inner.style.transform = 'rotateY(180deg)';
+        }
+      });
+      card.addEventListener('mouseleave', function () {
+        if (window.innerWidth >= 768) {
+          inner.style.transform = 'rotateY(0deg)';
+        }
+      });
+    });
+  });
+</script>
+{% endblock scripts %}
