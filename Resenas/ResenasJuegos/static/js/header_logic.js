@@ -4,15 +4,12 @@ function replaceWithIcon(imgElement) {
     const parentContainer = document.getElementById('user-avatar-container');
     if (!parentContainer) return;
 
-    // Creamos el nuevo elemento de icono
-    const iconElement = document.createElement('i');
-    iconElement.className = 'fa fa-user';
-
-    // Reemplazamos la imagen que falló por el nuevo icono
-    parentContainer.replaceChild(iconElement, imgElement);
+    const icon = document.createElement('i');
+    icon.className = 'fa fa-user';
+    parent.replaceChild(icon, imgElement);
 
     // Evitamos un bucle infinito si el icono también falla
-    imgElement.onerror = null; 
+    imgElement.onerror = null;
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -63,8 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const menuToggle = document.getElementById('menu-toggle');
     menuToggle?.addEventListener('click', () => {
         document.body.classList.toggle('overflow-hidden'); // bloquea scroll
-        // Aquí abrís/cerrás tu sidebar si tenés uno
-        // ej: document.getElementById('sidebar').classList.toggle('hidden');
+        // Aquí abrís/cerrás tu sidebar;
     });
 
     // --- Dropdown filtros ---
@@ -84,4 +80,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
