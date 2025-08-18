@@ -78,14 +78,12 @@ class PostCategoryFilter (ListView):
         
         return queryset
 
-    # DA LOS NOMBRES A CADA UNA DE LAS CATEGORIAS DEL SIDEBAR EN LA PAGINA (JUEGOS DE ...)********************************
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['selected_category'] = self.kwargs.get('category', '')
         return context
 
-
-# SE PUEDE REUTILIZAR PARA FILTRO MAS RECIENTES, MAS ANTIGUOS
+#Filtro mas reciente, mas antiguo
 class PostDateFilter(ListView):
     model = Post
     template_name = 'post/post_list.html'
@@ -101,7 +99,7 @@ class PostDateFilter(ListView):
         return queryset
 
 
-# Filtros post por estrellas - REUTILIZAR EL IF SCORE PARA FILTRO DE MAYOR PUNTUACION A MENOR PUNTUACION
+# Filtros post por estrellas
 class PostStarFilter(ListView):
     model = Post
     template_name = 'post/post_list.html'
@@ -230,7 +228,6 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         kwargs['request'] = self.request
         return kwargs
 
-# TODO: agregar funcion 403 para que aparezca imagen del michi
     def form_valid(self, form):
         form.instance.author = self.request.user
     
@@ -267,7 +264,6 @@ class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
     def get_success_url(self):
         return reverse_lazy ('post_detail', kwargs={'slug': self.object.slug})
 
-#TODO: agregar funcion 403 para que aparezca imagen del michi
     def get_form_kwargs(self):
             kwargs = super().get_form_kwargs()
             kwargs['active_images'] = self.get_object().images.filter(active=True)
@@ -286,7 +282,7 @@ class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
             return Post.objects.all()
         return Post.objects.filter(author=user)
 
-    def form_valid(self, form): # TODO: si se quiere que el autor del post cambie al editar, agregar: post.autor = self.request.user
+    def form_valid(self, form):
         post=form.save(commit=False)
         active_images=form.active_images
         keep_any_image_active=False
@@ -317,22 +313,22 @@ class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
         return user == post.author or user.is_superuser # Solo permite acceso a usuarios autores y superusuarios
 
 
-# Listar todos los posts
-# class PostListView(ListView):
-#     model = Post
-#     template_name = 'post/post_list.html'
-#     context_object_name = 'posts'
+#Listar todos los posts
+class PostListView(ListView):
+    model = Post
+    template_name = 'post/post_list.html'
+    context_object_name = 'posts'
 
-#     def get_queryset(self):
-#         return (Post.objects.all()
-#         .prefetch_related('images')
-#         # .annotate(avg_score=Coalesce
-#         #         (Avg('comment__score'),
-#         #          Value(0.0, output_field=FloatField())
-#         #         )
-#         #     )
-#         .order_by('-created_at')
-#         )  # get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
+    def get_queryset(self):
+        return (Post.objects.all()
+        .prefetch_related('images')
+        # .annotate(avg_score=Coalesce
+        #         (Avg('comment__score'),
+        #          Value(0.0, output_field=FloatField())
+        #         )
+        #     )
+        .order_by('-created_at')
+        )  # get_queryset se usa para optimizar la consulta y traer las imágenes relacionadas de una sola vez, además de calcular el promedio de puntuaciones
 
 
 # Eliminar un post existente
@@ -342,8 +338,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     slug_url_kwarg = 'slug'
     template_name = 'post/post_delete.html'
     success_url = reverse_lazy('home')
-
-# TODO: agregar funcion 403 para que aparezca imagen del michi     
+ 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user

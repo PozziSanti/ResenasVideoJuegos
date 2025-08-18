@@ -49,10 +49,10 @@
 
             <!-- Stats -->
             <div class="bg-darker-morado-transparent rounded-xl p-4 border border-accent-blue">
-                <h2 class="text-light font-bold mb-2">Stats</h2>
-                <p class="text-medium">Member for: 8 days</p>
-                <p class="text-medium">Games liked: 0</p>
-                <p class="text-medium">Playstreak: 1 day</p>
+                <h2 class="text-light font-bold mb-2">Estadísticas</h2>
+                <p class="text-medium">
+                    Juegos Favoritos: {{ request.user.favorite.count }}
+                </p>
             </div>
         </div>
 
@@ -61,23 +61,29 @@
 
             <!-- Liked Games -->
             <div class="bg-darker-morado-transparent rounded-xl p-6 border border-accent-blue">
-                <h2 class="text-light font-bold mb-4">Mis favoritos</h2>
-                {% if favorites %}
-                <ul class="space-y-2">
-                    {% for fav in favorites %}
-                    <li>
-                        <a href="{% url 'post_detail' fav.post.slug %}" class="text-accent-blue hover:underline">
+                <h2 class="text-light font-bold mb-4">Tus juegos favoritos</h2>
+                {% if request.user.favorite.exists %}
+                <ul class="space-y-3">
+                    {% for fav in request.user.favorite.all %}
+                    <li
+                        class="flex items-center justify-between bg-dark-morado rounded-lg p-3 hover:bg-accent-blue/20 transition">
+                        <a href="{% url 'post_detail' slug=fav.post.slug %}"
+                            class="text-light font-semibold">
                             {{ fav.post.title }}
                         </a>
+                        <span class="text-sm text-medium">❤️</span>
                     </li>
                     {% endfor %}
                 </ul>
                 {% else %}
-                <p class="text-medium text-center">Todavía no tienes juegos en favoritos.</p>
+                <p class="text-medium text-center">
+                    Todavía no marcaste ningún juego como favorito.
+                </p>
                 {% endif %}
             </div>
         </div>
     </div>
+
 </div>
 
 {% endblock content_layout %}
