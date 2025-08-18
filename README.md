@@ -255,12 +255,12 @@ Una vez que el servidor esté en funcionamiento (`python manage.py runserver`), 
 
 Para facilitar la prueba de la aplicación sin necesidad de registrarse, se han creado cuentas de usuario predefinidas:
 
-- **Usuario:** `testuser`
-  - **Contraseña:** `testpass`
+- **Usuario:** `testingusercomun`
+  - **Contraseña:** `facilito123`
   - **Rol:** Usuario estándar
 
-- **Usuario:** `adminuser`
-  - **Contraseña:** `adminpass`
+- **Usuario:** `testinguserpan`
+  - **Contraseña:** `facil123`
   - **Rol:** Administrador
 
 Estas cuentas permiten acceder a las funcionalidades básicas y administrativas del sistema.
