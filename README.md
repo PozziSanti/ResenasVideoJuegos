@@ -6,6 +6,7 @@ Hit or Quit es una plataforma colaborativa donde los usuarios pueden compartir y
 
 ## 🗂️ Estructura
 
+```bash
 ┣ 📂env
 ┃ ┣ 📂Scripts
 ┃ ┃ ┣ 📜activate.bat
@@ -171,7 +172,7 @@ Hit or Quit es una plataforma colaborativa donde los usuarios pueden compartir y
 ┃ ┗ 📜requirements.txt
 ┣ 📜LICENSE
 ┗ 📜README.md
-
+```  
 
 
 ## Instalación
