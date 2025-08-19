@@ -272,6 +272,12 @@ Estas cuentas permiten acceder a las funcionalidades básicas y administrativas 
 - **Suarez Fernando** – *Backend Developer*
 - **Gnus Matías** – *Backend Developer*
 
+## 📌 Organización del Proyecto
+
+El equipo utiliza Trello para la planificación y seguimiento de tareas:
+
+👉 [![Trello Board](https://img.shields.io/badge/Trello-Proyecto%20Final-026AA7?logo=trello&logoColor=white)](https://trello.com/b/Fpkr5eiX/proyecto-final)
+
 ## ⚙️ Tecnologías Utilizadas
 - Python 3
 - HTML & CSS
