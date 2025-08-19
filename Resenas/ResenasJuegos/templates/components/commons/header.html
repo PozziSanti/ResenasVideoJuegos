@@ -64,6 +64,24 @@
                             Más Antiguos
                         </button>
                     </form>
+                    
+                    <!-- Filtrar A-Z -->
+                    <form method="get" action="{% url 'post_alphabet' %}" class="w-full">
+                        <input type="hidden" name="order" value="asc">
+                        <button type="submit" 
+                            class="w-full text-left bg-light-morado hover:bg-accent-blue text-light px-3 py-2 rounded-md transition text-sm">
+                            A → Z
+                        </button>
+                    </form>
+
+                    <!-- Filtrar Z-A -->
+                    <form method="get" action="{% url 'post_alphabet' %}" class="w-full">
+                        <input type="hidden" name="order" value="desc">
+                        <button type="submit" 
+                            class="w-full text-left bg-light-morado hover:bg-accent-blue text-light px-3 py-2 rounded-md transition text-sm">
+                            Z → A
+                        </button>
+                    </form>
 
                     <!-- Mejor Puntuados -->
                     <form method="get" action="{% url 'post_by_star' %}" class="w-full">
