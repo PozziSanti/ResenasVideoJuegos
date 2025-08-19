@@ -24,7 +24,7 @@
     <div
       class="flip-card-back absolute inset-0 h-full w-full rounded-xl bg-light-morado px-4 sm:px-6 text-center text-text-light [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center">
       <h1 class="text-base sm:text-lg md:text-lg font-bold mb-2">{{ post.title }}</h1>
-      <p class="text-xs sm:text-sm md:text-sm mb-4">{{ post.content|truncatewords:20|default:"Sin descripción" }}</p>
+      <p class="text-xs sm:text-sm md:text-sm mb-4">{{ post.content|truncatewords:12|default:"Sin descripción" }}</p>
       <a href="{% url 'post_detail' post.slug %}"
         class="mt-2 rounded-md bg-accent-blue py-1 sm:py-2 px-2 sm:px-4 text-xs sm:text-sm font-semibold hover:bg-accent-blue-hover transition-colors">
         Ver más
