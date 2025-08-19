@@ -272,7 +272,7 @@ Estas cuentas permiten acceder a las funcionalidades básicas y administrativas 
 - **Suarez Fernando** – *Backend Developer*
 - **Gnus Matías** – *Backend Developer*
 
-📌 Organización del Proyecto
+## 📌 Organización del Proyecto
 
 El equipo utiliza Trello para la planificación y seguimiento de tareas:
 
