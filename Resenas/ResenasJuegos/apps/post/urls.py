@@ -1,9 +1,9 @@
 from django.urls import path
 from apps.post.views import (IndexView, AboutView, TermsView, PrivacyPolicyView,
                             PostUpdateView, PostDeleteView, PostCreateView, PostDetailView, PostListView, 
-                            PostCategoryFilter, PostTitleFilter, PostDateFilter, PostStarFilter, PostAutocomplete,
-                            CommentUpdateView, CategoryCreateView, CategoryListView, CategoryUpdateView, 
-                            CategoryDeleteView)
+                            PostCategoryFilter, PostTitleFilter, PostDateFilter, PostStarFilter, PostAlphabetFilter, 
+                            PostAutocomplete, CommentUpdateView, CategoryCreateView, CategoryListView, 
+                            CategoryUpdateView, CategoryDeleteView)
 
 #Si se llega a usar PostListView y PostDateFilter agergar en las importaciones
 
@@ -18,6 +18,7 @@ urlpatterns = [
     path('category/<str:category>/', PostCategoryFilter.as_view(), name='post_by_category'),
     path('date/', PostDateFilter.as_view(), name='post_by_date'), 
     path('star/', PostStarFilter.as_view(), name='post_by_star'),
+    path('alphabet/', PostAlphabetFilter.as_view(), name='post_alphabet'),
     path('post/create/', PostCreateView.as_view(), name='post_create'),
     path('post/<slug:slug>/', PostDetailView.as_view(), name='post_detail'),
     path('edit/<slug:slug>/', PostUpdateView.as_view(), name='post_update'),
